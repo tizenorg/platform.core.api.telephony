@@ -37,7 +37,7 @@
  *
  * To ensure your application is only running on the device with specific features, please define the features in your manifest file using the manifest editor in the SDK.\n
  *
- * More details on featuring your application can be found from <a href="../org.tizen.mobile.native.appprogramming/html/ide_sdk_tools/feature_element.htm"><b>Feature Element</b>.</a>
+ * More details on featuring your application can be found from <a href="../org.tizen.gettingstarted/html/native/details/app_filtering_n.htm"><b>Feature List</b>.</a>
  */
 
 /**
@@ -61,7 +61,7 @@
  *
  * To ensure your application is only running on the device with specific features, please define the features in your manifest file using the manifest editor in the SDK.\n
  *
- * More details on featuring your application can be found from <a href="../org.tizen.mobile.native.appprogramming/html/ide_sdk_tools/feature_element.htm"><b>Feature Element</b>.</a>
+ * More details on featuring your application can be found from <a href="../org.tizen.gettingstarted/html/native/details/app_filtering_n.htm"><b>Feature List</b>.</a>
  */
 
 /**
@@ -85,7 +85,7 @@
  *
  * To ensure your application is only running on the device with specific features, please define the features in your manifest file using the manifest editor in the SDK.\n
  *
- * More details on featuring your application can be found from <a href="../org.tizen.mobile.native.appprogramming/html/ide_sdk_tools/feature_element.htm"><b>Feature Element</b>.</a>
+ * More details on featuring your application can be found from <a href="../org.tizen.gettingstarted/html/native/details/app_filtering_n.htm"><b>Feature List</b>.</a>
  */
 
 /**
@@ -108,7 +108,7 @@
  *
  * To ensure your application is only running on the device with specific features, please define the features in your manifest file using the manifest editor in the SDK.\n
  *
- * More details on featuring your application can be found from <a href="../org.tizen.mobile.native.appprogramming/html/ide_sdk_tools/feature_element.htm"><b>Feature Element</b>.</a>
+ * More details on featuring your application can be found from <a href="../org.tizen.gettingstarted/html/native/details/app_filtering_n.htm"><b>Feature List</b>.</a>
  */
 
 /**
@@ -131,7 +131,7 @@
  *
  * To ensure your application is only running on the device with specific features, please define the features in your manifest file using the manifest editor in the SDK.\n
  *
- * More details on featuring your application can be found from <a href="../org.tizen.mobile.native.appprogramming/html/ide_sdk_tools/feature_element.htm"><b>Feature Element</b>.</a>
+ * More details on featuring your application can be found from <a href="../org.tizen.gettingstarted/html/native/details/app_filtering_n.htm"><b>Feature List</b>.</a>
  */
 
 #endif /* __TIZEN_TELEPHONY_INFORMATION_DOC_H__ */

@@ -35,7 +35,7 @@
 
 /**
  * @brief Enumeration for the state of SIM card.
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
 typedef enum
 {
@@ -51,9 +51,10 @@ typedef enum
  * @since_tizen 2.4
  */
 typedef enum {
-	TELEPHONY_SIM_APP_TYPE_SIM = 0x01, /**< SIM(GSM) card */
-	TELEPHONY_SIM_APP_TYPE_USIM = 0x02, /**< USIM card */
-	TELEPHONY_SIM_APP_TYPE_CSIM = 0x04, /**< CDMA card */
+	TELEPHONY_SIM_APP_TYPE_SIM = 0x01, /**< SIM(GSM) Application */
+	TELEPHONY_SIM_APP_TYPE_USIM = 0x02, /**< USIM Application */
+	TELEPHONY_SIM_APP_TYPE_CSIM = 0x04, /**< CDMA Application */
+	TELEPHONY_SIM_APP_TYPE_ISIM = 0x08, /**< ISIM Application */
 } telephony_sim_application_type_e;
 
 
@@ -61,7 +62,7 @@ typedef enum {
  * @brief Gets the Integrated Circuit Card IDentification (ICC-ID).
  * @details The Integrated Circuit Card Identification number internationally identifies SIM cards.
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -90,7 +91,7 @@ int telephony_sim_get_icc_id(telephony_h handle, char **icc_id);
  * @brief Gets the SIM Operator (MCC [3 digits] + MNC [2~3 digits]).
  * @details The Operator is embedded in the SIM card.
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -119,7 +120,7 @@ int telephony_sim_get_operator(telephony_h handle, char **sim_operator);
  * @brief Gets the Mobile Subscription Identification Number (MSIN [9~10 digits]) of the SIM provider.
  * @details This function gets Mobile Subscription Identification Number embedded in the SIM card.
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -149,7 +150,7 @@ int telephony_sim_get_msin(telephony_h handle, char **msin);
  * @details This function gets Service Provider Name embedded in the SIM card.
  *          If this value is not stored in SIM card, @c NULL will be returned.
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -177,7 +178,7 @@ int telephony_sim_get_spn(telephony_h handle, char **spn);
 /**
  * @brief Checks whether the current SIM card is different from the previous SIM card.
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -204,7 +205,7 @@ int telephony_sim_is_changed(telephony_h handle, bool *is_changed);
 /**
  * @brief Gets the state of the SIM.
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -231,9 +232,10 @@ int telephony_sim_get_state(telephony_h handle, telephony_sim_state_e *sim_state
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] app_list The masking value for below values
- *                      #TAPI_SIM_APP_TYPE_SIM 0x01 GSM Application
- *                      #TAPI_SIM_APP_TYPE_USIM 0x02 USIM Application
- *                      #TAPI_SIM_APP_TYPE_CSIM 0x04 CSIM Application
+ *                      #TELEPHONY_SIM_APP_TYPE_SIM 0x01 GSM Application
+ *                      #TELEPHONY_SIM_APP_TYPE_USIM 0x02 USIM Application
+ *                      #TELEPHONY_SIM_APP_TYPE_CSIM 0x04 CSIM Application
+ *                      #TELEPHONY_SIM_APP_TYPE_ISIM 0x08 ISIM Application
  *
  * @return @c 0 on success,
  *         otherwise a negative error value
@@ -252,7 +254,7 @@ int telephony_sim_get_application_list(telephony_h handle, unsigned int *app_lis
  *          This value contains MSISDN related to the subscriber.
  *          If this value is not stored in SIM card, @c NULL will be returned.
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *

@@ -30,17 +30,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#ifdef LOG_TAG
-#undef LOG_TAG
-#endif
-#define LOG_TAG "CAPI_TELEPHONY"
-
-#define CHECK_INPUT_PARAMETER(arg) \
-	if (arg == NULL) { \
-		LOGE("INVALID_PARAMETER"); \
-		return TELEPHONY_ERROR_INVALID_PARAMETER; \
-	}
-
 int telephony_network_get_lac(telephony_h handle, int *lac)
 {
 	int ret;
@@ -165,14 +154,14 @@ int telephony_network_get_mcc(telephony_h handle, char **mcc)
 
 	ret = tel_get_property_string(tapi_h, TAPI_PROP_NETWORK_PLMN, &plmn_str);
 	if (ret == TAPI_API_SUCCESS) {
-		*mcc = malloc (sizeof(char) * (mcc_length + 1));
+		*mcc = malloc(sizeof(char) * (mcc_length + 1));
 		if (*mcc == NULL) {
 			LOGE("OUT_OF_MEMORY");
 			ret = TELEPHONY_ERROR_OUT_OF_MEMORY;
 		} else {
-			memset (*mcc, 0x00, mcc_length + 1);
-			strncpy (*mcc, plmn_str, mcc_length);
-			free (plmn_str);
+			memset(*mcc, 0x00, mcc_length + 1);
+			strncpy(*mcc, plmn_str, mcc_length);
+			free(plmn_str);
 
 			LOGI("mcc:[%s]", *mcc);
 			ret = TELEPHONY_ERROR_NONE;
@@ -206,14 +195,14 @@ int telephony_network_get_mnc(telephony_h handle, char **mnc)
 		plmn_length = strlen(plmn_str);
 		LOGI("plmn:[%s], length:[%d]", plmn_str, plmn_length);
 
-		*mnc = malloc (sizeof(char) * (plmn_length -3 + 1));
+		*mnc = malloc(sizeof(char) * (plmn_length -3 + 1));
 		if (*mnc == NULL) {
 			LOGE("OUT_OF_MEMORY");
 			ret = TELEPHONY_ERROR_OUT_OF_MEMORY;
 		} else {
-			memset (*mnc, 0x00, (plmn_length -3 + 1));
-			strncpy (*mnc, plmn_str + 3, (plmn_length -3 + 1));
-			free (plmn_str);
+			memset(*mnc, 0x00, (plmn_length -3 + 1));
+			strncpy(*mnc, plmn_str + 3, (plmn_length -3 + 1));
+			free(plmn_str);
 
 			LOGI("mnc:[%s]", *mnc);
 			ret = TELEPHONY_ERROR_NONE;
@@ -448,7 +437,7 @@ int telephony_network_get_default_data_subscription(telephony_h handle,
 
 	ret = tel_get_network_default_data_subscription(tapi_h,  &default_data_subscription);
 	if (ret == TAPI_API_SUCCESS) {
-		switch(default_data_subscription) {
+		switch (default_data_subscription) {
 		case TAPI_NETWORK_DEFAULT_DATA_SUBS_SIM1:
 			*default_data_sub = TELEPHONY_NETWORK_DEFAULT_DATA_SUBS_SIM1;
 			break;
@@ -488,7 +477,7 @@ int telephony_network_get_default_subscription(telephony_h handle,
 
 	ret = tel_get_network_default_subscription(tapi_h,  &default_subscription);
 	if (ret == TAPI_API_SUCCESS) {
-		switch(default_subscription) {
+		switch (default_subscription) {
 		case TAPI_NETWORK_DEFAULT_SUBS_SIM1:
 			*default_sub = TELEPHONY_NETWORK_DEFAULT_SUBS_SIM1;
 			break;

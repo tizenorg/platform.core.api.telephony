@@ -40,7 +40,7 @@ extern "C" {
 
 /**
  * @brief The Telephony API handle.
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
 typedef struct telephony_data *telephony_h;
 
@@ -48,7 +48,7 @@ typedef struct telephony_data *telephony_h;
  * @brief The structure type for the list of handles to use the Telephony API.
  * @remarks There are two handles in case of dual SIM device. \n
  *          In this case, handle[0] is mean Primary SIM and handle[1] is mean Secondary SIM.
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
 typedef struct {
     unsigned int count; /**< Number of available handle */
@@ -57,7 +57,7 @@ typedef struct {
 
 /**
  * @brief Enumeration for Telephony error.
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
 typedef enum {
     TELEPHONY_ERROR_NONE = TIZEN_ERROR_NONE,                            /**< Successful */
@@ -71,37 +71,46 @@ typedef enum {
 
 /**
  * @brief Enumeration for Telephony notification.
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
 typedef enum  {
-    TELEPHONY_NOTI_SIM_STATUS = 0x10,            /**< Notification to be invoked when the SIM card state changes */
+    TELEPHONY_NOTI_SIM_STATUS = 0x10,            /**< Notification to be invoked when the SIM card state changes, '#telephony_sim_state_e' will be delivered in notification data */
 
-    TELEPHONY_NOTI_NETWORK_SERVICE_STATE = 0x20, /**< Notification to be invoked when the network service state changes */
-    TELEPHONY_NOTI_NETWORK_CELLID,               /**< Notification to be invoked when the cell ID changes */
-    TELEPHONY_NOTI_NETWORK_ROAMING_STATUS,       /**< Notification to be invoked when the roaming status changes */
-    TELEPHONY_NOTI_NETWORK_SIGNALSTRENGTH_LEVEL, /**< Notification to be invoked when the signal strength changes */
-    TELEPHONY_NOTI_NETWORK_SPN_NAME, /**< Notification to be invoked when the spn changes */
-    TELEPHONY_NOTI_NETWORK_NETWORK_NAME, /**< Notification to be invoked when the network name changes */
-    TELEPHONY_NOTI_NETWORK_NAME_OPTION, /**< Notification to be invoked when the network name option changes */
-    TELEPHONY_NOTI_NETWORK_PS_TYPE, /**< Notification to be invoked when the ps type changes */
-    TELEPHONY_NOTI_NETWORK_DEFAULT_DATA_SUBSCRIPTION, /**< Notification to be invoked when the default data subscription changes */
-    TELEPHONY_NOTI_NETWORK_DEFAULT_SUBSCRIPTION, /**< Notification to be invoked when the default subscription changes */
+    TELEPHONY_NOTI_NETWORK_SERVICE_STATE = 0x20, /**< Notification to be invoked when the network service state changes, '#telephony_network_service_state_e' will be delivered in notification data */
+    TELEPHONY_NOTI_NETWORK_CELLID,               /**< Notification to be invoked when the cell ID changes, 'cell_id(int)' will be delivered in notification data */
+    TELEPHONY_NOTI_NETWORK_ROAMING_STATUS,       /**< Notification to be invoked when the roaming status changes, 'roaming_status(bool)' will be delivered in notification data */
+    TELEPHONY_NOTI_NETWORK_SIGNALSTRENGTH_LEVEL, /**< Notification to be invoked when the signal strength changes, '#telephony_network_rssi_e' will be delivered in notification data */
+    TELEPHONY_NOTI_NETWORK_NETWORK_NAME, /**< Notification to be invoked when the network name changes, 'network_name(char *)' wil be delivered in notification data (@b Since: 2.4) */
+    TELEPHONY_NOTI_NETWORK_PS_TYPE, /**< Notification to be invoked when the ps type changes, '#telephony_network_ps_type_e' will be delivered in notification data (@b Since: 2.4) */
+    TELEPHONY_NOTI_NETWORK_DEFAULT_DATA_SUBSCRIPTION, /**< Notification to be invoked when the default data subscription changes, '#telephony_network_default_data_subs_e' wil be delivered in notification data (@b Since: 2.4) */
+    TELEPHONY_NOTI_NETWORK_DEFAULT_SUBSCRIPTION, /**< Notification to be invoked when the default subscription changes, '#telephony_network_default_subs_e' will be delivered in notification data (@b Since: 2.4) */
 
-    TELEPHONY_NOTI_VOICE_CALL_STATE = 0x30,      /**< Notification to be invoked when the voice call state changes */
-    TELEPHONY_NOTI_VIDEO_CALL_STATE,              /**< Notification to be invoked when the video call state changes */
-    TELEPHONY_NOTI_CALL_PREFERRED_VOICE_SUBSCRIPTION /**< Notification to be invoked when the preferred voice subscription changes */
+    TELEPHONY_NOTI_VOICE_CALL_STATE = 0x30,      /**< Notification to be invoked when the voice call state changes, '#telephony_call_state_e' will be delivered in notification data (Deprecated Since 2.4. Use #TELEPHONY_NOTI_VOICE_CALL_STATUS_XXX instead.) */
+    TELEPHONY_NOTI_VIDEO_CALL_STATE,              /**< Notification to be invoked when the video call state changes, '#telephony_call_state_e' will be delivered in notification data (Deprecated Since 2.4. Use #TELEPHONY_NOTI_VIDEO_CALL_STATUS_XXX instead.) */
+    TELEPHONY_NOTI_VOICE_CALL_STATUS_IDLE, /**< Notification to be invoked when a voice call is in idle status, 'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) */
+    TELEPHONY_NOTI_VOICE_CALL_STATUS_ACTIVE, /**< Notification to be invoked when a voice call is in active status, 'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) */
+    TELEPHONY_NOTI_VOICE_CALL_STATUS_HELD, /**< Notification to be invoked when a voice call is in held status, 'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) */
+    TELEPHONY_NOTI_VOICE_CALL_STATUS_DIALING, /**< Notification to be invoked when a voice call is in dialing status, 'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) */
+    TELEPHONY_NOTI_VOICE_CALL_STATUS_ALERTING, /**< Notification to be invoked when a voice call is in alerting status, 'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) */
+    TELEPHONY_NOTI_VOICE_CALL_STATUS_INCOMING, /**< Notification to be invoked when a voice call is in incoming status, 'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) */
+    TELEPHONY_NOTI_VIDEO_CALL_STATUS_IDLE, /**< Notification to be invoked when a video call is in idle status, 'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) */
+    TELEPHONY_NOTI_VIDEO_CALL_STATUS_ACTIVE, /**< Notification to be invoked when a video call is in active status, 'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) */
+    TELEPHONY_NOTI_VIDEO_CALL_STATUS_DIALING, /**< Notification to be invoked when a video call is in dialing status, 'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) */
+    TELEPHONY_NOTI_VIDEO_CALL_STATUS_ALERTING, /**< Notification to be invoked when a video call is in alerting status, 'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) */
+    TELEPHONY_NOTI_VIDEO_CALL_STATUS_INCOMING, /**< Notification to be invoked when a video call is in incoming status, 'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) */
+    TELEPHONY_NOTI_CALL_PREFERRED_VOICE_SUBSCRIPTION /**< Notification to be invoked when the preferred voice subscription changes, '#telephony_call_preferred_voice_subs_e' will be delivered in notification data (@b Since: 2.4) */
 } telephony_noti_e;
 
 /**
  * @brief Called when the telephony state changes.
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
 typedef void (*telephony_noti_cb)(telephony_h handle, telephony_noti_e noti_id, void *data, void *user_data);
 
 /**
  * @brief Sets a callback function to be invoked when the telephony state changes.
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -129,7 +138,7 @@ int telephony_set_noti_cb(telephony_h handle,
 /**
  * @brief Unsets a callback function.
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -152,7 +161,7 @@ int telephony_unset_noti_cb(telephony_h handle, telephony_noti_e noti_id);
 /**
  * @brief Acquires the list of available handles to use the telephony API.
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  *
  * @remarks You will get two handles in case of dual SIM device. \n
  *          In this case, handle[0] is mean Primary SIM and handle[1] is mean Secondary SIM.
@@ -175,7 +184,7 @@ int telephony_init(telephony_handle_list_s *list);
 /**
  * @brief Deinitializes the telephony handle list.
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  *
  * @param[in] list The handle list to be deinitialized
  *

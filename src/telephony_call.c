@@ -27,17 +27,6 @@
 #include "telephony_call.h"
 #include "telephony_private.h"
 
-#ifdef LOG_TAG
-#undef LOG_TAG
-#endif
-#define LOG_TAG "CAPI_TELEPHONY"
-
-#define CHECK_INPUT_PARAMETER(arg) \
-	if (arg == NULL) { \
-		LOGE("INVALID_PARAMETER"); \
-		return TELEPHONY_ERROR_INVALID_PARAMETER; \
-	}
-
 static void _mapping_call_state(TelCallStates_t tapi_call_state, telephony_call_state_e *call_state)
 {
 	switch (tapi_call_state) {
@@ -53,6 +42,35 @@ static void _mapping_call_state(TelCallStates_t tapi_call_state, telephony_call_
 		*call_state = TELEPHONY_CALL_STATE_CONNECTING;
 		break;
 	/* Do not check IDLE state to prevent overriding in case of multi-party call */
+	default:
+		LOGE("Not handled call state: [%d]", tapi_call_state);
+		break;
+	}
+}
+
+static void _mapping_call_status(TelCallStates_t tapi_call_state,
+	telephony_call_status_e *status)
+{
+	switch (tapi_call_state) {
+	case TAPI_CALL_STATE_IDLE:
+		*status = TELEPHONY_CALL_STATUS_IDLE;
+		break;
+	case TAPI_CALL_STATE_ACTIVE:
+		*status = TELEPHONY_CALL_STATUS_ACTIVE;
+		break;
+	case TAPI_CALL_STATE_HELD:
+		*status = TELEPHONY_CALL_STATUS_HELD;
+		break;
+	case TAPI_CALL_STATE_DIALING:
+		*status = TELEPHONY_CALL_STATUS_DIALING;
+		break;
+	case TAPI_CALL_STATE_ALERT:
+		*status = TELEPHONY_CALL_STATUS_ALERTING;
+		break;
+	case TAPI_CALL_STATE_INCOMING:
+	case TAPI_CALL_STATE_WAITING:
+		*status = TELEPHONY_CALL_STATUS_INCOMING;
+		break;
 	default:
 		LOGE("Not handled call state: [%d]", tapi_call_state);
 		break;
@@ -86,16 +104,27 @@ static void _get_call_status_cb(TelCallStatus_t *status, void *user_data)
 	telephony_call_info_s *call_info;
 
 	call_info = g_malloc0(sizeof(telephony_call_info_s));
+	if (!call_info)
+		return;
 	call_info->id = status->CallHandle;
 	call_info->type = status->CallType;
 	call_info->direction = status->bMoCall ? TELEPHONY_CALL_DIRECTION_MO : TELEPHONY_CALL_DIRECTION_MT;
 	call_info->conference_status = status->bConferenceState;
-	_mapping_call_state(status->CallState, &call_info->state);
+	_mapping_call_status(status->CallState, &call_info->status);
 	strncpy(call_info->number, status->pNumber, TELEPHONY_CALL_NUMBER_LEN_MAX);
 
-	LOGI("id[%d] number[%s] type[%d] state[%d] direction[%d] conference_status[%d]",
-		call_info->id, call_info->number, call_info->type,
-		call_info->state, call_info->direction, call_info->conference_status);
+	LOGI("id[%d] number[%s] type[%s] status[%s] direction[%s] conference_status[%s]",
+		call_info->id, call_info->number,
+		call_info->type == TELEPHONY_CALL_TYPE_VOICE ? "VOICE" :
+		call_info->type == TELEPHONY_CALL_TYPE_VIDEO ? "VIDEO" : "E911",
+		call_info->status == TELEPHONY_CALL_STATUS_IDLE ? "IDLE" :
+		call_info->status == TELEPHONY_CALL_STATUS_ACTIVE ? "ACTVIE" :
+		call_info->status == TELEPHONY_CALL_STATUS_HELD ? "HELD" :
+		call_info->status == TELEPHONY_CALL_STATUS_DIALING ? "DIALING" :
+		call_info->status == TELEPHONY_CALL_STATUS_ALERTING ? "ALERTING" :
+		call_info->status == TELEPHONY_CALL_STATUS_INCOMING ? "INCOMING" : "UNKNOWN",
+		call_info->direction == TELEPHONY_CALL_DIRECTION_MO ? "MO" : "MT",
+		call_info->conference_status ? "TRUE" : "FALSE");
 	*list = g_slist_append(*list, call_info);
 }
 
@@ -221,12 +250,13 @@ int telephony_call_get_call_list(telephony_h handle,
 
 	if (g_slist_length(list)) {
 		*count = g_slist_length(list);
-		*call_list = g_malloc0(*count * sizeof(telephony_call_info_s));
+		*call_list = g_malloc0(*count * sizeof(telephony_call_h));
+
 		tmp = list;
 		while (tmp) {
 			telephony_call_info_s *call_info = tmp->data;
-			*call_list[call_index] = g_malloc0(sizeof(telephony_call_info_s));
-			memcpy(*call_list[call_index], call_info, sizeof(telephony_call_info_s));
+			(*call_list)[call_index] = g_malloc0(sizeof(telephony_call_info_s));
+			memcpy((*call_list)[call_index], call_info, sizeof(telephony_call_info_s));
 			tmp = g_slist_next(tmp);
 			call_index++;
 		}
@@ -235,6 +265,7 @@ int telephony_call_get_call_list(telephony_h handle,
 		*count = 0;
 		*call_list = NULL;
 	}
+
 	return TELEPHONY_ERROR_NONE;
 }
 
@@ -244,10 +275,12 @@ int telephony_call_release_call_list(unsigned int count, telephony_call_h **call
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
 	CHECK_INPUT_PARAMETER(call_list);
 
-	for (i = 0; i < count; i++) {
-		g_free((telephony_call_info_s *)*call_list[i]);
+	if (count > 0) {
+		for (i = 0; i < count; i++)
+			g_free((telephony_call_info_s *)(*call_list)[i]);
+		g_free(*call_list);
 	}
-	g_free(*call_list);
+
 	return TELEPHONY_ERROR_NONE;
 }
 
@@ -282,14 +315,14 @@ int telephony_call_get_type(telephony_call_h call_handle,
 	return TELEPHONY_ERROR_NONE;
 }
 
-int telephony_call_get_state(telephony_call_h call_handle,
-	telephony_call_state_e *state)
+int telephony_call_get_status(telephony_call_h call_handle,
+	telephony_call_status_e *status)
 {
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
 	CHECK_INPUT_PARAMETER(call_handle);
-	CHECK_INPUT_PARAMETER(state);
+	CHECK_INPUT_PARAMETER(status);
 
-	*state = ((telephony_call_info_s *)call_handle)->state;
+	*status = ((telephony_call_info_s *)call_handle)->status;
 	return TELEPHONY_ERROR_NONE;
 }
 

@@ -51,7 +51,7 @@ typedef enum
  * @details The IMEI number is used by a GSM network to identify valid devices
  *          and therefore can be used for stopping a stolen phone from accessing that network.
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *

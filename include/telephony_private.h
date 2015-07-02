@@ -25,6 +25,17 @@
 
 #define TELEPHONY_FEATURE	"http://tizen.org/feature/network.telephony"
 
+#ifdef LOG_TAG
+#undef LOG_TAG
+#endif
+#define LOG_TAG "CAPI_TELEPHONY"
+
+#define CHECK_INPUT_PARAMETER(arg) \
+	if (arg == NULL) { \
+		LOGE("INVALID_PARAMETER"); \
+		return TELEPHONY_ERROR_INVALID_PARAMETER; \
+	}
+
 #define CHECK_TELEPHONY_SUPPORTED(feature_name) { \
 	bool telephony_supported = FALSE; \
 	if (!system_info_get_platform_bool(feature_name, &telephony_supported)) { \
@@ -37,6 +48,12 @@
 		return TELEPHONY_ERROR_OPERATION_FAILED; \
 	} \
 }
+
+/**
+ * @brief Definition for the max length of call number
+ * @since_tizen 2.4
+ */
+#define TELEPHONY_CALL_NUMBER_LEN_MAX 82
 
 typedef struct {
 	GSList *evt_list;
@@ -65,10 +82,10 @@ struct tapi_handle {
  */
 typedef struct {
 	unsigned int id; /**< The handle of the call */
-	char number[TELEPHONY_CALL_NUMBER_LEN_MAX + 1]; /**< Current Calling number */
-	telephony_call_type_e type; /**< Type of call (voice, data, emergency) */
-	telephony_call_state_e state; /**< Current Call state */
-	telephony_call_direction_e direction; /**< Current Call direction (MO, MT) */
+	char number[TELEPHONY_CALL_NUMBER_LEN_MAX + 1]; /**< Calling number */
+	telephony_call_type_e type; /**< Type of call (voice, video, emergency) */
+	telephony_call_status_e status; /**< Call Status */
+	telephony_call_direction_e direction; /**< Call direction (MO, MT) */
 	bool conference_status; /**< true: Conference call, false: Single call */
 } telephony_call_info_s;
 

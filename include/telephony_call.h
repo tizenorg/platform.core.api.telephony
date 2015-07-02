@@ -34,32 +34,35 @@ extern "C" {
  */
 
 /**
- * @brief Definition for the max length of call number
- * @since_tizen 2.4
- */
-#define TELEPHONY_CALL_NUMBER_LEN_MAX 82
-
-/**
- * @brief Definition for the max length of call count
- * @since_tizen 2.4
- */
-#define TELEPHONY_CALL_COUNT_LEN_MAX 6
-
-/**
  * @brief The call handle.
  * @since_tizen 2.4
  */
 typedef struct telephony_call_info_s *telephony_call_h;
 
 /**
+ * @deprecated Deprecated Since 2.4. Use #telephony_call_status_e instead.
+ *
  * @brief Enumeration for the call state.
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
 typedef enum {
-    TELEPHONY_CALL_STATE_IDLE,       /**< There exists no calls. */
-    TELEPHONY_CALL_STATE_CONNECTING, /**< There exists at least one call that is dialing, alerting or incoming */
-    TELEPHONY_CALL_STATE_CONNECTED,  /**< There exist active or held calls, and no calls are dialing, alerting or incoming*/
+	TELEPHONY_CALL_STATE_IDLE,       /**< There exists no calls. */
+	TELEPHONY_CALL_STATE_CONNECTING, /**< There exists at least one call that is dialing, alerting or incoming */
+	TELEPHONY_CALL_STATE_CONNECTED,  /**< There exist active or held calls, and no calls are dialing, alerting or incoming */
 } telephony_call_state_e;
+
+/**
+ * @brief Enumeration for the call status.
+ * @since_tizen 2.4
+ */
+typedef enum {
+	TELEPHONY_CALL_STATUS_IDLE, /**< Idle status */
+	TELEPHONY_CALL_STATUS_ACTIVE, /**< Active status */
+	TELEPHONY_CALL_STATUS_HELD, /**< Held status */
+	TELEPHONY_CALL_STATUS_DIALING, /**< Dialing status */
+	TELEPHONY_CALL_STATUS_ALERTING, /**< Alerting status */
+	TELEPHONY_CALL_STATUS_INCOMING, /**< Incoming status */
+} telephony_call_status_e;
 
 /**
  * @brief Enumeration for the preferred voice call subscription.
@@ -93,10 +96,12 @@ typedef enum {
 } telephony_call_direction_e;
 
 /**
+ * @deprecated Deprecated Since 2.4. Use #telephony_call_get_status instead.
+ *
  * @brief Gets the voice call state of the telephony service.
  * @details Determines if the voice call is connecting, connected, or idle.
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -120,10 +125,12 @@ typedef enum {
 int telephony_call_get_voice_call_state(telephony_h handle, telephony_call_state_e *call_state);
 
 /**
+ * @deprecated Deprecated Since 2.4. Use #telephony_call_get_status instead.
+ *
  * @brief Gets the video call state of the telephony service.
  * @details Determines if the video call is connecting, connected, or idle.
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -275,12 +282,12 @@ int telephony_call_get_number(telephony_call_h call_handle, char **number);
 int telephony_call_get_type(telephony_call_h call_handle, telephony_call_type_e *type);
 
 /**
- * @brief Gets the call state.
+ * @brief Gets the call status.
  *
  * @since_tizen 2.4
  *
  * @param[in] call_handle The handle from #telephony_call_get_call_list()
- * @param[out] state The state of the call (#telephony_call_state_e)
+ * @param[out] status The status of the call (#telephony_call_status_e)
  *
  * @return @c 0 on success,
  *         otherwise a negative error value
@@ -292,7 +299,7 @@ int telephony_call_get_type(telephony_call_h call_handle, telephony_call_type_e 
  * @pre The call handle should be obtained from #telephony_call_get_call_list()
  * @post The call list should be released by using #telephony_call_release_call_list()
  */
-int telephony_call_get_state(telephony_call_h call_handle, telephony_call_state_e *state);
+int telephony_call_get_status(telephony_call_h call_handle, telephony_call_status_e *status);
 
 /**
  * @brief Gets whether the call is MO(Mobile Originated) call or MT(Mobile Terminated).
@@ -318,7 +325,7 @@ int telephony_call_get_direction(telephony_call_h call_handle, telephony_call_di
  * @since_tizen 2.4
  *
  * @param[in] call_handle The handle from #telephony_call_get_call_list()
- * @param[out] conference_status The value whether this call is conference call or not.
+ * @param[out] conference_status The value whether the call is conference call or not.
  *                            (true: Conference call, false: Single call)
  *
  * @return @c 0 on success,

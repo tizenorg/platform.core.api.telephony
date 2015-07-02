@@ -37,7 +37,7 @@ extern "C"
 /**
  * @brief Enumeration for RSSI (Receive Signal Strength Indicator).
  * @details #TELEPHONY_NETWORK_RSSI_6 indicates the highest strength.
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
 typedef enum
 {
@@ -53,7 +53,7 @@ typedef enum
 
 /**
  * @brief Enumeration for Network Type.
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
 typedef enum
 {
@@ -81,7 +81,7 @@ typedef enum
 
 /**
  * @brief Enumeration for Network Service State.
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
 typedef enum
 {
@@ -125,7 +125,7 @@ typedef enum {
 /**
  * @brief Gets the LAC (Location Area Code) of the current network.
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -150,7 +150,7 @@ int telephony_network_get_lac(telephony_h handle, int *lac);
 /**
  * @brief Gets the cell ID.
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -175,9 +175,9 @@ int telephony_network_get_cell_id(telephony_h handle, int *cell_id);
 /**
  * @brief Gets the RSSI (Received Signal Strength Indicator).
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
- * @privilege %%%%%http://tizen.org/privilege/telephony
+ * @privilege %http://tizen.org/privilege/telephony
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] rssi The Received Signal Strength Indicator \n
@@ -201,7 +201,7 @@ int telephony_network_get_rssi(telephony_h handle, telephony_network_rssi_e *rss
 /**
  * @brief Gets the roaming state.
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -227,7 +227,7 @@ int telephony_network_get_roaming_status(telephony_h handle, bool *status);
 /**
  * @brief Gets the MCC (Mobile Country Code) of the current registered network.
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -255,7 +255,7 @@ int telephony_network_get_mcc(telephony_h handle, char **mcc);
 /**
  * @brief Gets the MNC (Mobile Network Code) of the current registered network.
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -283,7 +283,7 @@ int telephony_network_get_mnc(telephony_h handle, char **mnc);
 /**
  * @brief Gets the name of the current registered network.
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -310,7 +310,7 @@ int telephony_network_get_network_name(telephony_h handle, char **network_name);
 /**
  * @brief Gets the network service type of the current registered network.
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -387,7 +387,7 @@ int telephony_network_get_network_name_option(telephony_h handle,
 /**
  * @brief Gets the current network state of the telephony service.
  *
- * @since_tizen 2.3
+ * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *

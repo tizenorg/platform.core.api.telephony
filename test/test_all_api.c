@@ -27,23 +27,26 @@
 #define LOG_TAG "CAPI_TELEPHONY_TEST"
 
 static GMainLoop *event_loop;
+static telephony_handle_list_s handle_list;
 
 static int network_noti_tbl[] = {
 	TELEPHONY_NOTI_NETWORK_SERVICE_STATE,
 	TELEPHONY_NOTI_NETWORK_CELLID,
 	TELEPHONY_NOTI_NETWORK_ROAMING_STATUS,
 	TELEPHONY_NOTI_NETWORK_SIGNALSTRENGTH_LEVEL,
-	TELEPHONY_NOTI_NETWORK_SPN_NAME,
 	TELEPHONY_NOTI_NETWORK_NETWORK_NAME,
-	TELEPHONY_NOTI_NETWORK_NAME_OPTION,
 	TELEPHONY_NOTI_NETWORK_PS_TYPE,
 	TELEPHONY_NOTI_NETWORK_DEFAULT_DATA_SUBSCRIPTION,
 	TELEPHONY_NOTI_NETWORK_DEFAULT_SUBSCRIPTION
 };
 
 static int call_noti_tbl[] = {
-	TELEPHONY_NOTI_VOICE_CALL_STATE,
-	TELEPHONY_NOTI_VIDEO_CALL_STATE,
+	TELEPHONY_NOTI_VOICE_CALL_STATUS_IDLE,
+	TELEPHONY_NOTI_VOICE_CALL_STATUS_ACTIVE,
+	TELEPHONY_NOTI_VOICE_CALL_STATUS_HELD,
+	TELEPHONY_NOTI_VOICE_CALL_STATUS_DIALING,
+	TELEPHONY_NOTI_VOICE_CALL_STATUS_ALERTING,
+	TELEPHONY_NOTI_VOICE_CALL_STATUS_INCOMING,
 	TELEPHONY_NOTI_CALL_PREFERRED_VOICE_SUBSCRIPTION
 };
 
@@ -64,8 +67,6 @@ static const char *_mapping_sim_state(telephony_sim_state_e sim_state)
 static void sim_noti_cb(telephony_h handle, telephony_noti_e noti_id, void *data, void *user_data)
 {
 	LOGI("Noti!! SIM status: [%d]", *(int *)data);
-
-//	g_main_loop_quit(event_loop);
 }
 
 static const char *_mapping_service_state(telephony_network_service_state_e service_state)
@@ -175,14 +176,8 @@ static void network_noti_cb(telephony_h handle, telephony_noti_e noti_id, void *
 	case TELEPHONY_NOTI_NETWORK_SIGNALSTRENGTH_LEVEL:
 		LOGI("Noti!!! Signal strength: [%d]", *(int *)data);
 		break;
-	case TELEPHONY_NOTI_NETWORK_SPN_NAME:
-		LOGI("Noti!!! SPN Name: [%s]", *(int *)data);
-		break;
 	case TELEPHONY_NOTI_NETWORK_NETWORK_NAME:
 		LOGI("Noti!!! Network Name: [%s]", *(int *)data);
-		break;
-	case TELEPHONY_NOTI_NETWORK_NAME_OPTION:
-		LOGI("Noti!!! Name Option: [%s]", _mapping_name_option(*(int *)data));
 		break;
 	case TELEPHONY_NOTI_NETWORK_PS_TYPE:
 		LOGI("Noti!!! PS Type: [%s]", _mapping_ps_type(*(int *)data));
@@ -198,7 +193,6 @@ static void network_noti_cb(telephony_h handle, telephony_noti_e noti_id, void *
 		break;
 	}
 
-//	g_main_loop_quit(event_loop);
 }
 
 static const char *_mapping_call_state(telephony_call_state_e call_state)
@@ -234,27 +228,79 @@ static const char *_mapping_preferred_voice_sub(telephony_call_preferred_voice_s
 
 static void call_noti_cb(telephony_h handle, telephony_noti_e noti_id, void *data, void *user_data)
 {
-	switch (noti_id) {
-	case TELEPHONY_NOTI_VOICE_CALL_STATE:
-		LOGI("Noti!!! Voice Call state: [%s]", _mapping_call_state(*(int *)data));
-		break;
-	case TELEPHONY_NOTI_VIDEO_CALL_STATE:
-		LOGI("Noti!!! Video Call state: [%s]", _mapping_call_state(*(int *)data));
-		break;
-	case TELEPHONY_NOTI_CALL_PREFERRED_VOICE_SUBSCRIPTION:
+	int ret_value;
+	telephony_call_h *call_list;
+	unsigned int count = 0;
+
+	if (noti_id == TELEPHONY_NOTI_CALL_PREFERRED_VOICE_SUBSCRIPTION) {
 		LOGI("Noti!!! Preferred Voice Subscription: [%d]", *(int *)data);
+		return;
+	}
+
+	switch (noti_id) {
+	case TELEPHONY_NOTI_VOICE_CALL_STATUS_IDLE:
+		LOGI("Noti!!! Voice Call Status Idle!!! [%d]", *(int *)data);
+		break;
+	case TELEPHONY_NOTI_VOICE_CALL_STATUS_ACTIVE:
+		LOGI("Noti!!! Voice Call Status Active!!! [%d]", *(int *)data);
+		break;
+	case TELEPHONY_NOTI_VOICE_CALL_STATUS_HELD:
+		LOGI("Noti!!! Voice Call Status Held!!! [%d]", *(int *)data);
+		break;
+	case TELEPHONY_NOTI_VOICE_CALL_STATUS_DIALING:
+		LOGI("Noti!!! Voice Call Status Dialing!!! [%d]", *(int *)data);
+		break;
+	case TELEPHONY_NOTI_VOICE_CALL_STATUS_ALERTING:
+		LOGI("Noti!!! Voice Call Status Alerting!!! [%d]", *(int *)data);
+		break;
+	case TELEPHONY_NOTI_VOICE_CALL_STATUS_INCOMING:
+		LOGI("Noti!!! Voice Call Status Incoming!!! [%d]", *(int *)data);
 		break;
 	default:
 		LOGE("Unknown noti");
 		break;
 	}
 
-//	g_main_loop_quit(event_loop);
+	ret_value = telephony_call_get_call_list(handle_list.handle[0], &count, &call_list);
+	if (ret_value != TELEPHONY_ERROR_NONE) {
+		LOGE("telephony_call_get_call_list() failed!!!zz [0x%x]", ret_value);
+	} else {
+		int i;
+		unsigned int handle_id = 0;
+		char *number = NULL;
+		telephony_call_type_e type = 0;
+		telephony_call_status_e status = 0;
+		telephony_call_direction_e direction = 0;
+		bool conf_status = 0;
+
+		for (i = 0; i < count; i++) {
+			telephony_call_get_handle_id(call_list[i], &handle_id);
+			telephony_call_get_number(call_list[i], &number);
+			telephony_call_get_type(call_list[i], &type);
+			telephony_call_get_status(call_list[i], &status);
+			telephony_call_get_direction(call_list[i], &direction);
+			telephony_call_get_conference_status(call_list[i], &conf_status);
+			LOGI("id[%d] number[%s] type[%s] status[%s] direction[%s] conference_status[%s]",
+				handle_id, number,
+				type == TELEPHONY_CALL_TYPE_VOICE ? "VOICE" :
+				type == TELEPHONY_CALL_TYPE_VIDEO ? "VIDEO" : "E911",
+				status == TELEPHONY_CALL_STATUS_IDLE ? "IDLE" :
+				status == TELEPHONY_CALL_STATUS_ACTIVE ? "ACTVIE" :
+				status == TELEPHONY_CALL_STATUS_HELD ? "HELD" :
+				status == TELEPHONY_CALL_STATUS_DIALING ? "DIALING" :
+				status == TELEPHONY_CALL_STATUS_ALERTING ? "ALERTING" :
+				status == TELEPHONY_CALL_STATUS_INCOMING ? "INCOMING" : "UNKNOWN",
+				direction == TELEPHONY_CALL_DIRECTION_MO ? "MO" : "MT",
+				conf_status ? "TRUE" : "FALSE");
+			free(number);
+		}
+		telephony_call_release_call_list(count, &call_list);
+	}
+
 }
 
 int main()
 {
-	telephony_handle_list_s handle_list;
 	int ret_value, i;
 
 	/* SIM value */
@@ -266,6 +312,7 @@ int main()
 	unsigned int app_list = 0;
 	char *subscriber_number = NULL;
 	char *subscriber_id = NULL;
+	bool is_changed = FALSE;
 
 	/* Network value */
 	int cell_id = 0;
@@ -290,7 +337,7 @@ int main()
 
 	/* Modem value */
 	char *imei = NULL;
-	telephony_modem_power_status_e status = 0;
+	telephony_modem_power_status_e power_status = 0;
 
 	/* Initialize handle */
 	ret_value = telephony_init(&handle_list);
@@ -302,6 +349,12 @@ int main()
 	LOGI("handle count: [%d]", handle_list.count);
 
 	/* SIM API */
+	ret_value = telephony_sim_is_changed(handle_list.handle[0], &is_changed);
+	if (ret_value != TELEPHONY_ERROR_NONE)
+		LOGE("telephony_sim_is_changed() failed!!! [%d]", ret_value);
+	else
+		LOGI("SIM is [%s]", is_changed ? "Changed" : "Not changed");
+
 	ret_value = telephony_sim_get_operator(handle_list.handle[0], &operator);
 	if (ret_value != TELEPHONY_ERROR_NONE) {
 		LOGE("telephony_sim_get_operator() failed!!! [%d]", ret_value);
@@ -335,25 +388,21 @@ int main()
 	}
 
 	ret_value = telephony_sim_get_state(handle_list.handle[0], &sim_state);
-	if (ret_value != TELEPHONY_ERROR_NONE) {
+	if (ret_value != TELEPHONY_ERROR_NONE)
 		LOGE("telephony_sim_get_state() failed!!! [%d]", ret_value);
-	} else {
+	else
 		LOGI("SIM state is [%s]", _mapping_sim_state(sim_state));
-	}
 
 	ret_value = telephony_sim_get_application_list(handle_list.handle[0], &app_list);
 	if (ret_value != TELEPHONY_ERROR_NONE) {
 		LOGE("telephony_sim_get_type() failed!!! [%d]", ret_value);
 	} else {
-		if (app_list & TELEPHONY_SIM_APP_TYPE_SIM) {
+		if (app_list & TELEPHONY_SIM_APP_TYPE_SIM)
 			LOGI("Sim type [SIM]");
-		}
-		if (app_list & TELEPHONY_SIM_APP_TYPE_USIM) {
+		if (app_list & TELEPHONY_SIM_APP_TYPE_USIM)
 			LOGI("Sim type [USIM]");
-		}
-		if (app_list & TELEPHONY_SIM_APP_TYPE_CSIM) {
+		if (app_list & TELEPHONY_SIM_APP_TYPE_CSIM)
 			LOGI("Sim type [CSIM]");
-		}
 	}
 
 	ret_value = telephony_sim_get_subscriber_number(handle_list.handle[0], &subscriber_number);
@@ -374,18 +423,16 @@ int main()
 
 	/* Network API */
 	ret_value = telephony_network_get_cell_id(handle_list.handle[0], &cell_id);
-	if (ret_value != TELEPHONY_ERROR_NONE) {
+	if (ret_value != TELEPHONY_ERROR_NONE)
 		LOGE("telephony_network_get_cell_id() failed!!! [%d]", ret_value);
-	} else {
+	else
 		LOGI("Cell ID is [%d]", cell_id);
-	}
 
 	ret_value = telephony_network_get_lac(handle_list.handle[0], &lac);
-	if (ret_value != TELEPHONY_ERROR_NONE) {
+	if (ret_value != TELEPHONY_ERROR_NONE)
 		LOGE("telephony_network_get_lac() failed!!! [%d]", ret_value);
-	} else {
+	else
 		LOGI("Location Area Code is [%d]", lac);
-	}
 
 	ret_value = telephony_network_get_mcc(handle_list.handle[0], &mcc);
 	if (ret_value != TELEPHONY_ERROR_NONE) {
@@ -412,82 +459,71 @@ int main()
 	}
 
 	ret_value = telephony_network_get_network_name_option(handle_list.handle[0], &network_name_option);
-	if (ret_value != TELEPHONY_ERROR_NONE) {
+	if (ret_value != TELEPHONY_ERROR_NONE)
 		LOGE("telephony_network_get_network_name_option() failed!!! [%d]", ret_value);
-	} else {
+	else
 		LOGI("Network_name_option name is [%s]", _mapping_name_option(network_name_option));
-	}
 
 	ret_value = telephony_network_get_roaming_status(handle_list.handle[0], &roaming_status);
-	if (ret_value != TELEPHONY_ERROR_NONE) {
+	if (ret_value != TELEPHONY_ERROR_NONE)
 		LOGE("telephony_network_get_roaming_status() failed!!! [%d]", ret_value);
-	} else {
+	else
 		LOGI("Network Roaming: [%s]", roaming_status ? "ON" : "OFF");
-	}
 
 	ret_value = telephony_network_get_rssi(handle_list.handle[0], &rssi);
-	if (ret_value != TELEPHONY_ERROR_NONE) {
+	if (ret_value != TELEPHONY_ERROR_NONE)
 		LOGE("telephony_network_get_rssi() failed!!! [%d]", ret_value);
-	} else {
+	else
 		LOGI("Received Signal Strength Indicator is [%d]", rssi);
-	}
 
 	ret_value = telephony_network_get_service_state(handle_list.handle[0], &service_state);
-	if (ret_value != TELEPHONY_ERROR_NONE) {
+	if (ret_value != TELEPHONY_ERROR_NONE)
 		LOGE("telephony_network_get_service_state() failed!!! [%d]", ret_value);
-	} else {
+	else
 		LOGI("Network service state is [%s]", _mapping_service_state(service_state));
-	}
 
 	ret_value = telephony_network_get_type(handle_list.handle[0], &network_type);
-	if (ret_value != TELEPHONY_ERROR_NONE) {
+	if (ret_value != TELEPHONY_ERROR_NONE)
 		LOGE("telephony_network_get_type() failed!!! [%d]", ret_value);
-	} else {
+	else
 		LOGI("Network type is [%s]", _mapping_network_type(network_type));
-	}
 
 	ret_value = telephony_network_get_ps_type(handle_list.handle[0], &ps_type);
-	if (ret_value != TELEPHONY_ERROR_NONE) {
+	if (ret_value != TELEPHONY_ERROR_NONE)
 		LOGE("telephony_network_get_ps_type() failed!!! [%d]", ret_value);
-	} else {
+	else
 		LOGI("PS type is [%s]", _mapping_ps_type(ps_type));
-	}
 
 	ret_value = telephony_network_get_default_data_subscription(handle_list.handle[0], &default_data_sub);
-	if (ret_value != TELEPHONY_ERROR_NONE) {
+	if (ret_value != TELEPHONY_ERROR_NONE)
 		LOGE("telephony_network_get_default_data_subscription() failed!!! [%d]", ret_value);
-	} else {
+	else
 		LOGI("Default data subscription is [%s]", _mapping_default_data_sub(default_data_sub));
-	}
 
 	ret_value = telephony_network_get_default_subscription(handle_list.handle[0], &default_sub);
-	if (ret_value != TELEPHONY_ERROR_NONE) {
+	if (ret_value != TELEPHONY_ERROR_NONE)
 		LOGE("telephony_network_get_default_subscription() failed!!! [%d]", ret_value);
-	} else {
+	else
 		LOGI("Default subscription is [%s]", _mapping_default_sub(default_sub));
-	}
 
 	/* Call API */
 	ret_value = telephony_call_get_voice_call_state(handle_list.handle[0], &call_state);
-	if (ret_value != TELEPHONY_ERROR_NONE) {
+	if (ret_value != TELEPHONY_ERROR_NONE)
 		LOGE("telephony_call_get_voice_call_state() failed!!! [%d]", ret_value);
-	} else {
+	else
 		LOGI("Voice Call state is [%s]", _mapping_call_state(call_state));
-	}
 
 	ret_value = telephony_call_get_video_call_state(handle_list.handle[0], &call_state);
-	if (ret_value != TELEPHONY_ERROR_NONE) {
+	if (ret_value != TELEPHONY_ERROR_NONE)
 		LOGE("telephony_call_get_video_call_state() failed!!! [%d]", ret_value);
-	} else {
+	else
 		LOGI("Video Call state is [%s]", _mapping_call_state(call_state));
-	}
 
 	ret_value = telephony_call_get_preferred_voice_subscription(handle_list.handle[0], &call_sub);
-	if (ret_value != TELEPHONY_ERROR_NONE) {
+	if (ret_value != TELEPHONY_ERROR_NONE)
 		LOGE("telephony_call_get_preferred_voice_subscription() failed!!! [%d]", ret_value);
-	} else {
+	else
 		LOGI("Preferred voice subscription is [%s]", _mapping_preferred_voice_sub(call_sub));
-	}
 
 	ret_value = telephony_call_get_call_list(handle_list.handle[0], &count, &call_list);
 	if (ret_value != TELEPHONY_ERROR_NONE) {
@@ -496,7 +532,7 @@ int main()
 		unsigned int handle_id = 0;
 		char *number = NULL;
 		telephony_call_type_e type = 0;
-		telephony_call_state_e state = 0;
+		telephony_call_status_e status = 0;
 		telephony_call_direction_e direction = 0;
 		bool conf_status = 0;
 
@@ -504,11 +540,11 @@ int main()
 			telephony_call_get_handle_id(call_list[i], &handle_id);
 			telephony_call_get_number(call_list[i], &number);
 			telephony_call_get_type(call_list[i], &type);
-			telephony_call_get_state(call_list[i], &state);
+			telephony_call_get_status(call_list[i], &status);
 			telephony_call_get_direction(call_list[i], &direction);
 			telephony_call_get_conference_status(call_list[i], &conf_status);
-			LOGI("handle_id[%d] number[%s] type[%d] state[%d] direction[%d] conf_status[%d]",
-				handle_id, number, type, state, direction, conf_status);
+			LOGI("handle_id[%d] number[%s] type[%d] status[%d] direction[%d] conf_status[%d]",
+				handle_id, number, type, status, direction, conf_status);
 			free(number);
 		}
 		telephony_call_release_call_list(count, &call_list);
@@ -523,25 +559,24 @@ int main()
 		free(imei);
 	}
 
-	ret_value = telephony_modem_get_power_status(handle_list.handle[0], &status);
-	if (ret_value != TELEPHONY_ERROR_NONE) {
+	ret_value = telephony_modem_get_power_status(handle_list.handle[0], &power_status);
+	if (ret_value != TELEPHONY_ERROR_NONE)
 		LOGE("telephony_modem_get_power_status() failed!!! [%d]", ret_value);
-	} else {
-		LOGI("Modem power status is [%d] (0=on,1=off,2=rst,3=low)", status);
-	}
+	else
+		LOGI("Modem power status is [%d] (0=on,1=off,2=rst,3=low)", power_status);
 
 	/* set_noti_cb */
 	ret_value = telephony_set_noti_cb(handle_list.handle[0], TELEPHONY_NOTI_SIM_STATUS, sim_noti_cb, NULL);
 	if (ret_value != TELEPHONY_ERROR_NONE)
 		LOGE("Set noti failed!!!");
 
-	for (i = 0; i < 4; i++) {
+	for (i = 0; i < (sizeof(network_noti_tbl) / sizeof(int)); i++) {
 		ret_value = telephony_set_noti_cb(handle_list.handle[0], network_noti_tbl[i], network_noti_cb, NULL);
 		if (ret_value != TELEPHONY_ERROR_NONE)
 			LOGE("Set noti failed!!!");
 	}
 
-	for (i = 0; i < 3; i++) {
+	for (i = 0; i < (sizeof(call_noti_tbl) / sizeof(int)); i++) {
 		ret_value = telephony_set_noti_cb(handle_list.handle[0], call_noti_tbl[i], call_noti_cb, NULL);
 		if (ret_value != TELEPHONY_ERROR_NONE)
 			LOGE("Set noti failed!!!");
@@ -555,22 +590,21 @@ int main()
 	if (ret_value != TELEPHONY_ERROR_NONE)
 		LOGE("Unset noti failed!!!");
 
-	for (i = 0; i < 4; i++) {
+	for (i = 0; i < (sizeof(network_noti_tbl) / sizeof(int)); i++) {
 		ret_value = telephony_unset_noti_cb(handle_list.handle[0], network_noti_tbl[i]);
 		if (ret_value != TELEPHONY_ERROR_NONE)
 			LOGE("Unset noti failed!!!");
 	}
 
-	for (i = 0; i < 3; i++) {
+	for (i = 0; i < (sizeof(call_noti_tbl) / sizeof(int)); i++) {
 		ret_value = telephony_unset_noti_cb(handle_list.handle[0], call_noti_tbl[i]);
 		if (ret_value != TELEPHONY_ERROR_NONE)
 			LOGE("Unset noti failed!!!");
 	}
 
 	ret_value = telephony_deinit(&handle_list);
-	if (ret_value != TELEPHONY_ERROR_NONE) {
+	if (ret_value != TELEPHONY_ERROR_NONE)
 		LOGE("Deinitialize failed!!!");
-	}
 
 	return 0;
 }

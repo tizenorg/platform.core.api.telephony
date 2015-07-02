@@ -27,17 +27,6 @@
 #include "telephony_modem.h"
 #include "telephony_private.h"
 
-#ifdef LOG_TAG
-#undef LOG_TAG
-#endif
-#define LOG_TAG "CAPI_TELEPHONY"
-
-#define CHECK_INPUT_PARAMETER(arg) \
-	if (arg == NULL) { \
-		LOGE("INVALID_PARAMETER"); \
-		return TELEPHONY_ERROR_INVALID_PARAMETER; \
-	}
-
 int telephony_modem_get_imei(telephony_h handle, char **imei)
 {
 	GVariant *gv = NULL;
