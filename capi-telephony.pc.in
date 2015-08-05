@@ -3,7 +3,7 @@
 
 prefix=@PREFIX@
 exec_prefix=/usr
-libdir=@LIBDIR@
+libdir=/usr/lib
 includedir=/usr/include/telephony
 
 Name: @PC_NAME@
