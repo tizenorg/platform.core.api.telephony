@@ -293,10 +293,16 @@ static void call_noti_cb(telephony_h handle, telephony_noti_e noti_id, void *dat
 				direction == TELEPHONY_CALL_DIRECTION_MO ? "MO" : "MT",
 				conf_status ? "TRUE" : "FALSE");
 			free(number);
+			number = NULL;
 		}
 		telephony_call_release_call_list(count, &call_list);
 	}
 
+}
+
+static void on_telephony_state_changed_cb(telephony_state_e state, void *user_data)
+{
+	LOGI("telephony state value : [%d]", state);
 }
 
 int main()
@@ -338,6 +344,9 @@ int main()
 	/* Modem value */
 	char *imei = NULL;
 	telephony_modem_power_status_e power_status = 0;
+
+	/* Ready */
+	telephony_state_e ready_state = 0;
 
 	/* Initialize handle */
 	ret_value = telephony_init(&handle_list);
@@ -546,6 +555,7 @@ int main()
 			LOGI("handle_id[%d] number[%s] type[%d] status[%d] direction[%d] conf_status[%d]",
 				handle_id, number, type, status, direction, conf_status);
 			free(number);
+			number = NULL;
 		}
 		telephony_call_release_call_list(count, &call_list);
 	}
@@ -582,6 +592,18 @@ int main()
 			LOGE("Set noti failed!!!");
 	}
 
+	ret_value = telephony_get_state(&ready_state);
+	if (ret_value != TELEPHONY_ERROR_NONE)
+		LOGI("telephony_get_state() failed!!!");
+	else
+		LOGI("telephony_get_state() succeed ! : %s", ready_state ? "TRUE" : "FALSE");
+
+	ret_value = telephony_set_state_changed_cb(on_telephony_state_changed_cb, NULL);
+	if (ret_value != TELEPHONY_ERROR_NONE)
+		LOGI("telephony_set_state_changed_cb() failed!!!");
+	else
+		LOGI("telephony_set_state_changed_cb() succeed!!");
+
 	LOGI("If telephony status is changed, then callback function will be called");
 	event_loop = g_main_loop_new(NULL, FALSE);
 	g_main_loop_run(event_loop);
@@ -605,6 +627,12 @@ int main()
 	ret_value = telephony_deinit(&handle_list);
 	if (ret_value != TELEPHONY_ERROR_NONE)
 		LOGE("Deinitialize failed!!!");
+
+	ret_value = telephony_unset_state_changed_cb(on_telephony_state_changed_cb);
+	if (ret_value != TELEPHONY_ERROR_NONE)
+		LOGE("telephony_unset_state_changed_cb() failed!!!");
+	else
+		LOGD("telephony_unset_state_changed_cb() succeed!!");
 
 	return 0;
 }

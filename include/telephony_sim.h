@@ -279,7 +279,7 @@ int telephony_sim_get_application_list(telephony_h handle, unsigned int *app_lis
  */
 int telephony_sim_get_subscriber_number(telephony_h handle, char **subscriber_number);
 
-/*
+/**
  * @brief Gets the Subscriber ID.
  * @details This function gets subscriber ID encoded.
  *

@@ -201,6 +201,82 @@ int telephony_init(telephony_handle_list_s *list);
 int telephony_deinit(telephony_handle_list_s *list);
 
 /**
+ * @brief Enumeration for the telephony state.
+ * @since_tizen 2.4
+ */
+typedef enum {
+    TELEPHONY_STATE_NOT_READY, /**< Telephony state is not ready */
+    TELEPHONY_STATE_READY, /**< Telephony state is ready */
+} telephony_state_e;
+
+/**
+ * @brief Called for the telephony state changes.
+ * @since_tizen 2.4
+ */
+typedef void (*telephony_state_changed_cb)(telephony_state_e state, void *user_data);
+
+/**
+ * @brief Acquires the telephony state value
+ *
+ * @since_tizen 2.4
+ *
+ * @param[out] state The state value of telephony.
+ *
+ * @return @c 0 on success,
+ *         otherwise a negative error value
+ *
+ * @retval #TELEPHONY_ERROR_NONE              Successful
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
+ * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
+ *
+ * @see telephony_set_state_changed_cb()
+ * @see telephony_unset_state_changed_cb()
+ */
+int telephony_get_state(telephony_state_e *state);
+
+/**
+ * @brief Sets a callback function to be invoked when the telephony state changes.
+ *
+ * @since_tizen 2.4
+ *
+ * @param[in] callback The callback to be invoked when the telephony state changes
+ * @param[in] user_data The user data passed to the callback function
+ *
+ * @return @c 0 on success,
+ *         otherwise a negative error value
+ *
+ * @retval #TELEPHONY_ERROR_NONE              Successful
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
+ * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
+ *
+ * @post telephony_state_changed_cb() will be invoked.
+ *
+ * @see telephony_unset_state_changed_cb()
+ */
+int telephony_set_state_changed_cb(telephony_state_changed_cb callback, void *user_data);
+
+/**
+ * @brief Unsets a telephony state callback function.
+ *
+ * @since_tizen 2.4
+ *
+ * @param[in] callback The callback to unset when the telephony state changes
+ *
+ * @return @c 0 on success,
+ *         otherwise a negative error value
+ *
+ * @retval #TELEPHONY_ERROR_NONE              Successful
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
+ * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
+ *
+ * @see telephony_set_state_changed_cb()
+ */
+int telephony_unset_state_changed_cb(telephony_state_changed_cb callback);
+
+/**
  * @}
  */
 

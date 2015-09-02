@@ -495,3 +495,48 @@ int telephony_deinit(telephony_handle_list_s *list)
 
 	return TELEPHONY_ERROR_NONE;
 }
+
+int telephony_get_state(telephony_state_e *state)
+{
+	int res = 0;
+	int value = 0;
+
+	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
+	CHECK_INPUT_PARAMETER(state);
+
+	res = tel_get_ready_state(&value);
+	if (res != TAPI_API_SUCCESS)
+		return TELEPHONY_ERROR_OPERATION_FAILED;
+
+	*state = value;
+
+	return TELEPHONY_ERROR_NONE;
+}
+
+int telephony_set_state_changed_cb(telephony_state_changed_cb callback, void *user_data)
+{
+	int res = 0;
+
+	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
+	CHECK_INPUT_PARAMETER(callback);
+
+	res = tel_register_ready_state_cb((tapi_state_cb)callback, user_data);
+	if (res != TAPI_API_SUCCESS)
+		return TELEPHONY_ERROR_OPERATION_FAILED;
+
+	return TELEPHONY_ERROR_NONE;
+}
+
+int telephony_unset_state_changed_cb(telephony_state_changed_cb callback)
+{
+	int res = 0;
+
+	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
+	CHECK_INPUT_PARAMETER(callback);
+
+	res = tel_deregister_ready_state_cb((tapi_state_cb)callback);
+	if (res != TAPI_API_SUCCESS)
+		return TELEPHONY_ERROR_OPERATION_FAILED;
+
+	return TELEPHONY_ERROR_NONE;
+}
