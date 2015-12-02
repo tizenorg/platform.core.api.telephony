@@ -16,13 +16,15 @@ Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
 
 %description
+Telephony public API library
 
 %package devel
 Summary:  Telephony Core API
-Group:    TO_BE/FILLED_IN
+Group:    Developement/Libraries
 Requires: %{name} = %{version}-%{release}
 
 %description devel
+Telephony public API library (devel)
 
 %prep
 %setup -q
