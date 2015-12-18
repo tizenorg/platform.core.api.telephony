@@ -57,7 +57,7 @@ int telephony_modem_get_imei(telephony_h handle, char **imei)
 		}
 	} else {
 		LOGE("g_dbus_conn failed. error (%s)", gerr->message);
-		if (strstr(gerr->message, "No access rights")) {
+		if (strstr(gerr->message, "AccessDenied")) {
 			LOGE("PERMISSION_DENIED");
 			error = TELEPHONY_ERROR_PERMISSION_DENIED;
 		}

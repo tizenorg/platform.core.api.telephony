@@ -37,7 +37,7 @@
 #define DBUS_SIM_LOCKED "SIM LOCKED"
 #define DBUS_SIM_NOT_READY "SIM NOT READY"
 #define DBUS_SIM_RESPONSE_DATA_ERROR "SIM RESPONSE DATA ERROR"
-#define DBUS_SIM_ACCESS_DENIED "No access rights"
+#define DBUS_SIM_ACCESS_DENIED "AccessDenied"
 
 #define GET_SIM_STATUS(tapi_h, sim_card_state) { \
 	int card_changed = 0; \
