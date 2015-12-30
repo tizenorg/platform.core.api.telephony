@@ -305,13 +305,13 @@ int telephony_sim_get_state(telephony_h handle, telephony_sim_state_e *sim_state
 	switch (sim_card_state) {
 	case TAPI_SIM_STATUS_CARD_ERROR:
 	case TAPI_SIM_STATUS_CARD_NOT_PRESENT:
-	case TAPI_SIM_STATUS_CARD_BLOCKED:
 	case TAPI_SIM_STATUS_CARD_REMOVED:
 	case TAPI_SIM_STATUS_CARD_CRASHED:
 		*sim_state = TELEPHONY_SIM_STATE_UNAVAILABLE;
 		break;
 	case TAPI_SIM_STATUS_SIM_PIN_REQUIRED:
 	case TAPI_SIM_STATUS_SIM_PUK_REQUIRED:
+	case TAPI_SIM_STATUS_CARD_BLOCKED:
 	case TAPI_SIM_STATUS_SIM_NCK_REQUIRED:
 	case TAPI_SIM_STATUS_SIM_NSCK_REQUIRED:
 	case TAPI_SIM_STATUS_SIM_SPCK_REQUIRED:
@@ -456,6 +456,140 @@ int telephony_sim_get_subscriber_id(telephony_h handle, char **subscriber_id)
 			LOGE("get_subscriber_id: OPERATION_FAILED");
 			error_code = TELEPHONY_ERROR_OPERATION_FAILED;
 		}
+	}
+
+	return error_code;
+}
+
+int telephony_sim_get_lock_state(telephony_h handle, telephony_sim_lock_state_e *lock_state)
+{
+	TelSimCardStatus_t sim_card_state;
+	int error_code = TELEPHONY_ERROR_NONE;
+	TapiHandle *tapi_h;
+
+	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
+	CHECK_INPUT_PARAMETER(handle);
+	tapi_h = ((telephony_data *)handle)->tapi_h;
+	CHECK_INPUT_PARAMETER(tapi_h);
+	CHECK_INPUT_PARAMETER(lock_state);
+	GET_SIM_STATUS(tapi_h, sim_card_state);
+
+	switch (sim_card_state) {
+	case TAPI_SIM_STATUS_SIM_PIN_REQUIRED:
+		*lock_state = TELEPHONY_SIM_LOCK_STATE_PIN_REQUIRED;
+		break;
+	case TAPI_SIM_STATUS_SIM_PUK_REQUIRED:
+		*lock_state = TELEPHONY_SIM_LOCK_STATE_PUK_REQUIRED;
+		break;
+	case TAPI_SIM_STATUS_CARD_BLOCKED:
+		*lock_state = TELEPHONY_SIM_LOCK_STATE_PERM_LOCKED;
+		break;
+	case TAPI_SIM_STATUS_SIM_NCK_REQUIRED:
+		*lock_state = TELEPHONY_SIM_LOCK_STATE_NCK_REQUIRED;
+		break;
+	case TAPI_SIM_STATUS_SIM_NSCK_REQUIRED:
+		*lock_state = TELEPHONY_SIM_LOCK_STATE_NSCK_REQUIRED;
+		break;
+	case TAPI_SIM_STATUS_SIM_SPCK_REQUIRED:
+		*lock_state = TELEPHONY_SIM_LOCK_STATE_SPCK_REQUIRED;
+		break;
+	case TAPI_SIM_STATUS_SIM_CCK_REQUIRED:
+		*lock_state = TELEPHONY_SIM_LOCK_STATE_CCK_REQUIRED;
+		break;
+	case TAPI_SIM_STATUS_SIM_LOCK_REQUIRED:
+		*lock_state = TELEPHONY_SIM_LOCK_STATE_PHONE_REQUIRED;
+		break;
+	default:
+		*lock_state = TELEPHONY_SIM_LOCK_STATE_UNKNOWN;
+		break;
+	}
+
+	return error_code;
+}
+
+int telephony_sim_get_gid1(telephony_h handle, char **gid1)
+{
+	int error_code = TELEPHONY_ERROR_NONE;
+	TelSimCardStatus_t sim_card_state = TAPI_SIM_STATUS_UNKNOWN;
+	TapiHandle *tapi_h;
+
+	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
+	CHECK_INPUT_PARAMETER(handle);
+	tapi_h = ((telephony_data *)handle)->tapi_h;
+	CHECK_INPUT_PARAMETER(tapi_h);
+	CHECK_INPUT_PARAMETER(gid1);
+	GET_SIM_STATUS(tapi_h, sim_card_state);
+
+	*gid1 = NULL;
+	if (sim_card_state != TAPI_SIM_STATUS_SIM_INIT_COMPLETED) {
+		error_code = TELEPHONY_ERROR_SIM_NOT_AVAILABLE;
+	} else {
+		GError *gerr = NULL;
+		TelSimAccessResult_t result = TAPI_SIM_ACCESS_SUCCESS;
+		GVariant *sync_gv = NULL;
+		GVariant *gid_gv = NULL;
+		GVariant *inner_gv = NULL;
+		GVariantIter *iter = NULL;
+		TelSimGid_t tel_gid;
+		int i = 0;
+		guchar value = 0;
+
+		sync_gv = g_dbus_connection_call_sync(tapi_h->dbus_connection,
+			DBUS_TELEPHONY_SERVICE, tapi_h->path, DBUS_TELEPHONY_SIM_INTERFACE,
+			"GetGID", NULL, NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &gerr);
+
+		if (sync_gv) {
+			g_variant_get(sync_gv, "(ii@v)", &result, &tel_gid.GroupIdentifierLen, &gid_gv);
+			if (result == TAPI_SIM_ACCESS_SUCCESS) {
+				inner_gv = g_variant_get_variant(gid_gv);
+				g_variant_get(inner_gv, "ay", &iter);
+				while (g_variant_iter_loop(iter, "y", &value) && i < TAPI_SIM_GROUP_IDENTIFIER_LEN_MAX) {
+					tel_gid.szGroupIdentifier[i] = value;
+					i++;
+				}
+				*gid1 = g_malloc0(tel_gid.GroupIdentifierLen * 2 + 1);
+				for (i = 0; i < tel_gid.GroupIdentifierLen; i++) {
+					snprintf(*gid1 + (i * 2), 3, "%02x", tel_gid.szGroupIdentifier[i]);
+				}
+				g_variant_iter_free(iter);
+				g_variant_unref(inner_gv);
+				g_variant_unref(gid_gv);
+			} else {
+				error_code = TELEPHONY_ERROR_OPERATION_FAILED;
+			}
+		} else {
+			LOGE("g_dbus_conn failed. error (%s)", gerr->message);
+			error_code = _convert_dbus_errmsg_to_sim_error(gerr->message);
+			g_error_free(gerr);
+		}
+	}
+
+	return error_code;
+}
+
+int telephony_sim_get_call_forwarding_state(telephony_h handle, bool *call_forwarding_state)
+{
+	int error_code;
+	TapiHandle *tapi_h;
+	int tel_state;
+
+	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
+	CHECK_INPUT_PARAMETER(handle);
+	tapi_h = ((telephony_data *)handle)->tapi_h;
+	CHECK_INPUT_PARAMETER(tapi_h);
+	CHECK_INPUT_PARAMETER(call_forwarding_state);
+
+	error_code = tel_get_property_int(tapi_h, TAPI_PROP_SIM_CALL_FORWARD_STATE, &tel_state);
+	if (error_code == TAPI_API_SUCCESS) {
+		*call_forwarding_state = (bool)tel_state;
+		LOGI("call_forwarding_state: [%s]", *call_forwarding_state ? "TRUE" : "FALSE");
+		error_code = TELEPHONY_ERROR_NONE;
+	} else if (error_code == TAPI_API_ACCESS_DENIED) {
+		LOGE("PERMISSION_DENIED");
+		error_code = TELEPHONY_ERROR_PERMISSION_DENIED;
+	} else {
+		LOGE("OPERATION_FAILED");
+		error_code = TELEPHONY_ERROR_OPERATION_FAILED;
 	}
 
 	return error_code;

@@ -29,6 +29,11 @@
 static GMainLoop *event_loop;
 static telephony_handle_list_s handle_list;
 
+static int sim_noti_tbl[] = {
+	TELEPHONY_NOTI_SIM_STATUS,
+	TELEPHONY_NOTI_SIM_CALL_FORWARDING_STATE
+};
+
 static int network_noti_tbl[] = {
 	TELEPHONY_NOTI_NETWORK_SERVICE_STATE,
 	TELEPHONY_NOTI_NETWORK_CELLID,
@@ -319,6 +324,9 @@ int main()
 	char *subscriber_number = NULL;
 	char *subscriber_id = NULL;
 	bool is_changed = FALSE;
+	telephony_sim_lock_state_e lock_state = 0;
+	char *gid1 = NULL;
+	bool call_forwarding_state = FALSE;
 
 	/* Network value */
 	int cell_id = 0;
@@ -428,6 +436,28 @@ int main()
 	} else {
 		LOGI("Subscriber ID is [%s]", subscriber_id);
 		free(subscriber_id);
+	}
+
+	ret_value = telephony_sim_get_lock_state(handle_list.handle[0], &lock_state);
+	if (ret_value != TELEPHONY_ERROR_NONE) {
+		LOGE("telephony_sim_get_lock_state() failed!!! [%d]", ret_value);
+	} else {
+		LOGI("Lock state is [%d]", lock_state);
+	}
+
+	ret_value = telephony_sim_get_gid1(handle_list.handle[0], &gid1);
+	if (ret_value != TELEPHONY_ERROR_NONE) {
+		LOGE("telephony_sim_get_gid1() failed!!! [%d]", ret_value);
+	} else {
+		LOGI("GID1 is [%s]", gid1);
+		free(gid1);
+	}
+
+	ret_value = telephony_sim_get_call_forwarding_state(handle_list.handle[0], &call_forwarding_state);
+	if (ret_value != TELEPHONY_ERROR_NONE) {
+		LOGE("telephony_sim_get_call_forwarding_state() failed!!! [%d]", ret_value);
+	} else {
+		LOGI("Call forwarding state is [%s]", call_forwarding_state ? "TRUE" : "FALSE");
 	}
 
 	/* Network API */
@@ -576,9 +606,11 @@ int main()
 		LOGI("Modem power status is [%d] (0=on,1=off,2=rst,3=low)", power_status);
 
 	/* set_noti_cb */
-	ret_value = telephony_set_noti_cb(handle_list.handle[0], TELEPHONY_NOTI_SIM_STATUS, sim_noti_cb, NULL);
-	if (ret_value != TELEPHONY_ERROR_NONE)
-		LOGE("Set noti failed!!!");
+	for (i = 0; i < (sizeof(sim_noti_tbl) / sizeof(int)); i++) {
+		ret_value = telephony_set_noti_cb(handle_list.handle[0], sim_noti_tbl[i], sim_noti_cb, NULL);
+		if (ret_value != TELEPHONY_ERROR_NONE)
+			LOGE("Set noti failed!!!");
+	}
 
 	for (i = 0; i < (sizeof(network_noti_tbl) / sizeof(int)); i++) {
 		ret_value = telephony_set_noti_cb(handle_list.handle[0], network_noti_tbl[i], network_noti_cb, NULL);
@@ -608,9 +640,11 @@ int main()
 	event_loop = g_main_loop_new(NULL, FALSE);
 	g_main_loop_run(event_loop);
 
-	ret_value = telephony_unset_noti_cb(handle_list.handle[0], TELEPHONY_NOTI_SIM_STATUS);
-	if (ret_value != TELEPHONY_ERROR_NONE)
-		LOGE("Unset noti failed!!!");
+	for (i = 0; i < (sizeof(sim_noti_tbl) / sizeof(int)); i++) {
+		ret_value = telephony_unset_noti_cb(handle_list.handle[0], sim_noti_tbl[i]);
+		if (ret_value != TELEPHONY_ERROR_NONE)
+			LOGE("Unset noti failed!!!");
+	}
 
 	for (i = 0; i < (sizeof(network_noti_tbl) / sizeof(int)); i++) {
 		ret_value = telephony_unset_noti_cb(handle_list.handle[0], network_noti_tbl[i]);
