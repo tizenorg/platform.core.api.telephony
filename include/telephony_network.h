@@ -231,7 +231,7 @@ int telephony_network_get_roaming_status(telephony_h handle, bool *status);
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
- * @remarks You must release @c mcc using free().
+ * @remarks You must release @c mcc using free() on success case.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] mcc The Mobile Country Code (three digits)
@@ -259,7 +259,7 @@ int telephony_network_get_mcc(telephony_h handle, char **mcc);
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
- * @remarks You must release @c mnc using free().
+ * @remarks You must release @c mnc using free() on success case.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] mnc The Mobile Network Code (three digits)
@@ -287,7 +287,7 @@ int telephony_network_get_mnc(telephony_h handle, char **mnc);
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
- * @remarks You must release @c network_name using free().
+ * @remarks You must release @c network_name using free() on success case.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] network_name The name of the current registered network
