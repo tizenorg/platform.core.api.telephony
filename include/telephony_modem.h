@@ -55,7 +55,7 @@ typedef enum
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
- * @remarks You must release @c imei using free().
+ * @remarks You must release @c imei using free() on success case.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] imei The International Mobile Station Equipment Identity

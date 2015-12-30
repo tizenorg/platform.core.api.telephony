@@ -244,7 +244,7 @@ int telephony_call_get_handle_id(telephony_call_h call_handle, unsigned int *han
  *
  * @since_tizen 2.4
  *
- * @remarks You must release @c number using free().
+ * @remarks You must release @c number using free() on success case.
  *
  * @param[in] call_handle The handle from #telephony_call_get_call_list()
  * @param[out] number The number of the call
