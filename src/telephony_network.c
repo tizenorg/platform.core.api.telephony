@@ -27,9 +27,6 @@
 #include "telephony_common.h"
 #include "telephony_private.h"
 
-#include <sys/types.h>
-#include <unistd.h>
-
 static int __get_serving_network(TapiHandle *tapi_h, TelNetworkServing_t *data)
 {
 	int ret;

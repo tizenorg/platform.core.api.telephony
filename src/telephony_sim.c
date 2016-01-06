@@ -124,6 +124,7 @@ int telephony_sim_get_icc_id(telephony_h handle, char **icc_id)
 				error_code = TELEPHONY_ERROR_OPERATION_FAILED;
 			}
 			g_free(iccid);
+			g_variant_unref(sync_gv);
 		} else {
 			LOGE("g_dbus_conn failed. error (%s)", gerr->message);
 			error_code = _convert_dbus_errmsg_to_sim_error(gerr->message);
@@ -246,6 +247,7 @@ int telephony_sim_get_spn(telephony_h handle, char **spn)
 				error_code = TELEPHONY_ERROR_OPERATION_FAILED;
 			}
 			g_free(spn_str);
+			g_variant_unref(sync_gv);
 		} else {
 			LOGE("g_dbus_conn failed. error (%s)", gerr->message);
 			error_code = _convert_dbus_errmsg_to_sim_error(gerr->message);
@@ -403,6 +405,7 @@ int telephony_sim_get_subscriber_number(telephony_h handle, char **subscriber_nu
 		} else {
 			error_code = TELEPHONY_ERROR_OPERATION_FAILED;
 		}
+		g_variant_unref(sync_gv);
 	} else {
 		LOGE("g_dbus_conn failed. error (%s)", gerr->message);
 		error_code = _convert_dbus_errmsg_to_sim_error(gerr->message);
@@ -557,6 +560,7 @@ int telephony_sim_get_gid1(telephony_h handle, char **gid1)
 			} else {
 				error_code = TELEPHONY_ERROR_OPERATION_FAILED;
 			}
+			g_variant_unref(sync_gv);
 		} else {
 			LOGE("g_dbus_conn failed. error (%s)", gerr->message);
 			error_code = _convert_dbus_errmsg_to_sim_error(gerr->message);
