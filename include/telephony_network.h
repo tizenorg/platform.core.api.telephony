@@ -39,67 +39,69 @@ extern "C"
  * @details #TELEPHONY_NETWORK_RSSI_6 indicates the highest strength.
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
-typedef enum
-{
-    TELEPHONY_NETWORK_RSSI_0, /**< Strength 0 */
-    TELEPHONY_NETWORK_RSSI_1, /**< Strength 1 */
-    TELEPHONY_NETWORK_RSSI_2, /**< Strength 2 */
-    TELEPHONY_NETWORK_RSSI_3, /**< Strength 3 */
-    TELEPHONY_NETWORK_RSSI_4, /**< Strength 4 */
-    TELEPHONY_NETWORK_RSSI_5, /**< Strength 5 */
-    TELEPHONY_NETWORK_RSSI_6, /**< Strength 6 */
+typedef enum {
+	TELEPHONY_NETWORK_RSSI_0, /**< Strength 0 */
+	TELEPHONY_NETWORK_RSSI_1, /**< Strength 1 */
+	TELEPHONY_NETWORK_RSSI_2, /**< Strength 2 */
+	TELEPHONY_NETWORK_RSSI_3, /**< Strength 3 */
+	TELEPHONY_NETWORK_RSSI_4, /**< Strength 4 */
+	TELEPHONY_NETWORK_RSSI_5, /**< Strength 5 */
+	TELEPHONY_NETWORK_RSSI_6, /**< Strength 6 */
 } telephony_network_rssi_e;
-
 
 /**
  * @brief Enumeration for Network Type.
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
-typedef enum
-{
-    TELEPHONY_NETWORK_TYPE_UNKNOWN, /**< Unknown */
-    TELEPHONY_NETWORK_TYPE_GSM,     /**< 2G GSM network type */
-    TELEPHONY_NETWORK_TYPE_GPRS,    /**< 2.5G GPRS network type */
-    TELEPHONY_NETWORK_TYPE_EDGE,    /**< 2.5G EDGE network type */
-    TELEPHONY_NETWORK_TYPE_UMTS,    /**< 3G UMTS network type */
-    TELEPHONY_NETWORK_TYPE_HSDPA,   /**< HSDPA network type */
-    TELEPHONY_NETWORK_TYPE_LTE,     /**< LTE network type */
+typedef enum {
+	TELEPHONY_NETWORK_TYPE_UNKNOWN,		/**< Unknown */
+	TELEPHONY_NETWORK_TYPE_GSM,		/**< 2G GSM network type */
+	TELEPHONY_NETWORK_TYPE_GPRS,		/**< 2.5G GPRS network type */
+	TELEPHONY_NETWORK_TYPE_EDGE,		/**< 2.5G EDGE network type */
+	TELEPHONY_NETWORK_TYPE_UMTS,		/**< 3G UMTS network type */
+	TELEPHONY_NETWORK_TYPE_HSDPA,		/**< HSDPA network type */
+	TELEPHONY_NETWORK_TYPE_LTE,		/**< LTE network type */
+	TELEPHONY_NETWORK_TYPE_IS95A,		/**< IS95A network type (@b Since: 3.0) */
+	TELEPHONY_NETWORK_TYPE_IS95B,		/**< IS95B network type (@b Since: 3.0) */
+	TELEPHONY_NETWORK_TYPE_CDMA_1X,		/**< CDMA 1x network type (@b Since: 3.0) */
+	TELEPHONY_NETWORK_TYPE_EVDO_REV_0,	/**< EVDO revision 0 network type (@b Since: 3.0) */
+	TELEPHONY_NETWORK_TYPE_EVDO_REV_A,	/**< EVDO revision A network type (@b Since: 3.0) */
+	TELEPHONY_NETWORK_TYPE_EVDO_REV_B,	/**< EVDO revision B network type (@b Since: 3.0) */
+	TELEPHONY_NETWORK_TYPE_EVDV,		/**< EVDV network type (@b Since: 3.0) */
+	TELEPHONY_NETWORK_TYPE_EHRPD,		/**< EHRPD network type (@b Since: 3.0) */
 } telephony_network_type_e;
 
 /**
  * @brief Enumeration for PS Type.
  * @since_tizen 2.4
  */
-typedef enum
-{
-    TELEPHONY_NETWORK_PS_TYPE_UNKNOWN, /**< Unknown */
-    TELEPHONY_NETWORK_PS_TYPE_HSDPA,    /**< HSDPA ps type */
-    TELEPHONY_NETWORK_PS_TYPE_HSUPA,    /**< HSUPA ps type */
-    TELEPHONY_NETWORK_PS_TYPE_HSPA,      /**< HSPA ps type */
-    TELEPHONY_NETWORK_PS_TYPE_HSPAP,   /**< HSPAP ps type */
+typedef enum {
+	TELEPHONY_NETWORK_PS_TYPE_UNKNOWN,	/**< Unknown */
+	TELEPHONY_NETWORK_PS_TYPE_HSDPA,	/**< HSDPA ps type */
+	TELEPHONY_NETWORK_PS_TYPE_HSUPA,	/**< HSUPA ps type */
+	TELEPHONY_NETWORK_PS_TYPE_HSPA,		/**< HSPA ps type */
+	TELEPHONY_NETWORK_PS_TYPE_HSPAP,	/**< HSPAP ps type */
 } telephony_network_ps_type_e;
 
 /**
  * @brief Enumeration for Network Service State.
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
-typedef enum
-{
-    TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE,     /**< In service */
-    TELEPHONY_NETWORK_SERVICE_STATE_OUT_OF_SERVICE, /**< Out of service */
-    TELEPHONY_NETWORK_SERVICE_STATE_EMERGENCY_ONLY, /**< Only emergency call is allowed */
+typedef enum {
+	TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE,	/**< In service */
+	TELEPHONY_NETWORK_SERVICE_STATE_OUT_OF_SERVICE,	/**< Out of service */
+	TELEPHONY_NETWORK_SERVICE_STATE_EMERGENCY_ONLY,	/**< Only emergency call is allowed */
 } telephony_network_service_state_e;
 
 /**
  * @brief Enumeration for Network Name Priority.
  * @since_tizen 2.4
  */
-typedef enum
-{
-    TELEPHONY_NETWORK_NAME_OPTION_UNKNOWN, /**< Unknown */
-    TELEPHONY_NETWORK_NAME_OPTION_SPN,     /**< Network name displayed by SPN */
-    TELEPHONY_NETWORK_NAME_OPTION_NETWORK, /**< Network name displayed by Network */
-    TELEPHONY_NETWORK_NAME_OPTION_ANY,    /**< Network name displayed by SPN or Network */
+typedef enum {
+	TELEPHONY_NETWORK_NAME_OPTION_UNKNOWN,	/**< Unknown */
+	TELEPHONY_NETWORK_NAME_OPTION_SPN,	/**< Network name displayed by SPN */
+	TELEPHONY_NETWORK_NAME_OPTION_NETWORK,	/**< Network name displayed by Network */
+	TELEPHONY_NETWORK_NAME_OPTION_ANY,	/**< Network name displayed by SPN or Network */
 } telephony_network_name_option_e;
 
 /**
@@ -107,9 +109,9 @@ typedef enum
  * @since_tizen 2.4
  */
 typedef enum {
-	TELEPHONY_NETWORK_DEFAULT_DATA_SUBS_UNKNOWN = -1,  /**< Unknown status */
-	TELEPHONY_NETWORK_DEFAULT_DATA_SUBS_SIM1 = 0,      /**< SIM 1 */
-	TELEPHONY_NETWORK_DEFAULT_DATA_SUBS_SIM2           /**< SIM 2 */
+	TELEPHONY_NETWORK_DEFAULT_DATA_SUBS_UNKNOWN = -1,	/**< Unknown status */
+	TELEPHONY_NETWORK_DEFAULT_DATA_SUBS_SIM1 = 0,		/**< SIM 1 */
+	TELEPHONY_NETWORK_DEFAULT_DATA_SUBS_SIM2		/**< SIM 2 */
 } telephony_network_default_data_subs_e;
 
 /**
@@ -117,13 +119,22 @@ typedef enum {
  * @since_tizen 2.4
  */
 typedef enum {
-	TELEPHONY_NETWORK_DEFAULT_SUBS_UNKNOWN = -1,  /**<  Unknown status **/
-	TELEPHONY_NETWORK_DEFAULT_SUBS_SIM1 = 0, /**< SIM 1 network **/
-	TELEPHONY_NETWORK_DEFAULT_SUBS_SIM2 /**<  SIM 2 network **/
+	TELEPHONY_NETWORK_DEFAULT_SUBS_UNKNOWN = -1,	/**< Unknown status */
+	TELEPHONY_NETWORK_DEFAULT_SUBS_SIM1 = 0,	/**< SIM 1 network */
+	TELEPHONY_NETWORK_DEFAULT_SUBS_SIM2		/**< SIM 2 network */
 } telephony_network_default_subs_e;
 
 /**
- * @brief Gets the LAC (Location Area Code) of the current network.
+ * @brief Enumeration for network selection mode.
+ * @since_tizen 3.0
+ */
+typedef enum {
+	TELEPHONY_NETWORK_SELECTION_MODE_AUTOMATIC,	/**< Automatic mode */
+	TELEPHONY_NETWORK_SELECTION_MODE_MANUAL		/**< Manual mode */
+} telephony_network_selection_mode_e;
+
+/**
+ * @brief Gets the LAC (Location Area Code) of the current location.
  *
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
@@ -148,7 +159,7 @@ typedef enum {
 int telephony_network_get_lac(telephony_h handle, int *lac);
 
 /**
- * @brief Gets the cell ID.
+ * @brief Gets the cell ID of the current location.
  *
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
@@ -199,7 +210,7 @@ int telephony_network_get_cell_id(telephony_h handle, int *cell_id);
 int telephony_network_get_rssi(telephony_h handle, telephony_network_rssi_e *rssi);
 
 /**
- * @brief Gets the roaming state.
+ * @brief Gets the roaming state of the current registered network.
  *
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
@@ -331,7 +342,7 @@ int telephony_network_get_network_name(telephony_h handle, char **network_name);
  * @see telephony_network_get_service_state()
  */
 int telephony_network_get_type(telephony_h handle,
-    telephony_network_type_e *network_type);
+	telephony_network_type_e *network_type);
 
 /**
  * @brief Gets the packet service type of the current registered network.
@@ -382,7 +393,7 @@ int telephony_network_get_ps_type(telephony_h handle, telephony_network_ps_type_
  * @see telephony_network_get_service_state()
  */
 int telephony_network_get_network_name_option(telephony_h handle,
-    telephony_network_name_option_e *network_name_option);
+	telephony_network_name_option_e *network_name_option);
 
 /**
  * @brief Gets the current network state of the telephony service.
@@ -406,7 +417,7 @@ int telephony_network_get_network_name_option(telephony_h handle,
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  */
 int telephony_network_get_service_state(telephony_h handle,
-    telephony_network_service_state_e *network_service_state);
+	telephony_network_service_state_e *network_service_state);
 
 /**
  * @brief Gets the current default subscription for data service (Packet Switched).
@@ -455,6 +466,178 @@ int telephony_network_get_default_subscription(telephony_h handle,
 	telephony_network_default_subs_e *default_sub);
 
 /**
+ * @brief Gets the network selection mode.
+ *
+ * @since_tizen 3.0
+ * @privlevel public
+ * @privilege %http://tizen.org/privilege/telephony
+ *
+ * @param[in] handle The handle from telephony_init()
+ * @param[out] mode The network selection mode
+ *
+ * @return @c 0 on success,
+ *         otherwise a negative error value
+ *
+ * @retval #TELEPHONY_ERROR_NONE              Successful
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
+ * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
+ * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
+ */
+int telephony_network_get_selection_mode(telephony_h handle,
+	telephony_network_selection_mode_e *mode);
+
+/**
+ * @brief Gets the TAC (Tracking Area Code) of the current location. (LTE only)
+ *
+ * @since_tizen 3.0
+ * @privlevel public
+ * @privilege %http://tizen.org/privilege/telephony
+ *
+ * @param[in] handle The handle from telephony_init()
+ * @param[out] tac The Tracking Area Code
+ *
+ * @return @c 0 on success,
+ *         otherwise a negative error value
+ *
+ * @retval #TELEPHONY_ERROR_NONE              Successful
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
+ * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
+ * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
+ *
+ * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
+ *
+ * @see telephony_network_get_service_state()
+ */
+int telephony_network_get_tac(telephony_h handle, int *tac);
+
+/**
+ * @brief Gets the system ID of the current location. (CDMA only)
+ *
+ * @since_tizen 3.0
+ * @privlevel public
+ * @privilege %http://tizen.org/privilege/telephony
+ *
+ * @param[in] handle The handle from telephony_init()
+ * @param[out] sid The system ID
+ *
+ * @return @c 0 on success,
+ *         otherwise a negative error value
+ *
+ * @retval #TELEPHONY_ERROR_NONE              Successful
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
+ * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
+ * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
+ *
+ * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
+ *
+ * @see telephony_network_get_service_state()
+ */
+int telephony_network_get_system_id(telephony_h handle, int *sid);
+
+/**
+ * @brief Gets the network ID of the current location. (CDMA only)
+ *
+ * @since_tizen 3.0
+ * @privlevel public
+ * @privilege %http://tizen.org/privilege/telephony
+ *
+ * @param[in] handle The handle from telephony_init()
+ * @param[out] nid The network ID
+ *
+ * @return @c 0 on success,
+ *         otherwise a negative error value
+ *
+ * @retval #TELEPHONY_ERROR_NONE              Successful
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
+ * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
+ * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
+ *
+ * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
+ *
+ * @see telephony_network_get_service_state()
+ */
+int telephony_network_get_network_id(telephony_h handle, int *nid);
+
+/**
+ * @brief Gets the base station ID of the current location. (CDMA only)
+ *
+ * @since_tizen 3.0
+ * @privlevel public
+ * @privilege %http://tizen.org/privilege/telephony
+ *
+ * @param[in] handle The handle from telephony_init()
+ * @param[out] base_id The base station ID
+ *
+ * @return @c 0 on success,
+ *         otherwise a negative error value
+ *
+ * @retval #TELEPHONY_ERROR_NONE              Successful
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
+ * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
+ * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
+ *
+ * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
+ *
+ * @see telephony_network_get_service_state()
+ */
+int telephony_network_get_base_station_id(telephony_h handle, int *base_id);
+
+/**
+ * @brief Gets the base station latitude of the current location. (CDMA only)
+ *
+ * @since_tizen 3.0
+ * @privlevel public
+ * @privilege %http://tizen.org/privilege/telephony
+ *
+ * @param[in] handle The handle from telephony_init()
+ * @param[out] base_lat The base station latitude
+ *
+ * @return @c 0 on success,
+ *         otherwise a negative error value
+ *
+ * @retval #TELEPHONY_ERROR_NONE              Successful
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
+ * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
+ * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
+ *
+ * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
+ *
+ * @see telephony_network_get_service_state()
+ */
+int telephony_network_get_base_station_latitude(telephony_h handle, int *base_lat);
+
+/**
+ * @brief Gets the base station longitude of the current location. (CDMA only)
+ *
+ * @since_tizen 3.0
+ * @privlevel public
+ * @privilege %http://tizen.org/privilege/telephony
+ *
+ * @param[in] handle The handle from telephony_init()
+ * @param[out] base_long The base station longitude
+ *
+ * @return @c 0 on success,
+ *         otherwise a negative error value
+ *
+ * @retval #TELEPHONY_ERROR_NONE              Successful
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
+ * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
+ * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
+ *
+ * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
+ *
+ * @see telephony_network_get_service_state()
+ */
+int telephony_network_get_base_station_longitude(telephony_h handle, int *base_long);
+
+/**
  * @}
  */
 
@@ -462,4 +645,4 @@ int telephony_network_get_default_subscription(telephony_h handle,
 }
 #endif
 
-#endif	// __CAPI_TELEPHONY_NETWORK_INFO_H__
+#endif /* __CAPI_TELEPHONY_NETWORK_INFO_H__ */
