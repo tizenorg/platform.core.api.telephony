@@ -394,7 +394,7 @@ int telephony_sim_get_gid1(telephony_h handle, char **gid1);
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Invalid parameter
  *
- * @pre The SIM state must be #TELEPHONY_SIM_STATE_LOCKED.
+ * @pre The SIM state must be #TELEPHONY_SIM_STATE_AVAILABLE.
  *
  * @see telephony_sim_get_state()
  */
