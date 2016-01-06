@@ -30,6 +30,66 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+static int __get_serving_network(TapiHandle *tapi_h, TelNetworkServing_t *data)
+{
+	int ret;
+	int act;
+
+	ret = tel_get_property_int(tapi_h, TAPI_PROP_NETWORK_ACT, &act);
+	if (ret == TAPI_API_SUCCESS) {
+		ret = TELEPHONY_ERROR_NONE;
+		data->info.cdma_info.system_id = -1;
+		data->info.cdma_info.network_id = -1;
+		data->info.cdma_info.base_station_id = -1;
+		data->info.cdma_info.base_station_latitude = 0x7FFFFFFF;
+		data->info.cdma_info.base_station_longitude = 0x7FFFFFFF;
+
+		if (act >= TAPI_NETWORK_SYSTEM_IS95A && act <= TAPI_NETWORK_SYSTEM_EHRPD) {
+			GError *error = NULL;
+			GVariant *dbus_result;
+
+			dbus_result = g_dbus_connection_call_sync(tapi_h->dbus_connection,
+				DBUS_TELEPHONY_SERVICE, tapi_h->path, DBUS_TELEPHONY_NETWORK_INTERFACE,
+				"GetServingNetwork", NULL, NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &error);
+
+			if (dbus_result) {
+				GVariantIter *iter;
+				int tapi_result;
+
+				g_variant_get(dbus_result, "(a{sv}i)", &iter, &tapi_result);
+				if (tapi_result == 0) {
+					const gchar *key = NULL;
+					GVariant *value = NULL;
+					while (g_variant_iter_loop(iter, "{sv}", &key, &value)) {
+						if (!g_strcmp0(key, "c_serving")) {
+							g_variant_get(value, "(iuuuiiuu)",
+								&data->info.cdma_info.carrier,
+								&data->info.cdma_info.system_id,
+								&data->info.cdma_info.network_id,
+								&data->info.cdma_info.base_station_id,
+								&data->info.cdma_info.base_station_latitude,
+								&data->info.cdma_info.base_station_longitude,
+								&data->info.cdma_info.registration_zone,
+								&data->info.cdma_info.pilot_offset);
+						}
+					}
+					ret = TELEPHONY_ERROR_NONE;
+				} else {
+					ret = TELEPHONY_ERROR_OPERATION_FAILED;
+				}
+				g_variant_iter_free(iter);
+			}
+			g_variant_unref(dbus_result);
+		}
+	} else if (ret == TAPI_API_ACCESS_DENIED) {
+		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
+	} else {
+		ret = TELEPHONY_ERROR_OPERATION_FAILED;
+	}
+
+	return ret;
+}
+
 int telephony_network_get_lac(telephony_h handle, int *lac)
 {
 	int ret;
@@ -289,7 +349,7 @@ int telephony_network_get_network_name_option(telephony_h handle, telephony_netw
 int telephony_network_get_type(telephony_h handle, telephony_network_type_e *network_type)
 {
 	int ret;
-	int service_type = 0;
+	int act;
 	TapiHandle *tapi_h;
 
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
@@ -298,25 +358,54 @@ int telephony_network_get_type(telephony_h handle, telephony_network_type_e *net
 	CHECK_INPUT_PARAMETER(tapi_h);
 	CHECK_INPUT_PARAMETER(network_type);
 
-	ret = tel_get_property_int(tapi_h, TAPI_PROP_NETWORK_SERVICE_TYPE, &service_type);
+	ret = tel_get_property_int(tapi_h, TAPI_PROP_NETWORK_ACT, &act);
 	if (ret == TAPI_API_SUCCESS) {
-		switch (service_type) {
-		case TAPI_NETWORK_SERVICE_TYPE_2G:
+		switch (act) {
+		case TAPI_NETWORK_SYSTEM_GSM:
+		case TAPI_NETWORK_SYSTEM_PCS1900:
 			*network_type = TELEPHONY_NETWORK_TYPE_GSM;
 			break;
-		case TAPI_NETWORK_SERVICE_TYPE_2_5G:
+		case TAPI_NETWORK_SYSTEM_GPRS:
 			*network_type = TELEPHONY_NETWORK_TYPE_GPRS;
 			break;
-		case TAPI_NETWORK_SERVICE_TYPE_2_5G_EDGE:
+		case TAPI_NETWORK_SYSTEM_EGPRS:
 			*network_type = TELEPHONY_NETWORK_TYPE_EDGE;
 			break;
-		case TAPI_NETWORK_SERVICE_TYPE_3G:
+		case TAPI_NETWORK_SYSTEM_UMTS:
+		case TAPI_NETWORK_SYSTEM_GSM_AND_UMTS:
 			*network_type = TELEPHONY_NETWORK_TYPE_UMTS;
 			break;
-		case TAPI_NETWORK_SERVICE_TYPE_HSDPA:
+		case TAPI_NETWORK_SYSTEM_HSDPA:
 			*network_type = TELEPHONY_NETWORK_TYPE_HSDPA;
 			break;
-		case TAPI_NETWORK_SERVICE_TYPE_LTE:
+		case TAPI_NETWORK_SYSTEM_IS95A:
+			*network_type = TELEPHONY_NETWORK_TYPE_IS95A;
+			break;
+		case TAPI_NETWORK_SYSTEM_IS95B:
+			*network_type = TELEPHONY_NETWORK_TYPE_IS95B;
+			break;
+		case TAPI_NETWORK_SYSTEM_CDMA_1X:
+			*network_type = TELEPHONY_NETWORK_TYPE_CDMA_1X;
+			break;
+		case TAPI_NETWORK_SYSTEM_EVDO_REV_0:
+		case TAPI_NETWORK_SYSTEM_1X_EVDO_REV_0_HYBRID:
+			*network_type = TELEPHONY_NETWORK_TYPE_EVDO_REV_0;
+			break;
+		case TAPI_NETWORK_SYSTEM_EVDO_REV_A:
+		case TAPI_NETWORK_SYSTEM_1X_EVDO_REV_A_HYBRID:
+			*network_type = TELEPHONY_NETWORK_TYPE_EVDO_REV_A;
+			break;
+		case TAPI_NETWORK_SYSTEM_EVDO_REV_B:
+		case TAPI_NETWORK_SYSTEM_1X_EVDO_REV_B_HYBRID:
+			*network_type = TELEPHONY_NETWORK_TYPE_EVDO_REV_B;
+			break;
+		case TAPI_NETWORK_SYSTEM_EVDV:
+			*network_type = TELEPHONY_NETWORK_TYPE_EVDV;
+			break;
+		case TAPI_NETWORK_SYSTEM_EHRPD:
+			*network_type = TELEPHONY_NETWORK_TYPE_EHRPD;
+			break;
+		case TAPI_NETWORK_SYSTEM_LTE:
 			*network_type = TELEPHONY_NETWORK_TYPE_LTE;
 			break;
 		default:
@@ -502,3 +591,209 @@ int telephony_network_get_default_subscription(telephony_h handle,
 	return ret;
 }
 
+int telephony_network_get_selection_mode(telephony_h handle, telephony_network_selection_mode_e *mode)
+{
+	int ret = TELEPHONY_ERROR_OPERATION_FAILED;
+	TapiHandle *tapi_h;
+	GError *error = NULL;
+	GVariant *dbus_result;
+
+	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
+	CHECK_INPUT_PARAMETER(handle);
+	tapi_h = ((telephony_data *)handle)->tapi_h;
+	CHECK_INPUT_PARAMETER(tapi_h);
+	CHECK_INPUT_PARAMETER(mode);
+
+	dbus_result = g_dbus_connection_call_sync(tapi_h->dbus_connection,
+		DBUS_TELEPHONY_SERVICE, tapi_h->path, DBUS_TELEPHONY_NETWORK_INTERFACE,
+		"GetSelectionMode", NULL, NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &error);
+
+	if (dbus_result) {
+		int tapi_mode;
+		int tapi_result;
+		g_variant_get(dbus_result, "(ii)", &tapi_mode, &tapi_result);
+		if (tapi_result == 0) {
+			if (tapi_mode == TAPI_NETWORK_SELECTIONMODE_AUTOMATIC)
+				*mode = TELEPHONY_NETWORK_SELECTION_MODE_AUTOMATIC;
+			else
+				*mode = TELEPHONY_NETWORK_SELECTION_MODE_MANUAL;
+			ret = TELEPHONY_ERROR_NONE;
+		}
+		g_variant_unref(dbus_result);
+	} else {
+		LOGE("g_dbus_connection_call_sync() failed. (%s)", error->message);
+		if (strstr(error->message, "AccessDenied")) {
+			LOGE("PERMISSION_DENIED");
+			ret = TELEPHONY_ERROR_PERMISSION_DENIED;
+		}
+		g_error_free(error);
+	}
+
+	return ret;
+}
+
+int telephony_network_get_tac(telephony_h handle, int *tac)
+{
+	int ret;
+	TapiHandle *tapi_h;
+
+	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
+	CHECK_INPUT_PARAMETER(handle);
+	tapi_h = ((telephony_data *)handle)->tapi_h;
+	CHECK_INPUT_PARAMETER(tapi_h);
+	CHECK_INPUT_PARAMETER(tac);
+
+	ret = tel_get_property_int(tapi_h, TAPI_PROP_NETWORK_TAC, tac);
+	if (ret == TAPI_API_SUCCESS) {
+		LOGI("tac:[%d]", *tac);
+		ret = TELEPHONY_ERROR_NONE;
+	} else if (ret == TAPI_API_ACCESS_DENIED) {
+		LOGE("PERMISSION_DENIED");
+		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
+	} else {
+		LOGE("OPERATION_FAILED");
+		ret = TELEPHONY_ERROR_OPERATION_FAILED;
+	}
+
+	return ret;
+}
+
+int telephony_network_get_system_id(telephony_h handle, int *sid)
+{
+	int ret;
+	TapiHandle *tapi_h;
+	TelNetworkServing_t data = {0,};
+
+	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
+	CHECK_INPUT_PARAMETER(handle);
+	tapi_h = ((telephony_data *)handle)->tapi_h;
+	CHECK_INPUT_PARAMETER(tapi_h);
+	CHECK_INPUT_PARAMETER(sid);
+
+	ret = __get_serving_network(tapi_h, &data);
+	if (ret == TAPI_API_SUCCESS) {
+		*sid = data.info.cdma_info.system_id;
+		LOGI("sid:[%d]", *sid);
+		ret = TELEPHONY_ERROR_NONE;
+	} else if (ret == TAPI_API_ACCESS_DENIED) {
+		LOGE("PERMISSION_DENIED");
+		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
+	} else {
+		LOGE("OPERATION_FAILED");
+		ret = TELEPHONY_ERROR_OPERATION_FAILED;
+	}
+
+	return ret;
+}
+
+int telephony_network_get_network_id(telephony_h handle, int *nid)
+{
+	int ret;
+	TapiHandle *tapi_h;
+	TelNetworkServing_t data = {0,};
+
+	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
+	CHECK_INPUT_PARAMETER(handle);
+	tapi_h = ((telephony_data *)handle)->tapi_h;
+	CHECK_INPUT_PARAMETER(tapi_h);
+	CHECK_INPUT_PARAMETER(nid);
+
+	ret = __get_serving_network(tapi_h, &data);
+	if (ret == TAPI_API_SUCCESS) {
+		*nid = data.info.cdma_info.network_id;
+		LOGI("nid:[%d]", *nid);
+		ret = TELEPHONY_ERROR_NONE;
+	} else if (ret == TAPI_API_ACCESS_DENIED) {
+		LOGE("PERMISSION_DENIED");
+		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
+	} else {
+		LOGE("OPERATION_FAILED");
+		ret = TELEPHONY_ERROR_OPERATION_FAILED;
+	}
+
+	return ret;
+}
+
+int telephony_network_get_base_station_id(telephony_h handle, int *bs_id)
+{
+	int ret;
+	TapiHandle *tapi_h;
+	TelNetworkServing_t data = {0,};
+
+	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
+	CHECK_INPUT_PARAMETER(handle);
+	tapi_h = ((telephony_data *)handle)->tapi_h;
+	CHECK_INPUT_PARAMETER(tapi_h);
+	CHECK_INPUT_PARAMETER(bs_id);
+
+	ret = __get_serving_network(tapi_h, &data);
+	if (ret == TAPI_API_SUCCESS) {
+		*bs_id = data.info.cdma_info.base_station_id;
+		LOGI("bs_id:[%d]", *bs_id);
+		ret = TELEPHONY_ERROR_NONE;
+	} else if (ret == TAPI_API_ACCESS_DENIED) {
+		LOGE("PERMISSION_DENIED");
+		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
+	} else {
+		LOGE("OPERATION_FAILED");
+		ret = TELEPHONY_ERROR_OPERATION_FAILED;
+	}
+
+	return ret;
+}
+
+int telephony_network_get_base_station_latitude(telephony_h handle, int *bs_latitude)
+{
+	int ret;
+	TapiHandle *tapi_h;
+	TelNetworkServing_t data = {0,};
+
+	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
+	CHECK_INPUT_PARAMETER(handle);
+	tapi_h = ((telephony_data *)handle)->tapi_h;
+	CHECK_INPUT_PARAMETER(tapi_h);
+	CHECK_INPUT_PARAMETER(bs_latitude);
+
+	ret = __get_serving_network(tapi_h, &data);
+	if (ret == TAPI_API_SUCCESS) {
+		*bs_latitude = data.info.cdma_info.base_station_latitude;
+		LOGI("bs_latitude:[%d]", *bs_latitude);
+		ret = TELEPHONY_ERROR_NONE;
+	} else if (ret == TAPI_API_ACCESS_DENIED) {
+		LOGE("PERMISSION_DENIED");
+		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
+	} else {
+		LOGE("OPERATION_FAILED");
+		ret = TELEPHONY_ERROR_OPERATION_FAILED;
+	}
+
+	return ret;
+}
+
+int telephony_network_get_base_station_longitude(telephony_h handle, int *bs_longitude)
+{
+	int ret;
+	TapiHandle *tapi_h;
+	TelNetworkServing_t data = {0,};
+
+	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
+	CHECK_INPUT_PARAMETER(handle);
+	tapi_h = ((telephony_data *)handle)->tapi_h;
+	CHECK_INPUT_PARAMETER(tapi_h);
+	CHECK_INPUT_PARAMETER(bs_longitude);
+
+	ret = __get_serving_network(tapi_h, &data);
+	if (ret == TAPI_API_SUCCESS) {
+		*bs_longitude = data.info.cdma_info.base_station_longitude;
+		LOGI("bs_longitude:[%d]", *bs_longitude);
+		ret = TELEPHONY_ERROR_NONE;
+	} else if (ret == TAPI_API_ACCESS_DENIED) {
+		LOGE("PERMISSION_DENIED");
+		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
+	} else {
+		LOGE("OPERATION_FAILED");
+		ret = TELEPHONY_ERROR_OPERATION_FAILED;
+	}
+
+	return ret;
+}

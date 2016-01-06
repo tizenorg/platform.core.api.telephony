@@ -342,6 +342,9 @@ int main()
 	telephony_network_default_subs_e default_sub = 0;
 	telephony_network_name_option_e network_name_option = 0;
 	telephony_network_ps_type_e ps_type = 0;
+	telephony_network_selection_mode_e sel_mode;
+	int tac;
+	int nid, sid, bs_id, bs_latitude, bs_longitude;
 
 	/* Call value */
 	telephony_call_state_e call_state = 0;
@@ -544,6 +547,49 @@ int main()
 		LOGE("telephony_network_get_default_subscription() failed!!! [%d]", ret_value);
 	else
 		LOGI("Default subscription is [%s]", _mapping_default_sub(default_sub));
+
+	ret_value = telephony_network_get_selection_mode(handle_list.handle[0], &sel_mode);
+	if (ret_value != TELEPHONY_ERROR_NONE)
+		LOGE("telephony_network_get_selection_mode() failed!!! [%d]", ret_value);
+	else
+		LOGI("Network selection mode is [%s]",
+			sel_mode == TELEPHONY_NETWORK_SELECTION_MODE_AUTOMATIC ? "Automatic" : "Manual");
+
+	ret_value = telephony_network_get_tac(handle_list.handle[0], &tac);
+	if (ret_value != TELEPHONY_ERROR_NONE)
+		LOGE("telephony_network_get_tac() failed!!! [%d]", ret_value);
+	else
+		LOGI("Tracking Area Code is [%d]", tac);
+
+	ret_value = telephony_network_get_system_id(handle_list.handle[0], &sid);
+	if (ret_value != TELEPHONY_ERROR_NONE)
+		LOGE("telephony_network_get_system_id() failed!!! [%d]", ret_value);
+	else
+		LOGI("System ID is [%d]", sid);
+
+	ret_value = telephony_network_get_network_id(handle_list.handle[0], &nid);
+	if (ret_value != TELEPHONY_ERROR_NONE)
+		LOGE("telephony_network_get_network_id() failed!!! [%d]", ret_value);
+	else
+		LOGI("Network ID is [%d]", nid);
+
+	ret_value = telephony_network_get_base_station_id(handle_list.handle[0], &bs_id);
+	if (ret_value != TELEPHONY_ERROR_NONE)
+		LOGE("telephony_network_get_base_station_id() failed!!! [%d]", ret_value);
+	else
+		LOGI("Base station ID is [%d]", bs_id);
+
+	ret_value = telephony_network_get_base_station_latitude(handle_list.handle[0], &bs_latitude);
+	if (ret_value != TELEPHONY_ERROR_NONE)
+		LOGE("telephony_network_get_base_station_latitude() failed!!! [%d]", ret_value);
+	else
+		LOGI("Base station latitude is [%d]", bs_latitude);
+
+	ret_value = telephony_network_get_base_station_longitude(handle_list.handle[0], &bs_longitude);
+	if (ret_value != TELEPHONY_ERROR_NONE)
+		LOGE("telephony_network_get_base_station_longitude() failed!!! [%d]", ret_value);
+	else
+		LOGI("Base station longitude is [%d]", bs_longitude);
 
 	/* Call API */
 	ret_value = telephony_call_get_voice_call_state(handle_list.handle[0], &call_state);
