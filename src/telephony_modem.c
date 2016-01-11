@@ -27,6 +27,57 @@
 #include "telephony_modem.h"
 #include "telephony_private.h"
 
+static int __get_serial_number(TapiHandle *tapi_h, TelMiscSNInformation *data)
+{
+	int ret = TELEPHONY_ERROR_OPERATION_FAILED;
+	bool cdma_supported = FALSE;
+
+	if (!system_info_get_platform_bool(TELEPHONY_FEATURE_CDMA, &cdma_supported)) {
+		if (cdma_supported) {
+			GVariant *gv = NULL;
+			GError *gerr = NULL;
+
+			gv = g_dbus_connection_call_sync(tapi_h->dbus_connection,
+				DBUS_TELEPHONY_SERVICE, tapi_h->path, DBUS_TELEPHONY_MODEM_INTERFACE,
+				"GetSerialNumber", NULL, NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &gerr);
+
+			if (gv) {
+				int tapi_result;
+				char *tapi_esn = NULL, *tapi_meid = NULL, *tapi_imei = NULL, *tapi_imeisv = NULL;
+				g_variant_get(gv, "(issss)",
+					&tapi_result, &tapi_esn, &tapi_meid, &tapi_imei, &tapi_imeisv);
+				if (tapi_result == 0) {
+					ret = TELEPHONY_ERROR_NONE;
+					g_strlcpy((gchar *)data->szEsn, tapi_esn, TAPI_MISC_ME_SN_LEN_MAX);
+					g_strlcpy((gchar *)data->szMeid, tapi_meid, TAPI_MISC_ME_SN_LEN_MAX);
+					g_strlcpy((gchar *)data->szImei, tapi_imei, TAPI_MISC_ME_SN_LEN_MAX);
+					g_strlcpy((gchar *)data->szImeiSv, tapi_imeisv, TAPI_MISC_ME_SN_LEN_MAX);
+
+					g_free(tapi_esn);
+					g_free(tapi_meid);
+					g_free(tapi_imei);
+					g_free(tapi_imeisv);
+				}
+				g_variant_unref(gv);
+			} else {
+				LOGE("g_dbus_conn failed. error (%s)", gerr->message);
+				if (strstr(gerr->message, "AccessDenied"))
+					ret = TELEPHONY_ERROR_PERMISSION_DENIED;
+				g_error_free(gerr);
+			}
+		} else {
+			g_strlcpy((gchar *)data->szEsn, "", TAPI_MISC_ME_SN_LEN_MAX);
+			g_strlcpy((gchar *)data->szMeid, "", TAPI_MISC_ME_SN_LEN_MAX);
+			ret = TELEPHONY_ERROR_NONE;
+		}
+	} else {
+		LOGE("Error - Feature getting from System Info");
+		ret = TELEPHONY_ERROR_OPERATION_FAILED;
+	}
+
+	return ret;
+}
+
 int telephony_modem_get_imei(telephony_h handle, char **imei)
 {
 	GVariant *gv = NULL;
@@ -114,4 +165,66 @@ int telephony_modem_get_power_status(telephony_h handle,
 
 	return TELEPHONY_ERROR_NONE;
 
+}
+
+int telephony_modem_get_meid(telephony_h handle, char **meid)
+{
+	int ret;
+	TapiHandle *tapi_h;
+	TelMiscSNInformation data;
+
+	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
+	CHECK_INPUT_PARAMETER(handle);
+	tapi_h = ((telephony_data *)handle)->tapi_h;
+	CHECK_INPUT_PARAMETER(tapi_h);
+	CHECK_INPUT_PARAMETER(meid);
+
+	ret = __get_serial_number(tapi_h, &data);
+	if (ret == TAPI_API_SUCCESS) {
+		if (strlen((gchar *)data.szMeid) != 0)
+			*meid = strdup((gchar *)data.szMeid);
+		else
+			*meid = NULL;
+		LOGI("MEID:[%s]", *meid);
+		ret = TELEPHONY_ERROR_NONE;
+	} else if (ret == TAPI_API_ACCESS_DENIED) {
+		LOGE("PERMISSION_DENIED");
+		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
+	} else {
+		LOGE("OPERATION_FAILED");
+		ret = TELEPHONY_ERROR_OPERATION_FAILED;
+	}
+
+	return ret;
+}
+
+int telephony_modem_get_esn(telephony_h handle, char **esn)
+{
+	int ret;
+	TapiHandle *tapi_h;
+	TelMiscSNInformation data;
+
+	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
+	CHECK_INPUT_PARAMETER(handle);
+	tapi_h = ((telephony_data *)handle)->tapi_h;
+	CHECK_INPUT_PARAMETER(tapi_h);
+	CHECK_INPUT_PARAMETER(esn);
+
+	ret = __get_serial_number(tapi_h, &data);
+	if (ret == TAPI_API_SUCCESS) {
+		if (strlen((gchar *)data.szEsn) != 0)
+			*esn = strdup((gchar *)data.szEsn);
+		else
+			*esn = NULL;
+		LOGI("ESN:[%s]", *esn);
+		ret = TELEPHONY_ERROR_NONE;
+	} else if (ret == TAPI_API_ACCESS_DENIED) {
+		LOGE("PERMISSION_DENIED");
+		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
+	} else {
+		LOGE("OPERATION_FAILED");
+		ret = TELEPHONY_ERROR_OPERATION_FAILED;
+	}
+
+	return ret;
 }

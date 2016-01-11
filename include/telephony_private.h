@@ -24,6 +24,7 @@
 #include "telephony_call.h"
 
 #define TELEPHONY_FEATURE	"http://tizen.org/feature/network.telephony"
+#define TELEPHONY_FEATURE_CDMA	"http://tizen.org/feature/network.telephony.service.cdma"
 
 #ifdef LOG_TAG
 #undef LOG_TAG
