@@ -37,13 +37,12 @@ extern "C" {
  * @brief Enumeration for Modem Power Status.
  * @since_tizen 2.4
  */
-typedef enum
-{
-    TELEPHONY_MODEM_POWER_STATUS_UNKNOWN = -1, /**< Unknown*/
-    TELEPHONY_MODEM_POWER_STATUS_ON, /**< Modem power ON */
-    TELEPHONY_MODEM_POWER_STATUS_OFF,     /**< Modem power OFF */
-    TELEPHONY_MODEM_POWER_STATUS_RESET, /**< Modem power RESET */
-    TELEPHONY_MODEM_POWER_STATUS_LOW,    /**< Modem power LOW */
+typedef enum {
+	TELEPHONY_MODEM_POWER_STATUS_UNKNOWN = -1,	/**< Unknown */
+	TELEPHONY_MODEM_POWER_STATUS_ON,		/**< Modem power ON */
+	TELEPHONY_MODEM_POWER_STATUS_OFF,		/**< Modem power OFF */
+	TELEPHONY_MODEM_POWER_STATUS_RESET,		/**< Modem power RESET */
+	TELEPHONY_MODEM_POWER_STATUS_LOW,    		/**< Modem power LOW */
 } telephony_modem_power_status_e;
 
 /**
@@ -94,6 +93,52 @@ int telephony_modem_get_power_status(telephony_h handle,
 	telephony_modem_power_status_e *status);
 
 /**
+ * @brief Gets the MEID (Mobile Equipment Identifier) of a mobile phone. (for CDMA)
+ *
+ * @since_tizen 3.0
+ * @privlevel public
+ * @privilege %http://tizen.org/privilege/telephony
+ *
+ * @remarks You must release @c meid using free() on success case.
+ *
+ * @param[in] handle The handle from telephony_init()
+ * @param[out] meid The Mobile Equipment Identifier
+ *
+ * @return @c 0 on success,
+ *         otherwise a negative error value
+ *
+ * @retval #TELEPHONY_ERROR_NONE              Successful
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
+ * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
+ * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
+ */
+int telephony_modem_get_meid(telephony_h handle, char **meid);
+
+/**
+ * @brief Gets the ESN (Electronic Serial Number) of a mobile phone. (for CDMA)
+ *
+ * @since_tizen 3.0
+ * @privlevel public
+ * @privilege %http://tizen.org/privilege/telephony
+ *
+ * @remarks You must release @c esn using free() on success case.
+ *
+ * @param[in] handle The handle from telephony_init()
+ * @param[out] esn The Electronic Serial Number
+ *
+ * @return @c 0 on success,
+ *         otherwise a negative error value
+ *
+ * @retval #TELEPHONY_ERROR_NONE              Successful
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
+ * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
+ * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
+ */
+int telephony_modem_get_esn(telephony_h handle, char **esn);
+
+/**
  * @}
  */
 
@@ -101,4 +146,4 @@ int telephony_modem_get_power_status(telephony_h handle,
 }
 #endif
 
-#endif // __CAPI_TELEPHONY_MODEM_H__
+#endif /* __CAPI_TELEPHONY_MODEM_H__ */

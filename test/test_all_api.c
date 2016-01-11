@@ -354,6 +354,8 @@ int main()
 
 	/* Modem value */
 	char *imei = NULL;
+	char *meid = NULL;
+	char *esn = NULL;
 	telephony_modem_power_status_e power_status = 0;
 
 	/* Ready */
@@ -650,6 +652,22 @@ int main()
 		LOGE("telephony_modem_get_power_status() failed!!! [%d]", ret_value);
 	else
 		LOGI("Modem power status is [%d] (0=on,1=off,2=rst,3=low)", power_status);
+
+	ret_value = telephony_modem_get_meid(handle_list.handle[0], &meid);
+	if (ret_value != TELEPHONY_ERROR_NONE) {
+		LOGE("telephony_modem_get_meid() failed!!! [%d]", ret_value);
+	} else {
+		LOGI("MEID is [%s]", meid);
+		free(meid);
+	}
+
+	ret_value = telephony_modem_get_esn(handle_list.handle[0], &esn);
+	if (ret_value != TELEPHONY_ERROR_NONE) {
+		LOGE("telephony_modem_get_esn() failed!!! [%d]", ret_value);
+	} else {
+		LOGI("ESN is [%s]", esn);
+		free(esn);
+	}
 
 	/* set_noti_cb */
 	for (i = 0; i < (sizeof(sim_noti_tbl) / sizeof(int)); i++) {
