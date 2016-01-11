@@ -72,6 +72,7 @@ static int __get_serving_network(TapiHandle *tapi_h, TelNetworkServing_t *data)
 					}
 					ret = TELEPHONY_ERROR_NONE;
 				} else {
+					LOGE("OPERATION_FAILED");
 					ret = TELEPHONY_ERROR_OPERATION_FAILED;
 				}
 				g_variant_iter_free(iter);
@@ -79,8 +80,10 @@ static int __get_serving_network(TapiHandle *tapi_h, TelNetworkServing_t *data)
 			g_variant_unref(dbus_result);
 		}
 	} else if (ret == TAPI_API_ACCESS_DENIED) {
+		LOGE("PERMISSION_DENIED");
 		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
 	} else {
+		LOGE("OPERATION_FAILED");
 		ret = TELEPHONY_ERROR_OPERATION_FAILED;
 	}
 
@@ -668,16 +671,9 @@ int telephony_network_get_system_id(telephony_h handle, int *sid)
 	CHECK_INPUT_PARAMETER(sid);
 
 	ret = __get_serving_network(tapi_h, &data);
-	if (ret == TAPI_API_SUCCESS) {
+	if (ret == TELEPHONY_ERROR_NONE) {
 		*sid = data.info.cdma_info.system_id;
 		LOGI("sid:[%d]", *sid);
-		ret = TELEPHONY_ERROR_NONE;
-	} else if (ret == TAPI_API_ACCESS_DENIED) {
-		LOGE("PERMISSION_DENIED");
-		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
-	} else {
-		LOGE("OPERATION_FAILED");
-		ret = TELEPHONY_ERROR_OPERATION_FAILED;
 	}
 
 	return ret;
@@ -696,16 +692,9 @@ int telephony_network_get_network_id(telephony_h handle, int *nid)
 	CHECK_INPUT_PARAMETER(nid);
 
 	ret = __get_serving_network(tapi_h, &data);
-	if (ret == TAPI_API_SUCCESS) {
+	if (ret == TELEPHONY_ERROR_NONE) {
 		*nid = data.info.cdma_info.network_id;
 		LOGI("nid:[%d]", *nid);
-		ret = TELEPHONY_ERROR_NONE;
-	} else if (ret == TAPI_API_ACCESS_DENIED) {
-		LOGE("PERMISSION_DENIED");
-		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
-	} else {
-		LOGE("OPERATION_FAILED");
-		ret = TELEPHONY_ERROR_OPERATION_FAILED;
 	}
 
 	return ret;
@@ -724,16 +713,9 @@ int telephony_network_get_base_station_id(telephony_h handle, int *bs_id)
 	CHECK_INPUT_PARAMETER(bs_id);
 
 	ret = __get_serving_network(tapi_h, &data);
-	if (ret == TAPI_API_SUCCESS) {
+	if (ret == TELEPHONY_ERROR_NONE) {
 		*bs_id = data.info.cdma_info.base_station_id;
 		LOGI("bs_id:[%d]", *bs_id);
-		ret = TELEPHONY_ERROR_NONE;
-	} else if (ret == TAPI_API_ACCESS_DENIED) {
-		LOGE("PERMISSION_DENIED");
-		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
-	} else {
-		LOGE("OPERATION_FAILED");
-		ret = TELEPHONY_ERROR_OPERATION_FAILED;
 	}
 
 	return ret;
@@ -752,16 +734,9 @@ int telephony_network_get_base_station_latitude(telephony_h handle, int *bs_lati
 	CHECK_INPUT_PARAMETER(bs_latitude);
 
 	ret = __get_serving_network(tapi_h, &data);
-	if (ret == TAPI_API_SUCCESS) {
+	if (ret == TELEPHONY_ERROR_NONE) {
 		*bs_latitude = data.info.cdma_info.base_station_latitude;
 		LOGI("bs_latitude:[%d]", *bs_latitude);
-		ret = TELEPHONY_ERROR_NONE;
-	} else if (ret == TAPI_API_ACCESS_DENIED) {
-		LOGE("PERMISSION_DENIED");
-		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
-	} else {
-		LOGE("OPERATION_FAILED");
-		ret = TELEPHONY_ERROR_OPERATION_FAILED;
 	}
 
 	return ret;
@@ -780,16 +755,9 @@ int telephony_network_get_base_station_longitude(telephony_h handle, int *bs_lon
 	CHECK_INPUT_PARAMETER(bs_longitude);
 
 	ret = __get_serving_network(tapi_h, &data);
-	if (ret == TAPI_API_SUCCESS) {
+	if (ret == TELEPHONY_ERROR_NONE) {
 		*bs_longitude = data.info.cdma_info.base_station_longitude;
 		LOGI("bs_longitude:[%d]", *bs_longitude);
-		ret = TELEPHONY_ERROR_NONE;
-	} else if (ret == TAPI_API_ACCESS_DENIED) {
-		LOGE("PERMISSION_DENIED");
-		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
-	} else {
-		LOGE("OPERATION_FAILED");
-		ret = TELEPHONY_ERROR_OPERATION_FAILED;
 	}
 
 	return ret;
