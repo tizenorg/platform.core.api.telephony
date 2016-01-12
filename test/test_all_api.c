@@ -355,7 +355,6 @@ int main()
 	/* Modem value */
 	char *imei = NULL;
 	char *meid = NULL;
-	char *esn = NULL;
 	telephony_modem_power_status_e power_status = 0;
 
 	/* Ready */
@@ -659,14 +658,6 @@ int main()
 	} else {
 		LOGI("MEID is [%s]", meid);
 		free(meid);
-	}
-
-	ret_value = telephony_modem_get_esn(handle_list.handle[0], &esn);
-	if (ret_value != TELEPHONY_ERROR_NONE) {
-		LOGE("telephony_modem_get_esn() failed!!! [%d]", ret_value);
-	} else {
-		LOGI("ESN is [%s]", esn);
-		free(esn);
 	}
 
 	/* set_noti_cb */

@@ -116,29 +116,6 @@ int telephony_modem_get_power_status(telephony_h handle,
 int telephony_modem_get_meid(telephony_h handle, char **meid);
 
 /**
- * @brief Gets the ESN (Electronic Serial Number) of a mobile phone. (for CDMA)
- *
- * @since_tizen 3.0
- * @privlevel public
- * @privilege %http://tizen.org/privilege/telephony
- *
- * @remarks You must release @c esn using free() on success case.
- *
- * @param[in] handle The handle from telephony_init()
- * @param[out] esn The Electronic Serial Number
- *
- * @return @c 0 on success,
- *         otherwise a negative error value
- *
- * @retval #TELEPHONY_ERROR_NONE              Successful
- * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
- * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
- * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
- * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
- */
-int telephony_modem_get_esn(telephony_h handle, char **esn);
-
-/**
  * @}
  */
 
