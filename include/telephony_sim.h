@@ -347,7 +347,7 @@ int telephony_sim_get_subscriber_id(telephony_h handle, char **subscriber_id);
 int telephony_sim_get_lock_state(telephony_h handle, telephony_sim_lock_state_e *lock_state);
 
 /**
- * @brief Gets the Group Identifier Level 1(GID1).
+ * @brief Gets the GID1 (Group Identifier Level 1).
  * @details This function gets Group Identifier Level 1(GID1) embedded in the SIM card.
  *          If this value is not stored in SIM card, @c NULL will be returned.
  *
@@ -371,7 +371,7 @@ int telephony_sim_get_lock_state(telephony_h handle, telephony_sim_lock_state_e 
  *
  * @see telephony_sim_get_state()
  */
-int telephony_sim_get_gid1(telephony_h handle, char **gid1);
+int telephony_sim_get_group_id1(telephony_h handle, char **gid1);
 
 /**
  * @brief Gets the call fowarding state of the SIM.

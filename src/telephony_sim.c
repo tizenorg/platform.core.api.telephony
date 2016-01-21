@@ -510,7 +510,7 @@ int telephony_sim_get_lock_state(telephony_h handle, telephony_sim_lock_state_e 
 	return error_code;
 }
 
-int telephony_sim_get_gid1(telephony_h handle, char **gid1)
+int telephony_sim_get_group_id1(telephony_h handle, char **gid1)
 {
 	int error_code = TELEPHONY_ERROR_NONE;
 	TelSimCardStatus_t sim_card_state = TAPI_SIM_STATUS_UNKNOWN;

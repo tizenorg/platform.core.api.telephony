@@ -449,9 +449,9 @@ int main()
 		LOGI("Lock state is [%d]", lock_state);
 	}
 
-	ret_value = telephony_sim_get_gid1(handle_list.handle[0], &gid1);
+	ret_value = telephony_sim_get_group_id1(handle_list.handle[0], &gid1);
 	if (ret_value != TELEPHONY_ERROR_NONE) {
-		LOGE("telephony_sim_get_gid1() failed!!! [%d]", ret_value);
+		LOGE("telephony_sim_get_group_id1() failed!!! [%d]", ret_value);
 	} else {
 		LOGI("GID1 is [%s]", gid1);
 		free(gid1);
