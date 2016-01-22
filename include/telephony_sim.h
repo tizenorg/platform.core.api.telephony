@@ -53,11 +53,7 @@ typedef enum {
 	TELEPHONY_SIM_LOCK_STATE_PIN_REQUIRED, /**< SIM is PIN(Personal Identification Number) locked */
 	TELEPHONY_SIM_LOCK_STATE_PUK_REQUIRED, /**< SIM is PUK(Personal Unblocking Code) locked */
 	TELEPHONY_SIM_LOCK_STATE_PERM_LOCKED, /**< SIM is permanently blocked(All the attempts for PIN/PUK failed) */
-	TELEPHONY_SIM_LOCK_STATE_NCK_REQUIRED, /**< SIM is NCK(Network Control Key) locked */
-	TELEPHONY_SIM_LOCK_STATE_NSCK_REQUIRED, /**< SIM is NSCK(Network Subset Control Key) locked */
-	TELEPHONY_SIM_LOCK_STATE_SPCK_REQUIRED, /**< SIM is SPCK(Service Provider Control Key) locked */
-	TELEPHONY_SIM_LOCK_STATE_CCK_REQUIRED, /**< SIM is CCK(Corporate Control Key) locked */
-	TELEPHONY_SIM_LOCK_STATE_PHONE_REQUIRED /**< SIM is PH-SIM(Phone-SIM) locked */
+	TELEPHONY_SIM_LOCK_STATE_NCK_REQUIRED /**< SIM is NCK(Network Control Key) locked */
 } telephony_sim_lock_state_e;
 
 /**
@@ -374,16 +370,18 @@ int telephony_sim_get_lock_state(telephony_h handle, telephony_sim_lock_state_e 
 int telephony_sim_get_group_id1(telephony_h handle, char **gid1);
 
 /**
- * @brief Gets the call fowarding state of the SIM.
+ * @brief Gets the call fowarding indicator state of the SIM.
  * @details If the state is true, incoming call will be forwarded to selected number.
+ *          @c state indicates the CFU (Call Forwarding Unconditional) indicator status - Voice.
+ *          (3GPP TS 31.102 4.2.64 EF CFIS)
  *
  * @since_tizen 3.0
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
  * @param[in] handle The handle from telephony_init()
- * @param[out] call_forwarding_state The value whether incoming call will be forwarded or not.
- *                                   (true: forwarded, false: not forwarded)
+ * @param[out] state The value whether incoming call will be forwarded or not.
+ *                   (true: forwarded, false: not forwarded)
  *
  * @return @c 0 on success,
  *         otherwise a negative error value
@@ -398,7 +396,7 @@ int telephony_sim_get_group_id1(telephony_h handle, char **gid1);
  *
  * @see telephony_sim_get_state()
  */
-int telephony_sim_get_call_forwarding_state(telephony_h handle, bool *call_forwarding_state);
+int telephony_sim_get_call_forwarding_indicator_state(telephony_h handle, bool *state);
 
 /**
  * @}

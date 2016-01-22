@@ -491,17 +491,9 @@ int telephony_sim_get_lock_state(telephony_h handle, telephony_sim_lock_state_e 
 		*lock_state = TELEPHONY_SIM_LOCK_STATE_NCK_REQUIRED;
 		break;
 	case TAPI_SIM_STATUS_SIM_NSCK_REQUIRED:
-		*lock_state = TELEPHONY_SIM_LOCK_STATE_NSCK_REQUIRED;
-		break;
 	case TAPI_SIM_STATUS_SIM_SPCK_REQUIRED:
-		*lock_state = TELEPHONY_SIM_LOCK_STATE_SPCK_REQUIRED;
-		break;
 	case TAPI_SIM_STATUS_SIM_CCK_REQUIRED:
-		*lock_state = TELEPHONY_SIM_LOCK_STATE_CCK_REQUIRED;
-		break;
 	case TAPI_SIM_STATUS_SIM_LOCK_REQUIRED:
-		*lock_state = TELEPHONY_SIM_LOCK_STATE_PHONE_REQUIRED;
-		break;
 	default:
 		*lock_state = TELEPHONY_SIM_LOCK_STATE_UNKNOWN;
 		break;
@@ -571,7 +563,7 @@ int telephony_sim_get_group_id1(telephony_h handle, char **gid1)
 	return error_code;
 }
 
-int telephony_sim_get_call_forwarding_state(telephony_h handle, bool *call_forwarding_state)
+int telephony_sim_get_call_forwarding_indicator_state(telephony_h handle, bool *state)
 {
 	int error_code;
 	TapiHandle *tapi_h;
@@ -581,12 +573,12 @@ int telephony_sim_get_call_forwarding_state(telephony_h handle, bool *call_forwa
 	CHECK_INPUT_PARAMETER(handle);
 	tapi_h = ((telephony_data *)handle)->tapi_h;
 	CHECK_INPUT_PARAMETER(tapi_h);
-	CHECK_INPUT_PARAMETER(call_forwarding_state);
+	CHECK_INPUT_PARAMETER(state);
 
 	error_code = tel_get_property_int(tapi_h, TAPI_PROP_SIM_CALL_FORWARD_STATE, &tel_state);
 	if (error_code == TAPI_API_SUCCESS) {
-		*call_forwarding_state = (bool)tel_state;
-		LOGI("call_forwarding_state: [%s]", *call_forwarding_state ? "ON" : "OFF");
+		*state = (bool)tel_state;
+		LOGI("Call forwarding indciator state: [%s]", *state ? "ON" : "OFF");
 		error_code = TELEPHONY_ERROR_NONE;
 	} else if (error_code == TAPI_API_ACCESS_DENIED) {
 		LOGE("PERMISSION_DENIED");

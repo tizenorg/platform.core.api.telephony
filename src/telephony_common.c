@@ -77,7 +77,7 @@ static const char *_mapping_noti_id(telephony_noti_e noti_id)
 	switch (noti_id) {
 	case TELEPHONY_NOTI_SIM_STATUS:
 		return TAPI_NOTI_SIM_STATUS;
-	case TELEPHONY_NOTI_SIM_CALL_FORWARDING_STATE:
+	case TELEPHONY_NOTI_SIM_CALL_FORWARDING_INDICATOR_STATE:
 		return TAPI_PROP_SIM_CALL_FORWARD_STATE;
 	case TELEPHONY_NOTI_NETWORK_SERVICE_STATE:
 		return TAPI_PROP_NETWORK_SERVICE_TYPE;
@@ -250,8 +250,8 @@ static void on_signal_callback(TapiHandle *tapi_h, const char *evt_id,
 		int sim_status = _mapping_sim_status(*(TelSimCardStatus_t *)data);
 		CALLBACK_CALL(&sim_status);
 	} else if (!g_strcmp0(evt_id, TAPI_PROP_SIM_CALL_FORWARD_STATE)) {
-		bool call_forwarding_state = *(bool *)data;
-		CALLBACK_CALL(&call_forwarding_state);
+		bool state = *(bool *)data;
+		CALLBACK_CALL(&state);
 	} else if (!g_strcmp0(evt_id, TAPI_PROP_NETWORK_SERVICE_TYPE)) {
 		int service_state = _mapping_service_state(*(int *)data);
 		CALLBACK_CALL(&service_state);

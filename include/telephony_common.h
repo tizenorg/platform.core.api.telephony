@@ -75,7 +75,7 @@ typedef enum {
  */
 typedef enum  {
     TELEPHONY_NOTI_SIM_STATUS = 0x10,            /**< Notification to be invoked when the SIM card state changes, '#telephony_sim_state_e' will be delivered in notification data */
-    TELEPHONY_NOTI_SIM_CALL_FORWARDING_STATE, /**< Notification to be invoked when the SIM call forwarding state changes, 'call_forwarding_state(bool)' will be delivered in notification data (@b Since: 3.0) */
+    TELEPHONY_NOTI_SIM_CALL_FORWARDING_INDICATOR_STATE, /**< Notification to be invoked when the SIM call forwarding indicator state changes, 'state(bool)' will be delivered in notification data (@b Since: 3.0) */
 
     TELEPHONY_NOTI_NETWORK_SERVICE_STATE = 0x20, /**< Notification to be invoked when the network service state changes, '#telephony_network_service_state_e' will be delivered in notification data */
     TELEPHONY_NOTI_NETWORK_CELLID,               /**< Notification to be invoked when the cell ID changes, 'cell_id(int)' will be delivered in notification data */
