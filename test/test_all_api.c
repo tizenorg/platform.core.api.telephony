@@ -31,7 +31,7 @@ static telephony_handle_list_s handle_list;
 
 static int sim_noti_tbl[] = {
 	TELEPHONY_NOTI_SIM_STATUS,
-	TELEPHONY_NOTI_SIM_CALL_FORWARDING_STATE
+	TELEPHONY_NOTI_SIM_CALL_FORWARDING_INDICATOR_STATE
 };
 
 static int network_noti_tbl[] = {
@@ -71,7 +71,16 @@ static const char *_mapping_sim_state(telephony_sim_state_e sim_state)
 
 static void sim_noti_cb(telephony_h handle, telephony_noti_e noti_id, void *data, void *user_data)
 {
-	LOGI("Noti!! SIM status: [%d]", *(int *)data);
+	switch (noti_id) {
+	case TELEPHONY_NOTI_SIM_STATUS:
+		LOGI("Noti!! SIM status: [%d]", *(int *)data);
+		break;
+	case TELEPHONY_NOTI_SIM_CALL_FORWARDING_INDICATOR_STATE:
+		LOGI("Noti!! SIM Call forwarding indicator state: [%s]", *(bool *)data ? "ON" : "OFF");
+		break;
+	default:
+		break;
+	}
 }
 
 static const char *_mapping_service_state(telephony_network_service_state_e service_state)
@@ -326,7 +335,7 @@ int main()
 	bool is_changed = FALSE;
 	telephony_sim_lock_state_e lock_state = 0;
 	char *gid1 = NULL;
-	bool call_forwarding_state = FALSE;
+	bool cf_state = FALSE;
 
 	/* Network value */
 	int cell_id = 0;
@@ -457,11 +466,11 @@ int main()
 		free(gid1);
 	}
 
-	ret_value = telephony_sim_get_call_forwarding_state(handle_list.handle[0], &call_forwarding_state);
+	ret_value = telephony_sim_get_call_forwarding_indicator_state(handle_list.handle[0], &cf_state);
 	if (ret_value != TELEPHONY_ERROR_NONE) {
-		LOGE("telephony_sim_get_call_forwarding_state() failed!!! [%d]", ret_value);
+		LOGE("telephony_sim_get_call_forwarding_indicator_state() failed!!! [%d]", ret_value);
 	} else {
-		LOGI("Call forwarding state is [%s]", call_forwarding_state ? "ON" : "OFF");
+		LOGI("Call forwarding indicator state is [%s]", cf_state ? "ON" : "OFF");
 	}
 
 	/* Network API */
