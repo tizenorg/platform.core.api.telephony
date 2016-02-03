@@ -61,14 +61,14 @@ typedef enum {
 	TELEPHONY_NETWORK_TYPE_UMTS,		/**< 3G UMTS network type */
 	TELEPHONY_NETWORK_TYPE_HSDPA,		/**< HSDPA network type */
 	TELEPHONY_NETWORK_TYPE_LTE,		/**< LTE network type */
-	TELEPHONY_NETWORK_TYPE_IS95A,		/**< IS95A network type (@b Since: 3.0) */
-	TELEPHONY_NETWORK_TYPE_IS95B,		/**< IS95B network type (@b Since: 3.0) */
-	TELEPHONY_NETWORK_TYPE_CDMA_1X,		/**< CDMA 1x network type (@b Since: 3.0) */
-	TELEPHONY_NETWORK_TYPE_EVDO_REV_0,	/**< EVDO revision 0 network type (@b Since: 3.0) */
-	TELEPHONY_NETWORK_TYPE_EVDO_REV_A,	/**< EVDO revision A network type (@b Since: 3.0) */
-	TELEPHONY_NETWORK_TYPE_EVDO_REV_B,	/**< EVDO revision B network type (@b Since: 3.0) */
-	TELEPHONY_NETWORK_TYPE_EVDV,		/**< EVDV network type (@b Since: 3.0) */
-	TELEPHONY_NETWORK_TYPE_EHRPD,		/**< EHRPD network type (@b Since: 3.0) */
+	TELEPHONY_NETWORK_TYPE_IS95A,		/**< IS95A network type (Since: 3.0) */
+	TELEPHONY_NETWORK_TYPE_IS95B,		/**< IS95B network type (Since: 3.0) */
+	TELEPHONY_NETWORK_TYPE_CDMA_1X,		/**< CDMA 1x network type (Since: 3.0) */
+	TELEPHONY_NETWORK_TYPE_EVDO_REV_0,	/**< EVDO revision 0 network type (Since: 3.0) */
+	TELEPHONY_NETWORK_TYPE_EVDO_REV_A,	/**< EVDO revision A network type (Since: 3.0) */
+	TELEPHONY_NETWORK_TYPE_EVDO_REV_B,	/**< EVDO revision B network type (Since: 3.0) */
+	TELEPHONY_NETWORK_TYPE_EVDV,		/**< EVDV network type (Since: 3.0) */
+	TELEPHONY_NETWORK_TYPE_EHRPD,		/**< EHRPD network type (Since: 3.0) */
 } telephony_network_type_e;
 
 /**
@@ -507,8 +507,10 @@ int telephony_network_get_selection_mode(telephony_h handle,
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  *
  * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
+ *      and network type must be LTE network.
  *
  * @see telephony_network_get_service_state()
+ * @see telephony_network_get_type()
  */
 int telephony_network_get_tac(telephony_h handle, int *tac);
 
@@ -532,8 +534,10 @@ int telephony_network_get_tac(telephony_h handle, int *tac);
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  *
  * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
+ *      and network type must be CDMA network.
  *
  * @see telephony_network_get_service_state()
+ * @see telephony_network_get_type()
  */
 int telephony_network_get_system_id(telephony_h handle, int *sid);
 
@@ -557,8 +561,10 @@ int telephony_network_get_system_id(telephony_h handle, int *sid);
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  *
  * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
+ *      and network type must be CDMA network.
  *
  * @see telephony_network_get_service_state()
+ * @see telephony_network_get_type()
  */
 int telephony_network_get_network_id(telephony_h handle, int *nid);
 
@@ -582,8 +588,10 @@ int telephony_network_get_network_id(telephony_h handle, int *nid);
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  *
  * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
+ *      and network type must be CDMA network.
  *
  * @see telephony_network_get_service_state()
+ * @see telephony_network_get_type()
  */
 int telephony_network_get_base_station_id(telephony_h handle, int *bs_id);
 
@@ -607,8 +615,10 @@ int telephony_network_get_base_station_id(telephony_h handle, int *bs_id);
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  *
  * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
+ *      and network type must be CDMA network.
  *
  * @see telephony_network_get_service_state()
+ * @see telephony_network_get_type()
  */
 int telephony_network_get_base_station_latitude(telephony_h handle, int *bs_latitude);
 
@@ -632,8 +642,10 @@ int telephony_network_get_base_station_latitude(telephony_h handle, int *bs_lati
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  *
  * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
+ *      and network type must be CDMA network.
  *
  * @see telephony_network_get_service_state()
+ * @see telephony_network_get_type()
  */
 int telephony_network_get_base_station_longitude(telephony_h handle, int *bs_longitude);
 

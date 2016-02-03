@@ -1,6 +1,6 @@
 Name:       capi-telephony
 Summary:    Telephony Core API
-Version:    0.1.56
+Version:    0.1.57
 Release:    1
 Group:      System/Libraries
 License:    Apache-2.0
