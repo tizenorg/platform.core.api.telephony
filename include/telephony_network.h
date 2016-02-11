@@ -141,7 +141,7 @@ typedef enum {
  * @privilege %http://tizen.org/privilege/telephony
  *
  * @param[in] handle The handle from telephony_init()
- * @param[out] lac The Location Area Code
+ * @param[out] lac The Location Area Code, -1 if unknown
  *
  * @return @c 0 on success,
  *         otherwise a negative error value
@@ -166,7 +166,7 @@ int telephony_network_get_lac(telephony_h handle, int *lac);
  * @privilege %http://tizen.org/privilege/telephony
  *
  * @param[in] handle The handle from telephony_init()
- * @param[out] cell_id The cell identification number
+ * @param[out] cell_id The cell identification number, -1 if unknown
  *
  * @return @c 0 on success,
  *         otherwise a negative error value
@@ -495,7 +495,7 @@ int telephony_network_get_selection_mode(telephony_h handle,
  * @privilege %http://tizen.org/privilege/telephony
  *
  * @param[in] handle The handle from telephony_init()
- * @param[out] tac The Tracking Area Code
+ * @param[out] tac The Tracking Area Code, -1 if unknown
  *
  * @return @c 0 on success,
  *         otherwise a negative error value
@@ -522,7 +522,7 @@ int telephony_network_get_tac(telephony_h handle, int *tac);
  * @privilege %http://tizen.org/privilege/telephony
  *
  * @param[in] handle The handle from telephony_init()
- * @param[out] sid The system ID
+ * @param[out] sid The system ID, -1 if unknown
  *
  * @return @c 0 on success,
  *         otherwise a negative error value
@@ -549,7 +549,7 @@ int telephony_network_get_system_id(telephony_h handle, int *sid);
  * @privilege %http://tizen.org/privilege/telephony
  *
  * @param[in] handle The handle from telephony_init()
- * @param[out] nid The network ID
+ * @param[out] nid The network ID, -1 if unknown
  *
  * @return @c 0 on success,
  *         otherwise a negative error value
@@ -576,7 +576,7 @@ int telephony_network_get_network_id(telephony_h handle, int *nid);
  * @privilege %http://tizen.org/privilege/telephony
  *
  * @param[in] handle The handle from telephony_init()
- * @param[out] bs_id The base station ID
+ * @param[out] bs_id The base station ID, -1 if unknown
  *
  * @return @c 0 on success,
  *         otherwise a negative error value
@@ -603,7 +603,7 @@ int telephony_network_get_base_station_id(telephony_h handle, int *bs_id);
  * @privilege %http://tizen.org/privilege/telephony
  *
  * @param[in] handle The handle from telephony_init()
- * @param[out] bs_latitude The base station latitude
+ * @param[out] bs_latitude The base station latitude, 0x7FFFFFFF if unknown
  *
  * @return @c 0 on success,
  *         otherwise a negative error value
@@ -630,7 +630,7 @@ int telephony_network_get_base_station_latitude(telephony_h handle, int *bs_lati
  * @privilege %http://tizen.org/privilege/telephony
  *
  * @param[in] handle The handle from telephony_init()
- * @param[out] bs_longitude The base station longitude
+ * @param[out] bs_longitude The base station longitude, 0x7FFFFFFF if unknown
  *
  * @return @c 0 on success,
  *         otherwise a negative error value
