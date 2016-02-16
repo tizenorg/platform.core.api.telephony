@@ -140,6 +140,9 @@ typedef enum {
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
+ * @remarks This API returns #TELEPHONY_ERROR_NONE with unknown value (@c lac)
+ *          if precondition is not be satisfied.
+ *
  * @param[in] handle The handle from telephony_init()
  * @param[out] lac The Location Area Code, -1 if unknown
  *
@@ -164,6 +167,9 @@ int telephony_network_get_lac(telephony_h handle, int *lac);
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
+ *
+ * @remarks This API returns #TELEPHONY_ERROR_NONE with unknown value (@c cell_id)
+ *          if precondition is not be satisfied.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] cell_id The cell identification number, -1 if unknown
@@ -494,6 +500,9 @@ int telephony_network_get_selection_mode(telephony_h handle,
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
+ * @remarks This API returns #TELEPHONY_ERROR_NONE with unknown value (@c tac)
+ *          if precondition is not be satisfied.
+ *
  * @param[in] handle The handle from telephony_init()
  * @param[out] tac The Tracking Area Code, -1 if unknown
  *
@@ -520,6 +529,9 @@ int telephony_network_get_tac(telephony_h handle, int *tac);
  * @since_tizen 3.0
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
+ *
+ * @remarks This API returns #TELEPHONY_ERROR_NONE with unknown value (@c sid)
+ *          if precondition is not be satisfied.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] sid The system ID, -1 if unknown
@@ -548,6 +560,9 @@ int telephony_network_get_system_id(telephony_h handle, int *sid);
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
+ * @remarks This API returns #TELEPHONY_ERROR_NONE with unknown value (@c nid)
+ *          if precondition is not be satisfied.
+ *
  * @param[in] handle The handle from telephony_init()
  * @param[out] nid The network ID, -1 if unknown
  *
@@ -574,6 +589,9 @@ int telephony_network_get_network_id(telephony_h handle, int *nid);
  * @since_tizen 3.0
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
+ *
+ * @remarks This API returns #TELEPHONY_ERROR_NONE with unknown value (@c bs_id)
+ *          if precondition is not be satisfied.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] bs_id The base station ID, -1 if unknown
@@ -602,6 +620,9 @@ int telephony_network_get_base_station_id(telephony_h handle, int *bs_id);
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
+ * @remarks This API returns #TELEPHONY_ERROR_NONE with unknown value (@c bs_latitude)
+ *          if precondition is not be satisfied.
+ *
  * @param[in] handle The handle from telephony_init()
  * @param[out] bs_latitude The base station latitude, 0x7FFFFFFF if unknown
  *
@@ -628,6 +649,9 @@ int telephony_network_get_base_station_latitude(telephony_h handle, int *bs_lati
  * @since_tizen 3.0
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
+ *
+ * @remarks This API returns #TELEPHONY_ERROR_NONE with unknown value (@c bs_longitude)
+ *          if precondition is not be satisfied.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] bs_longitude The base station longitude, 0x7FFFFFFF if unknown
