@@ -140,8 +140,7 @@ typedef enum {
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
- * @remarks This API returns #TELEPHONY_ERROR_NONE with unknown value (@c lac)
- *          if precondition is not be satisfied.
+ * @remarks This API can be used in GSM / WCDMA network.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] lac The Location Area Code, -1 if unknown
@@ -155,9 +154,8 @@ typedef enum {
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  *
- * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
- *
  * @see telephony_network_get_service_state()
+ * @see telephony_network_get_type()
  */
 int telephony_network_get_lac(telephony_h handle, int *lac);
 
@@ -168,8 +166,7 @@ int telephony_network_get_lac(telephony_h handle, int *lac);
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
- * @remarks This API returns #TELEPHONY_ERROR_NONE with unknown value (@c cell_id)
- *          if precondition is not be satisfied.
+ * @remarks This API can be used in GSM / WCDMA / LTE network.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] cell_id The cell identification number, -1 if unknown
@@ -183,9 +180,8 @@ int telephony_network_get_lac(telephony_h handle, int *lac);
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  *
- * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
- *
  * @see telephony_network_get_service_state()
+ * @see telephony_network_get_type()
  */
 int telephony_network_get_cell_id(telephony_h handle, int *cell_id);
 
@@ -208,10 +204,6 @@ int telephony_network_get_cell_id(telephony_h handle, int *cell_id);
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
- *
- * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
- *
- * @see telephony_network_get_service_state()
  */
 int telephony_network_get_rssi(telephony_h handle, telephony_network_rssi_e *rssi);
 
@@ -234,10 +226,6 @@ int telephony_network_get_rssi(telephony_h handle, telephony_network_rssi_e *rss
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
- *
- * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
- *
- * @see telephony_network_get_service_state()
  */
 int telephony_network_get_roaming_status(telephony_h handle, bool *status);
 
@@ -248,7 +236,8 @@ int telephony_network_get_roaming_status(telephony_h handle, bool *status);
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
- * @remarks You must release @c mcc using free() on success case.
+ * @remarks This API can be used in GSM / WCDMA / LTE network.
+ *          You must release @c mcc using free() on success case.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] mcc The Mobile Country Code (three digits)
@@ -262,10 +251,6 @@ int telephony_network_get_roaming_status(telephony_h handle, bool *status);
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
- *
- * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
- *
- * @see telephony_network_get_service_state()
  */
 int telephony_network_get_mcc(telephony_h handle, char **mcc);
 
@@ -276,7 +261,8 @@ int telephony_network_get_mcc(telephony_h handle, char **mcc);
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
- * @remarks You must release @c mnc using free() on success case.
+ * @remarks This API can be used in GSM / WCDMA / LTE network.
+ *          You must release @c mnc using free() on success case.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] mnc The Mobile Network Code (three digits)
@@ -290,10 +276,6 @@ int telephony_network_get_mcc(telephony_h handle, char **mcc);
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
- *
- * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
- *
- * @see telephony_network_get_service_state()
  */
 int telephony_network_get_mnc(telephony_h handle, char **mnc);
 
@@ -317,10 +299,6 @@ int telephony_network_get_mnc(telephony_h handle, char **mnc);
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
- *
- * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
- *
- * @see telephony_network_get_service_state()
  */
 int telephony_network_get_network_name(telephony_h handle, char **network_name);
 
@@ -330,6 +308,8 @@ int telephony_network_get_network_name(telephony_h handle, char **network_name);
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
+ *
+ * @remarks This API can be used in case network is in service.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] network_type The network service type
@@ -343,8 +323,6 @@ int telephony_network_get_network_name(telephony_h handle, char **network_name);
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  *
- * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
- *
  * @see telephony_network_get_service_state()
  */
 int telephony_network_get_type(telephony_h handle,
@@ -356,6 +334,8 @@ int telephony_network_get_type(telephony_h handle,
  * @since_tizen 2.4
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
+ *
+ * @remarks This API can be used in HSDPA network.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] ps_type The type of packet service
@@ -369,9 +349,8 @@ int telephony_network_get_type(telephony_h handle,
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  *
- * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
- *
  * @see telephony_network_get_service_state()
+ * @see telephony_network_get_type()
  */
 int telephony_network_get_ps_type(telephony_h handle, telephony_network_ps_type_e *ps_type);
 
@@ -393,10 +372,6 @@ int telephony_network_get_ps_type(telephony_h handle, telephony_network_ps_type_
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
- *
- * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
- *
- * @see telephony_network_get_service_state()
  */
 int telephony_network_get_network_name_option(telephony_h handle,
 	telephony_network_name_option_e *network_name_option);
@@ -494,14 +469,13 @@ int telephony_network_get_selection_mode(telephony_h handle,
 	telephony_network_selection_mode_e *mode);
 
 /**
- * @brief Gets the TAC (Tracking Area Code) of the current location. (for LTE network)
+ * @brief Gets the TAC (Tracking Area Code) of the current location.
  *
  * @since_tizen 3.0
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
- * @remarks This API returns #TELEPHONY_ERROR_NONE with unknown value (@c tac)
- *          if precondition is not be satisfied.
+ * @remarks This API can be used in LTE network.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] tac The Tracking Area Code, -1 if unknown
@@ -515,23 +489,19 @@ int telephony_network_get_selection_mode(telephony_h handle,
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  *
- * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
- *      and network type must be LTE network.
- *
  * @see telephony_network_get_service_state()
  * @see telephony_network_get_type()
  */
 int telephony_network_get_tac(telephony_h handle, int *tac);
 
 /**
- * @brief Gets the system ID of the current location. (for CDMA network)
+ * @brief Gets the system ID of the current location.
  *
  * @since_tizen 3.0
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
- * @remarks This API returns #TELEPHONY_ERROR_NONE with unknown value (@c sid)
- *          if precondition is not be satisfied.
+ * @remarks This API can be used in CDMA network.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] sid The system ID, -1 if unknown
@@ -545,23 +515,19 @@ int telephony_network_get_tac(telephony_h handle, int *tac);
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  *
- * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
- *      and network type must be CDMA network.
- *
  * @see telephony_network_get_service_state()
  * @see telephony_network_get_type()
  */
 int telephony_network_get_system_id(telephony_h handle, int *sid);
 
 /**
- * @brief Gets the network ID of the current location. (for CDMA network)
+ * @brief Gets the network ID of the current location.
  *
  * @since_tizen 3.0
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
- * @remarks This API returns #TELEPHONY_ERROR_NONE with unknown value (@c nid)
- *          if precondition is not be satisfied.
+ * @remarks This API can be used in CDMA network.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] nid The network ID, -1 if unknown
@@ -575,23 +541,19 @@ int telephony_network_get_system_id(telephony_h handle, int *sid);
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  *
- * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
- *      and network type must be CDMA network.
- *
  * @see telephony_network_get_service_state()
  * @see telephony_network_get_type()
  */
 int telephony_network_get_network_id(telephony_h handle, int *nid);
 
 /**
- * @brief Gets the base station ID of the current location. (for CDMA network)
+ * @brief Gets the base station ID of the current location.
  *
  * @since_tizen 3.0
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
- * @remarks This API returns #TELEPHONY_ERROR_NONE with unknown value (@c bs_id)
- *          if precondition is not be satisfied.
+ * @remarks This API can be used in CDMA network.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] bs_id The base station ID, -1 if unknown
@@ -605,23 +567,19 @@ int telephony_network_get_network_id(telephony_h handle, int *nid);
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  *
- * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
- *      and network type must be CDMA network.
- *
  * @see telephony_network_get_service_state()
  * @see telephony_network_get_type()
  */
 int telephony_network_get_base_station_id(telephony_h handle, int *bs_id);
 
 /**
- * @brief Gets the base station latitude of the current location. (for CDMA network)
+ * @brief Gets the base station latitude of the current location.
  *
  * @since_tizen 3.0
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
- * @remarks This API returns #TELEPHONY_ERROR_NONE with unknown value (@c bs_latitude)
- *          if precondition is not be satisfied.
+ * @remarks This API can be used in CDMA network.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] bs_latitude The base station latitude, 0x7FFFFFFF if unknown
@@ -635,23 +593,19 @@ int telephony_network_get_base_station_id(telephony_h handle, int *bs_id);
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  *
- * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
- *      and network type must be CDMA network.
- *
  * @see telephony_network_get_service_state()
  * @see telephony_network_get_type()
  */
 int telephony_network_get_base_station_latitude(telephony_h handle, int *bs_latitude);
 
 /**
- * @brief Gets the base station longitude of the current location. (for CDMA network)
+ * @brief Gets the base station longitude of the current location.
  *
  * @since_tizen 3.0
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
- * @remarks This API returns #TELEPHONY_ERROR_NONE with unknown value (@c bs_longitude)
- *          if precondition is not be satisfied.
+ * @remarks This API can be used in CDMA network.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] bs_longitude The base station longitude, 0x7FFFFFFF if unknown
@@ -664,9 +618,6 @@ int telephony_network_get_base_station_latitude(telephony_h handle, int *bs_lati
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
- *
- * @pre The Network service state must be #TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE.
- *      and network type must be CDMA network.
  *
  * @see telephony_network_get_service_state()
  * @see telephony_network_get_type()
