@@ -115,6 +115,8 @@ typedef void (*telephony_noti_cb)(telephony_h handle, telephony_noti_e noti_id, 
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
+ * @remarks If applications have corresponding privilege for this API, callback will not be invoked although API returns success.
+ *
  * @param[in] handle  The handle to use the telephony API
  * @param[in] noti_id The notification ID to set the callback
  * @param[in] cb The callback to be invoked when the telephony state changes
@@ -125,7 +127,6 @@ typedef void (*telephony_noti_cb)(telephony_h handle, telephony_noti_e noti_id, 
  *
  * @retval #TELEPHONY_ERROR_NONE              Successful
  * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
- * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  *
@@ -143,6 +144,8 @@ int telephony_set_noti_cb(telephony_h handle,
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
+ * @remarks If applications have corresponding privilege for this API, callback will not be invoked although API returns success.
+ *
  * @param[in] handle  The handle to use the telephony API
  * @param[in] noti_id The notification ID to unset a callback
  *
@@ -151,7 +154,6 @@ int telephony_set_noti_cb(telephony_h handle,
  *
  * @retval #TELEPHONY_ERROR_NONE              Successful
  * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
- * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  *
