@@ -42,7 +42,14 @@ static int network_noti_tbl[] = {
 	TELEPHONY_NOTI_NETWORK_NETWORK_NAME,
 	TELEPHONY_NOTI_NETWORK_PS_TYPE,
 	TELEPHONY_NOTI_NETWORK_DEFAULT_DATA_SUBSCRIPTION,
-	TELEPHONY_NOTI_NETWORK_DEFAULT_SUBSCRIPTION
+	TELEPHONY_NOTI_NETWORK_DEFAULT_SUBSCRIPTION,
+	TELEPHONY_NOTI_NETWORK_LAC,
+	TELEPHONY_NOTI_NETWORK_TAC,
+	TELEPHONY_NOTI_NETWORK_SYSTEM_ID,
+	TELEPHONY_NOTI_NETWORK_NETWORK_ID,
+	TELEPHONY_NOTI_NETWORK_BS_ID,
+	TELEPHONY_NOTI_NETWORK_BS_LATITUDE,
+	TELEPHONY_NOTI_NETWORK_BS_LONGITUDE
 };
 
 static int call_noti_tbl[] = {
@@ -201,6 +208,27 @@ static void network_noti_cb(telephony_h handle, telephony_noti_e noti_id, void *
 		break;
 	case TELEPHONY_NOTI_NETWORK_DEFAULT_SUBSCRIPTION:
 		LOGI("Noti!!! Default Subscription: [%d]", *(int *)data);
+		break;
+	case TELEPHONY_NOTI_NETWORK_LAC:
+		LOGI("Noti!!! LAC: [%d]", *(int *)data);
+		break;
+	case TELEPHONY_NOTI_NETWORK_TAC:
+		LOGI("Noti!!! TAC: [%d]", *(int *)data);
+		break;
+	case TELEPHONY_NOTI_NETWORK_SYSTEM_ID:
+		LOGI("Noti!!! System ID: [%d]", *(int *)data);
+		break;
+	case TELEPHONY_NOTI_NETWORK_NETWORK_ID:
+		LOGI("Noti!!! Network ID: [%d]", *(int *)data);
+		break;
+	case TELEPHONY_NOTI_NETWORK_BS_ID:
+		LOGI("Noti!!! Base Station ID: [%d]", *(int *)data);
+		break;
+	case TELEPHONY_NOTI_NETWORK_BS_LATITUDE:
+		LOGI("Noti!!! Base Station Latitude: [%d]", *(int *)data);
+		break;
+	case TELEPHONY_NOTI_NETWORK_BS_LONGITUDE:
+		LOGI("Noti!!! Base Station Longitude: [%d]", *(int *)data);
 		break;
 	default:
 		LOGE("Unknown noti");

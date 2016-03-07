@@ -138,9 +138,10 @@ typedef enum {
  *
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
- * @privilege %http://tizen.org/privilege/telephony
+ * @privilege %http://tizen.org/privilege/location.coarse
  *
- * @remarks This API can be used in GSM / WCDMA network.
+ * @remarks This API can be used in GSM / WCDMA network. @n
+ *	http://tizen.org/privilege/location.coarse privilege is required to use this API since 3.0.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] lac The Location Area Code, -1 if unknown
@@ -164,9 +165,10 @@ int telephony_network_get_lac(telephony_h handle, int *lac);
  *
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  * @privlevel public
- * @privilege %http://tizen.org/privilege/telephony
+ * @privilege %http://tizen.org/privilege/location.coarse
  *
- * @remarks This API can be used in GSM / WCDMA / LTE network.
+ * @remarks This API can be used in GSM / WCDMA / LTE network. @n
+ *	http://tizen.org/privilege/location.coarse privilege is required to use this API since 3.0.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] cell_id The cell identification number, -1 if unknown
@@ -474,7 +476,7 @@ int telephony_network_get_selection_mode(telephony_h handle,
  *
  * @since_tizen 3.0
  * @privlevel public
- * @privilege %http://tizen.org/privilege/telephony
+ * @privilege %http://tizen.org/privilege/location.coarse
  *
  * @remarks This API can be used in LTE network.
  *
@@ -500,7 +502,7 @@ int telephony_network_get_tac(telephony_h handle, int *tac);
  *
  * @since_tizen 3.0
  * @privlevel public
- * @privilege %http://tizen.org/privilege/telephony
+ * @privilege %http://tizen.org/privilege/location.coarse
  *
  * @remarks This API can be used in CDMA network.
  *
@@ -526,7 +528,7 @@ int telephony_network_get_system_id(telephony_h handle, int *sid);
  *
  * @since_tizen 3.0
  * @privlevel public
- * @privilege %http://tizen.org/privilege/telephony
+ * @privilege %http://tizen.org/privilege/location.coarse
  *
  * @remarks This API can be used in CDMA network.
  *
@@ -552,7 +554,7 @@ int telephony_network_get_network_id(telephony_h handle, int *nid);
  *
  * @since_tizen 3.0
  * @privlevel public
- * @privilege %http://tizen.org/privilege/telephony
+ * @privilege %http://tizen.org/privilege/location.coarse
  *
  * @remarks This API can be used in CDMA network.
  *
@@ -578,7 +580,7 @@ int telephony_network_get_base_station_id(telephony_h handle, int *bs_id);
  *
  * @since_tizen 3.0
  * @privlevel public
- * @privilege %http://tizen.org/privilege/telephony
+ * @privilege %http://tizen.org/privilege/location.coarse
  *
  * @remarks This API can be used in CDMA network.
  *
@@ -604,7 +606,7 @@ int telephony_network_get_base_station_latitude(telephony_h handle, int *bs_lati
  *
  * @since_tizen 3.0
  * @privlevel public
- * @privilege %http://tizen.org/privilege/telephony
+ * @privilege %http://tizen.org/privilege/location.coarse
  *
  * @remarks This API can be used in CDMA network.
  *
