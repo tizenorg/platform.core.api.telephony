@@ -51,8 +51,8 @@ typedef struct telephony_data *telephony_h;
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
 typedef struct {
-    unsigned int count; /**< Number of available handle */
-    telephony_h *handle; /**< Handle to use Telephony API */
+	unsigned int count; /**< Number of available handle */
+	telephony_h *handle; /**< Handle to use Telephony API */
 } telephony_handle_list_s;
 
 /**
@@ -60,13 +60,13 @@ typedef struct {
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
 typedef enum {
-    TELEPHONY_ERROR_NONE = TIZEN_ERROR_NONE,                            /**< Successful */
-    TELEPHONY_ERROR_OUT_OF_MEMORY = TIZEN_ERROR_OUT_OF_MEMORY,          /**< Out of memory */
-    TELEPHONY_ERROR_INVALID_PARAMETER = TIZEN_ERROR_INVALID_PARAMETER,  /**< Invalid parameter */
-    TELEPHONY_ERROR_PERMISSION_DENIED = TIZEN_ERROR_PERMISSION_DENIED,  /**< Permission denied */
-    TELEPHONY_ERROR_NOT_SUPPORTED = TIZEN_ERROR_NOT_SUPPORTED,          /**< Not supported */
-    TELEPHONY_ERROR_OPERATION_FAILED = TIZEN_ERROR_TELEPHONY | 0x0001,  /**< Operation failed */
-    TELEPHONY_ERROR_SIM_NOT_AVAILABLE = TIZEN_ERROR_TELEPHONY | 0x1001, /**< SIM is not available */
+	TELEPHONY_ERROR_NONE = TIZEN_ERROR_NONE,                            /**< Successful */
+	TELEPHONY_ERROR_OUT_OF_MEMORY = TIZEN_ERROR_OUT_OF_MEMORY,          /**< Out of memory */
+	TELEPHONY_ERROR_INVALID_PARAMETER = TIZEN_ERROR_INVALID_PARAMETER,  /**< Invalid parameter */
+	TELEPHONY_ERROR_PERMISSION_DENIED = TIZEN_ERROR_PERMISSION_DENIED,  /**< Permission denied */
+	TELEPHONY_ERROR_NOT_SUPPORTED = TIZEN_ERROR_NOT_SUPPORTED,          /**< Not supported */
+	TELEPHONY_ERROR_OPERATION_FAILED = TIZEN_ERROR_TELEPHONY | 0x0001,  /**< Operation failed */
+	TELEPHONY_ERROR_SIM_NOT_AVAILABLE = TIZEN_ERROR_TELEPHONY | 0x1001, /**< SIM is not available */
 } telephony_error_e;
 
 /**
@@ -74,32 +74,101 @@ typedef enum {
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
  */
 typedef enum  {
-    TELEPHONY_NOTI_SIM_STATUS = 0x10,            /**< Notification to be invoked when the SIM card state changes, '#telephony_sim_state_e' will be delivered in notification data */
-    TELEPHONY_NOTI_SIM_CALL_FORWARDING_INDICATOR_STATE, /**< Notification to be invoked when the SIM call forwarding indicator state changes, 'state(bool)' will be delivered in notification data (@b Since: 3.0) */
+	TELEPHONY_NOTI_SIM_STATUS = 0x10,				/**< Notification to be invoked when the SIM card state changes. @n
+									'#telephony_sim_state_e' will be delivered in notification data @n
+									Privilege : http://tizen.org/privilege/telephony */
+	TELEPHONY_NOTI_SIM_CALL_FORWARDING_INDICATOR_STATE,	/**< Notification to be invoked when the SIM call forwarding indicator state changes. @n
+									'state(bool)' will be delivered in notification data (@b Since: 3.0) @n
+									Privilege : http://tizen.org/privilege/telephony */
 
-    TELEPHONY_NOTI_NETWORK_SERVICE_STATE = 0x20, /**< Notification to be invoked when the network service state changes, '#telephony_network_service_state_e' will be delivered in notification data */
-    TELEPHONY_NOTI_NETWORK_CELLID,               /**< Notification to be invoked when the cell ID changes, 'cell_id(int)' will be delivered in notification data */
-    TELEPHONY_NOTI_NETWORK_ROAMING_STATUS,       /**< Notification to be invoked when the roaming status changes, 'roaming_status(bool)' will be delivered in notification data */
-    TELEPHONY_NOTI_NETWORK_SIGNALSTRENGTH_LEVEL, /**< Notification to be invoked when the signal strength changes, '#telephony_network_rssi_e' will be delivered in notification data */
-    TELEPHONY_NOTI_NETWORK_NETWORK_NAME, /**< Notification to be invoked when the network name changes, 'network_name(char *)' wil be delivered in notification data (@b Since: 2.4) */
-    TELEPHONY_NOTI_NETWORK_PS_TYPE, /**< Notification to be invoked when the ps type changes, '#telephony_network_ps_type_e' will be delivered in notification data (@b Since: 2.4) */
-    TELEPHONY_NOTI_NETWORK_DEFAULT_DATA_SUBSCRIPTION, /**< Notification to be invoked when the default data subscription changes, '#telephony_network_default_data_subs_e' wil be delivered in notification data (@b Since: 2.4) */
-    TELEPHONY_NOTI_NETWORK_DEFAULT_SUBSCRIPTION, /**< Notification to be invoked when the default subscription changes, '#telephony_network_default_subs_e' will be delivered in notification data (@b Since: 2.4) */
+	TELEPHONY_NOTI_NETWORK_SERVICE_STATE = 0x20,		/**< Notification to be invoked when the network service state changes. @n
+									'#telephony_network_service_state_e' will be delivered in notification data @n
+									Privilege : http://tizen.org/privilege/telephony */
+	TELEPHONY_NOTI_NETWORK_CELLID,				/**< Notification to be invoked when the cell ID changes. @n
+									'cell_id(int)' will be delivered in notification data @n
+									Privilege : http://tizen.org/privilege/location.coarse (@b Since: 3.0) */
+	TELEPHONY_NOTI_NETWORK_ROAMING_STATUS,			/**< Notification to be invoked when the roaming status changes. @n
+									'roaming_status(bool)' will be delivered in notification data @n
+									Privilege : http://tizen.org/privilege/telephony */
+	TELEPHONY_NOTI_NETWORK_SIGNALSTRENGTH_LEVEL,		/**< Notification to be invoked when the signal strength changes. @n
+									'#telephony_network_rssi_e' will be delivered in notification data @n
+									Privilege : http://tizen.org/privilege/telephony */
+	TELEPHONY_NOTI_NETWORK_NETWORK_NAME,			/**< Notification to be invoked when the network name changes. @n
+									'network_name(char *)' wil be delivered in notification data (@b Since: 2.4) @n
+									Privilege : http://tizen.org/privilege/telephony */
+	TELEPHONY_NOTI_NETWORK_PS_TYPE,				/**< Notification to be invoked when the ps type changes. @n
+									'#telephony_network_ps_type_e' will be delivered in notification data (@b Since: 2.4) @n
+									Privilege : http://tizen.org/privilege/telephony */
+	TELEPHONY_NOTI_NETWORK_DEFAULT_DATA_SUBSCRIPTION,	/**< Notification to be invoked when the default data subscription changes. @n
+									'#telephony_network_default_data_subs_e' wil be delivered in notification data (@b Since: 2.4) @n
+									Privilege : http://tizen.org/privilege/telephony */
+	TELEPHONY_NOTI_NETWORK_DEFAULT_SUBSCRIPTION,		/**< Notification to be invoked when the default subscription changes. @n
+									'#telephony_network_default_subs_e' will be delivered in notification data (@b Since: 2.4) @n
+									Privilege : http://tizen.org/privilege/telephony */
+	TELEPHONY_NOTI_NETWORK_LAC, 				/**< Notification to be invoked when the LAC (Location Area Code) changes. @n
+									'lac(int)' will be delivered in notification data (@b Since: 3.0) @n
+									Privilege : http://tizen.org/privilege/location.coarse */
+	TELEPHONY_NOTI_NETWORK_TAC,					/**< Notification to be invoked when the TAC (Tracking Area Code) changes. @n
+									'tac(int)' will be delivered in notification data (@b Since: 3.0) @n
+									Privilege : http://tizen.org/privilege/location.coarse */
+	TELEPHONY_NOTI_NETWORK_SYSTEM_ID,				/**< Notification to be invoked when the system ID changes. @n
+									'sid(int)' will be delivered in notification data (@b Since: 3.0) @n
+									Privilege : http://tizen.org/privilege/location.coarse */
+	TELEPHONY_NOTI_NETWORK_NETWORK_ID,			/**< Notification to be invoked when the network ID changes. @n
+									'nid(int)' will be delivered in notification data (@b Since: 3.0) @n
+									Privilege : http://tizen.org/privilege/location.coarse */
+	TELEPHONY_NOTI_NETWORK_BS_ID,				/**< Notification to be invoked when the base station ID changes. @n
+									'bs_id(int)' will be delivered in notification data (@b Since: 3.0) @n
+									Privilege : http://tizen.org/privilege/location.coarse */
+	TELEPHONY_NOTI_NETWORK_BS_LATITUDE,			/**< Notification to be invoked when the base station latitude changes. @n
+									'bs_latitude(int)' will be delivered in notification data (@b Since: 3.0) @n
+									Privilege : http://tizen.org/privilege/location.coarse */
+	TELEPHONY_NOTI_NETWORK_BS_LONGITUDE,			/**< Notification to be invoked when the base station longitude changes. @n
+									'bs_longitue(int)' will be delivered in notification data (@b Since: 3.0) @n
+									Privilege : http://tizen.org/privilege/location.coarse */
 
-    TELEPHONY_NOTI_VOICE_CALL_STATE = 0x30,      /**< Notification to be invoked when the voice call state changes, '#telephony_call_state_e' will be delivered in notification data (Deprecated Since 2.4. Use #TELEPHONY_NOTI_VOICE_CALL_STATUS_XXX instead.) */
-    TELEPHONY_NOTI_VIDEO_CALL_STATE,              /**< Notification to be invoked when the video call state changes, '#telephony_call_state_e' will be delivered in notification data (Deprecated Since 2.4. Use #TELEPHONY_NOTI_VIDEO_CALL_STATUS_XXX instead.) */
-    TELEPHONY_NOTI_VOICE_CALL_STATUS_IDLE, /**< Notification to be invoked when a voice call is in idle status, 'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) */
-    TELEPHONY_NOTI_VOICE_CALL_STATUS_ACTIVE, /**< Notification to be invoked when a voice call is in active status, 'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) */
-    TELEPHONY_NOTI_VOICE_CALL_STATUS_HELD, /**< Notification to be invoked when a voice call is in held status, 'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) */
-    TELEPHONY_NOTI_VOICE_CALL_STATUS_DIALING, /**< Notification to be invoked when a voice call is in dialing status, 'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) */
-    TELEPHONY_NOTI_VOICE_CALL_STATUS_ALERTING, /**< Notification to be invoked when a voice call is in alerting status, 'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) */
-    TELEPHONY_NOTI_VOICE_CALL_STATUS_INCOMING, /**< Notification to be invoked when a voice call is in incoming status, 'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) */
-    TELEPHONY_NOTI_VIDEO_CALL_STATUS_IDLE, /**< Notification to be invoked when a video call is in idle status, 'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) */
-    TELEPHONY_NOTI_VIDEO_CALL_STATUS_ACTIVE, /**< Notification to be invoked when a video call is in active status, 'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) */
-    TELEPHONY_NOTI_VIDEO_CALL_STATUS_DIALING, /**< Notification to be invoked when a video call is in dialing status, 'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) */
-    TELEPHONY_NOTI_VIDEO_CALL_STATUS_ALERTING, /**< Notification to be invoked when a video call is in alerting status, 'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) */
-    TELEPHONY_NOTI_VIDEO_CALL_STATUS_INCOMING, /**< Notification to be invoked when a video call is in incoming status, 'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) */
-    TELEPHONY_NOTI_CALL_PREFERRED_VOICE_SUBSCRIPTION /**< Notification to be invoked when the preferred voice subscription changes, '#telephony_call_preferred_voice_subs_e' will be delivered in notification data (@b Since: 2.4) */
+	TELEPHONY_NOTI_VOICE_CALL_STATE = 0x30,			/**< Notification to be invoked when the voice call state changes. @n
+									'#telephony_call_state_e' will be delivered in notification data (Deprecated Since 2.4. Use #TELEPHONY_NOTI_VOICE_CALL_STATUS_XXX instead.) @n
+									Privilege : http://tizen.org/privilege/telephony */
+	TELEPHONY_NOTI_VIDEO_CALL_STATE,				/**< Notification to be invoked when the video call state changes. @n
+									'#telephony_call_state_e' will be delivered in notification data (Deprecated Since 2.4. Use #TELEPHONY_NOTI_VIDEO_CALL_STATUS_XXX instead.) @n
+									Privilege : http://tizen.org/privilege/telephony */
+	TELEPHONY_NOTI_VOICE_CALL_STATUS_IDLE,			/**< Notification to be invoked when a voice call is in idle status. @n
+									'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) @n
+									Privilege : http://tizen.org/privilege/telephony */
+	TELEPHONY_NOTI_VOICE_CALL_STATUS_ACTIVE,			/**< Notification to be invoked when a voice call is in active status. @n
+									'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) @n
+									Privilege : http://tizen.org/privilege/telephony */
+	TELEPHONY_NOTI_VOICE_CALL_STATUS_HELD,			/**< Notification to be invoked when a voice call is in held status. @n
+									'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) @n
+									Privilege : http://tizen.org/privilege/telephony */
+	TELEPHONY_NOTI_VOICE_CALL_STATUS_DIALING,			/**< Notification to be invoked when a voice call is in dialing status. @n
+									'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) @n
+									Privilege : http://tizen.org/privilege/telephony */
+	TELEPHONY_NOTI_VOICE_CALL_STATUS_ALERTING,			/**< Notification to be invoked when a voice call is in alertingstatus. @n
+									'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) @n
+									Privilege : http://tizen.org/privilege/telephony */
+	TELEPHONY_NOTI_VOICE_CALL_STATUS_INCOMING,		/**< Notification to be invoked when a voice call is in incoming status. @n
+									'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) @n
+									Privilege : http://tizen.org/privilege/telephony */
+	TELEPHONY_NOTI_VIDEO_CALL_STATUS_IDLE,			/**< Notification to be invoked when a video call is in idle status. @n
+									'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) @n
+									Privilege : http://tizen.org/privilege/telephony */
+	TELEPHONY_NOTI_VIDEO_CALL_STATUS_ACTIVE,			/**< Notification to be invoked when a video call is in active status. @n
+									'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) @n
+									Privilege : http://tizen.org/privilege/telephony */
+	TELEPHONY_NOTI_VIDEO_CALL_STATUS_DIALING,			/**< Notification to be invoked when a video call is in dialing status. @n
+									'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) @n
+									Privilege : http://tizen.org/privilege/telephony */
+	TELEPHONY_NOTI_VIDEO_CALL_STATUS_ALERTING,			/**< Notification to be invoked when a video call is in alerting status. @n
+									'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) @n
+									Privilege : http://tizen.org/privilege/telephony */
+	TELEPHONY_NOTI_VIDEO_CALL_STATUS_INCOMING,		/**< Notification to be invoked when a video call is in incoming status. @n
+									'handle_id(unsigned int)' will be delivered in notification data (@b Since: 2.4) @n
+									Privilege : http://tizen.org/privilege/telephony */
+	TELEPHONY_NOTI_CALL_PREFERRED_VOICE_SUBSCRIPTION		/**< Notification to be invoked when the preferred voice subscription changes. @n
+									'#telephony_call_preferred_voice_subs_e' will be delivered in notification data (@b Since: 2.4) @n
+									Privilege : http://tizen.org/privilege/telephony */
 } telephony_noti_e;
 
 /**
@@ -112,10 +181,10 @@ typedef void (*telephony_noti_cb)(telephony_h handle, telephony_noti_e noti_id, 
  * @brief Sets a callback function to be invoked when the telephony state changes.
  *
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
- * @privlevel public
- * @privilege %http://tizen.org/privilege/telephony
  *
- * @remarks If applications have no corresponding privilege for this API, callback will not be invoked although API returns success.
+ * @remarks An application should have the privilege corresponding to each notificaiton id. \n
+ *	Please see the #telephony_noti_e to know the privilege. \n
+ *	If an application has no proper privilege, callback will not be invoked although API returns success.
  *
  * @param[in] handle  The handle to use the telephony API
  * @param[in] noti_id The notification ID to set the callback
@@ -141,12 +210,8 @@ int telephony_set_noti_cb(telephony_h handle,
  * @brief Unsets a callback function.
  *
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
- * @privlevel public
- * @privilege %http://tizen.org/privilege/telephony
  *
- * @remarks If applications have no corresponding privilege for this API, callback will not be invoked although API returns success.
- *
- * @param[in] handle  The handle to use the telephony API
+ * @param[in] handle The handle to use the telephony API
  * @param[in] noti_id The notification ID to unset a callback
  *
  * @return @c 0 on success,
@@ -208,8 +273,8 @@ int telephony_deinit(telephony_handle_list_s *list);
  * @since_tizen 2.4
  */
 typedef enum {
-    TELEPHONY_STATE_NOT_READY, /**< Telephony state is not ready */
-    TELEPHONY_STATE_READY, /**< Telephony state is ready */
+	TELEPHONY_STATE_NOT_READY, /**< Telephony state is not ready */
+	TELEPHONY_STATE_READY, /**< Telephony state is ready */
 } telephony_state_e;
 
 /**
