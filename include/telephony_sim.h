@@ -230,6 +230,10 @@ int telephony_sim_is_changed(telephony_h handle, bool *is_changed);
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Invalid parameter
+ *
+ * @pre The SIM state must be #TELEPHONY_SIM_STATE_AVAILABLE.
+ *
+ * @see telephony_sim_get_state()
  */
 int telephony_sim_get_state(telephony_h handle, telephony_sim_state_e *sim_state);
 
@@ -255,6 +259,7 @@ int telephony_sim_get_state(telephony_h handle, telephony_sim_state_e *sim_state
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Invalid parameter
+ * @retval #TELEPHONY_ERROR_SIM_NOT_AVAILABLE SIM is not available
  */
 int telephony_sim_get_application_list(telephony_h handle, unsigned int *app_list);
 
@@ -335,6 +340,7 @@ int telephony_sim_get_subscriber_id(telephony_h handle, char **subscriber_id);
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Invalid parameter
+ * @retval #TELEPHONY_ERROR_SIM_NOT_AVAILABLE SIM is not available
  *
  * @pre The SIM state must be #TELEPHONY_SIM_STATE_LOCKED.
  *
@@ -391,6 +397,7 @@ int telephony_sim_get_group_id1(telephony_h handle, char **gid1);
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Invalid parameter
+ * @retval #TELEPHONY_ERROR_SIM_NOT_AVAILABLE SIM is not available
  *
  * @pre The SIM state must be #TELEPHONY_SIM_STATE_AVAILABLE.
  *
