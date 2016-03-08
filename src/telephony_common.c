@@ -269,7 +269,7 @@ static void on_signal_callback(TapiHandle *tapi_h, const char *evt_id,
 	} else if (!g_strcmp0(evt_id, TAPI_PROP_NETWORK_SERVICE_TYPE)) {
 		int service_state = _mapping_service_state(*(int *)data);
 		CALLBACK_CALL(&service_state);
-	} else if (!g_strcmp0(evt_id, TAPI_PROP_NETWORK_CELLID)) {
+	} else if (!g_strcmp0(evt_id, TAPI_NOTI_NETWORK_CELLID)) {
 		int cell_id = *(int *)data;
 		CALLBACK_CALL(&cell_id);
 	} else if (!g_strcmp0(evt_id, TAPI_PROP_NETWORK_ROAMING_STATUS)) {
@@ -287,9 +287,27 @@ static void on_signal_callback(TapiHandle *tapi_h, const char *evt_id,
 	} else if (!g_strcmp0(evt_id, TAPI_NOTI_NETWORK_DEFAULT_DATA_SUBSCRIPTION)) {
 		int default_data_sub = *(int *)data;
 		CALLBACK_CALL(&default_data_sub);
-	} else if (!g_strcmp0(evt_id, TAPI_NOTI_NETWORK_DEFAULT_SUBSCRIPTION)) {
-		int default_sub = *(int *)data;
-		CALLBACK_CALL(&default_sub);
+	} else if (!g_strcmp0(evt_id, TAPI_NOTI_NETWORK_LAC)) {
+		int lac = *(int *)data;
+		CALLBACK_CALL(&lac);
+	} else if (!g_strcmp0(evt_id, TAPI_NOTI_NETWORK_TAC)) {
+		int tac = *(int *)data;
+		CALLBACK_CALL(&tac);
+	} else if (!g_strcmp0(evt_id, TAPI_NOTI_NETWORK_SYSTEM_ID)) {
+		int sid = *(int *)data;
+		CALLBACK_CALL(&sid);
+	} else if (!g_strcmp0(evt_id, TAPI_NOTI_NETWORK_NETWORK_ID)) {
+		int nid = *(int *)data;
+		CALLBACK_CALL(&nid);
+	} else if (!g_strcmp0(evt_id, TAPI_NOTI_NETWORK_BS_ID)) {
+		int bsid = *(int *)data;
+		CALLBACK_CALL(&bsid);
+	} else if (!g_strcmp0(evt_id, TAPI_NOTI_NETWORK_BS_LATITUDE)) {
+		int latitude = *(int *)data;
+		CALLBACK_CALL(&latitude);
+	} else if (!g_strcmp0(evt_id, TAPI_NOTI_NETWORK_BS_LONGITUDE)) {
+		int longtitude = *(int *)data;
+		CALLBACK_CALL(&longtitude);
 	} else if (!g_strcmp0(evt_id, TAPI_NOTI_VOICE_CALL_STATUS_IDLE)
 			|| !g_strcmp0(evt_id, TAPI_NOTI_VIDEO_CALL_STATUS_IDLE)) {
 		TelCallStatusIdleNoti_t *noti = data;
