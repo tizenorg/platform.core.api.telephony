@@ -96,7 +96,6 @@ int telephony_sim_get_icc_id(telephony_h handle, char **icc_id)
 	CHECK_INPUT_PARAMETER(icc_id);
 	GET_SIM_STATUS(tapi_h, sim_card_state);
 
-	*icc_id = NULL;
 	if (sim_card_state == TAPI_SIM_STATUS_CARD_ERROR
 			|| sim_card_state == TAPI_SIM_STATUS_CARD_BLOCKED
 			|| sim_card_state == TAPI_SIM_STATUS_CARD_NOT_PRESENT
@@ -117,9 +116,9 @@ int telephony_sim_get_icc_id(telephony_h handle, char **icc_id)
 			g_variant_get(sync_gv, "(is)", &result, &iccid);
 			if (result == TAPI_SIM_ACCESS_SUCCESS) {
 				if (iccid != NULL && strlen(iccid) != 0)
-					*icc_id = g_strdup_printf("%s", iccid);
+					*icc_id = strdup(iccid);
 				else
-					*icc_id = g_strdup_printf("%s", "");
+					*icc_id = strdup("");
 			} else {
 				error_code = TELEPHONY_ERROR_OPERATION_FAILED;
 			}
@@ -148,14 +147,15 @@ int telephony_sim_get_operator(telephony_h handle, char **sim_operator)
 	CHECK_INPUT_PARAMETER(sim_operator);
 	GET_SIM_STATUS(tapi_h, sim_card_state);
 
-	*sim_operator = NULL;
 	if (sim_card_state != TAPI_SIM_STATUS_SIM_INIT_COMPLETED) {
 		error_code = TELEPHONY_ERROR_SIM_NOT_AVAILABLE;
 	} else {
 		TelSimImsiInfo_t sim_imsi_info;
 		int ret = tel_get_sim_imsi(tapi_h, &sim_imsi_info);
 		if (ret == TAPI_API_SUCCESS) {
-			*sim_operator = g_strdup_printf("%s%s", sim_imsi_info.szMcc, sim_imsi_info.szMnc);
+			int len = strlen(sim_imsi_info.szMcc) + strlen(sim_imsi_info.szMnc);
+			*sim_operator = malloc(len + 1);
+			snprintf(*sim_operator, len + 1, "%s%s", sim_imsi_info.szMcc, sim_imsi_info.szMnc);
 			LOGI("SIM operator: [%s]", *sim_operator);
 		} else if (ret == TAPI_API_ACCESS_DENIED) {
 			LOGE("PERMISSION_DENIED");
@@ -182,14 +182,13 @@ int telephony_sim_get_msin(telephony_h handle, char **msin)
 	CHECK_INPUT_PARAMETER(msin);
 	GET_SIM_STATUS(tapi_h, sim_card_state);
 
-	*msin = NULL;
 	if (sim_card_state != TAPI_SIM_STATUS_SIM_INIT_COMPLETED) {
 		error_code = TELEPHONY_ERROR_SIM_NOT_AVAILABLE;
 	} else {
 		TelSimImsiInfo_t sim_imsi_info;
 		int ret = tel_get_sim_imsi(tapi_h, &sim_imsi_info);
 		if (ret == TAPI_API_SUCCESS) {
-			*msin = g_strdup_printf("%s", sim_imsi_info.szMsin);
+			*msin = strdup(sim_imsi_info.szMsin);
 		} else if (ret == TAPI_API_ACCESS_DENIED) {
 			LOGE("PERMISSION_DENIED");
 			error_code = TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -215,7 +214,6 @@ int telephony_sim_get_spn(telephony_h handle, char **spn)
 	CHECK_INPUT_PARAMETER(spn);
 	GET_SIM_STATUS(tapi_h, sim_card_state);
 
-	*spn = NULL;
 	if (sim_card_state == TAPI_SIM_STATUS_CARD_ERROR
 			|| sim_card_state == TAPI_SIM_STATUS_CARD_BLOCKED
 			|| sim_card_state == TAPI_SIM_STATUS_CARD_NOT_PRESENT
@@ -236,13 +234,11 @@ int telephony_sim_get_spn(telephony_h handle, char **spn)
 		if (sync_gv) {
 			g_variant_get(sync_gv, "(iys)", &result, &dc, &spn_str);
 			if (result == TAPI_SIM_ACCESS_SUCCESS) {
-				if (spn_str != NULL && strlen(spn_str) != 0) {
-					*spn = g_strdup_printf("%s", spn_str);
-					LOGI("SPN: [%s]", *spn);
-				} else {
-					*spn = g_strdup_printf("%s", "");
-					LOGI("SPN: [%s]", *spn);
-				}
+				if (spn_str != NULL && strlen(spn_str) != 0)
+					*spn = strdup(spn_str);
+				else
+					*spn = strdup("");
+				LOGI("SPN: [%s]", *spn);
 			} else {
 				error_code = TELEPHONY_ERROR_OPERATION_FAILED;
 			}
@@ -347,7 +343,6 @@ int telephony_sim_get_application_list(telephony_h handle, unsigned int *app_lis
 	CHECK_INPUT_PARAMETER(app_list);
 	GET_SIM_STATUS(tapi_h, sim_card_state);
 
-	*app_list = 0x0;
 	if (sim_card_state != TAPI_SIM_STATUS_SIM_INIT_COMPLETED) {
 		error_code = TELEPHONY_ERROR_SIM_NOT_AVAILABLE;
 	} else {
@@ -355,6 +350,7 @@ int telephony_sim_get_application_list(telephony_h handle, unsigned int *app_lis
 		int ret = tel_get_sim_application_list(tapi_h, &tapi_app_list);
 		if (ret == TAPI_API_SUCCESS) {
 			*app_list = (unsigned int)tapi_app_list;
+			LOGI("SIM Application List: [0x%x]", *app_list);
 		} else if (ret == TAPI_API_ACCESS_DENIED) {
 			LOGE("PERMISSION_DENIED");
 			error_code = TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -364,7 +360,6 @@ int telephony_sim_get_application_list(telephony_h handle, unsigned int *app_lis
 		}
 	}
 
-	LOGI("SIM Application List: [0x%x]", *app_list);
 	return error_code;
 }
 
@@ -382,7 +377,6 @@ int telephony_sim_get_subscriber_number(telephony_h handle, char **subscriber_nu
 	CHECK_INPUT_PARAMETER(tapi_h);
 	CHECK_INPUT_PARAMETER(subscriber_number);
 
-	*subscriber_number = NULL;
 	sync_gv = g_dbus_connection_call_sync(tapi_h->dbus_connection,
 		DBUS_TELEPHONY_SERVICE, tapi_h->path, DBUS_TELEPHONY_SIM_INTERFACE,
 		"GetMSISDN", NULL, NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &gerr);
@@ -400,7 +394,7 @@ int telephony_sim_get_subscriber_number(telephony_h handle, char **subscriber_nu
 					if (!g_strcmp0(key, "number")) {
 						str_value = g_variant_get_string(value, NULL);
 						if (str_value != NULL && strlen(str_value) != 0)
-							*subscriber_number = g_strdup_printf("%s", str_value);
+							*subscriber_number = strdup(str_value);
 					}
 				}
 				g_variant_iter_free(iter_row);
@@ -408,7 +402,7 @@ int telephony_sim_get_subscriber_number(telephony_h handle, char **subscriber_nu
 				break;
 			}
 			if (!*subscriber_number)
-				*subscriber_number = g_strdup_printf("%s", "");
+				*subscriber_number = strdup("");
 			g_variant_iter_free(iter);
 		} else {
 			error_code = TELEPHONY_ERROR_OPERATION_FAILED;
@@ -436,7 +430,6 @@ int telephony_sim_get_subscriber_id(telephony_h handle, char **subscriber_id)
 	CHECK_INPUT_PARAMETER(subscriber_id);
 	GET_SIM_STATUS(tapi_h, sim_card_state);
 
-	*subscriber_id = NULL;
 	if (sim_card_state != TAPI_SIM_STATUS_SIM_INIT_COMPLETED) {
 		error_code = TELEPHONY_ERROR_SIM_NOT_AVAILABLE;
 	} else {
@@ -455,7 +448,7 @@ int telephony_sim_get_subscriber_id(telephony_h handle, char **subscriber_id)
 			SHA256_Update(&ctx, imsi, strlen(imsi));
 			SHA256_Final(md, &ctx);
 
-			*subscriber_id = g_malloc0(SHA256_DIGEST_LENGTH * 2 + 1);
+			*subscriber_id = malloc(SHA256_DIGEST_LENGTH * 2 + 1);
 			for (i = 0; i < SHA256_DIGEST_LENGTH; i++)
 				snprintf(*subscriber_id + (i * 2), 3,  "%02x", md[i]);
 			LOGI("Subscriber ID: [%s]", *subscriber_id);
@@ -519,7 +512,6 @@ int telephony_sim_get_group_id1(telephony_h handle, char **gid1)
 	CHECK_INPUT_PARAMETER(gid1);
 	GET_SIM_STATUS(tapi_h, sim_card_state);
 
-	*gid1 = NULL;
 	if (sim_card_state != TAPI_SIM_STATUS_SIM_INIT_COMPLETED) {
 		error_code = TELEPHONY_ERROR_SIM_NOT_AVAILABLE;
 	} else {
@@ -546,9 +538,13 @@ int telephony_sim_get_group_id1(telephony_h handle, char **gid1)
 					tel_gid.szGroupIdentifier[i] = value;
 					i++;
 				}
-				*gid1 = malloc(tel_gid.GroupIdentifierLen * 2 + 1);
-				for (i = 0; i < tel_gid.GroupIdentifierLen; i++) {
-					snprintf(*gid1 + (i * 2), 3, "%02x", tel_gid.szGroupIdentifier[i]);
+
+				if (tel_gid.GroupIdentifierLen == 0) {
+					*gid1 = strdup("");
+				} else {
+					*gid1 = malloc(tel_gid.GroupIdentifierLen * 2 + 1);
+					for (i = 0; i < tel_gid.GroupIdentifierLen; i++)
+						snprintf(*gid1 + (i * 2), 3, "%02x", tel_gid.szGroupIdentifier[i]);
 				}
 				g_variant_iter_free(iter);
 				g_variant_unref(inner_gv);
@@ -580,7 +576,6 @@ int telephony_sim_get_call_forwarding_indicator_state(telephony_h handle, bool *
 	CHECK_INPUT_PARAMETER(state);
 	GET_SIM_STATUS(tapi_h, sim_card_state);
 
-	*state = false;
 	if (sim_card_state != TAPI_SIM_STATUS_SIM_INIT_COMPLETED) {
 		error_code = TELEPHONY_ERROR_SIM_NOT_AVAILABLE;
 	} else {
