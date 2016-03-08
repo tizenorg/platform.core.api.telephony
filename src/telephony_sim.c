@@ -336,28 +336,36 @@ int telephony_sim_get_state(telephony_h handle, telephony_sim_state_e *sim_state
 
 int telephony_sim_get_application_list(telephony_h handle, unsigned int *app_list)
 {
+	int error_code = TELEPHONY_ERROR_NONE;
+	TelSimCardStatus_t sim_card_state = TAPI_SIM_STATUS_UNKNOWN;
 	TapiHandle *tapi_h;
-	unsigned char tapi_app_list;
-	int ret;
 
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
 	CHECK_INPUT_PARAMETER(handle);
 	tapi_h = ((telephony_data *)handle)->tapi_h;
 	CHECK_INPUT_PARAMETER(tapi_h);
 	CHECK_INPUT_PARAMETER(app_list);
+	GET_SIM_STATUS(tapi_h, sim_card_state);
 
-	ret = tel_get_sim_application_list(tapi_h, &tapi_app_list);
-	if (ret == TAPI_API_ACCESS_DENIED) {
-		LOGE("PERMISSION_DENIED");
-		return TELEPHONY_ERROR_PERMISSION_DENIED;
-	} else if (ret != TAPI_API_SUCCESS) {
-		LOGE("OPERATION_FAILED");
-		return TELEPHONY_ERROR_OPERATION_FAILED;
+	*app_list = 0;
+	if (sim_card_state != TAPI_SIM_STATUS_SIM_INIT_COMPLETED) {
+		error_code = TELEPHONY_ERROR_SIM_NOT_AVAILABLE;
+	} else {
+		unsigned char tapi_app_list;
+		int ret = tel_get_sim_application_list(tapi_h, &tapi_app_list);
+		if (ret == TAPI_API_SUCCESS) {
+			*app_list = (unsigned int)tapi_app_list;
+		} else if (ret == TAPI_API_ACCESS_DENIED) {
+			LOGE("PERMISSION_DENIED");
+			error_code = TELEPHONY_ERROR_PERMISSION_DENIED;
+		} else if (ret != TAPI_API_SUCCESS) {
+			LOGE("OPERATION_FAILED");
+			error_code = TELEPHONY_ERROR_OPERATION_FAILED;
+		}
 	}
 
-	*app_list = (unsigned int)tapi_app_list;
 	LOGI("SIM Application List: [0x%x]", *app_list);
-	return TELEPHONY_ERROR_NONE;
+	return error_code;
 }
 
 int telephony_sim_get_subscriber_number(telephony_h handle, char **subscriber_number)
@@ -561,27 +569,33 @@ int telephony_sim_get_group_id1(telephony_h handle, char **gid1)
 
 int telephony_sim_get_call_forwarding_indicator_state(telephony_h handle, bool *state)
 {
-	int error_code;
+	int error_code = TELEPHONY_ERROR_NONE;
+	TelSimCardStatus_t sim_card_state = TAPI_SIM_STATUS_UNKNOWN;
 	TapiHandle *tapi_h;
-	int tel_state;
 
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
 	CHECK_INPUT_PARAMETER(handle);
 	tapi_h = ((telephony_data *)handle)->tapi_h;
 	CHECK_INPUT_PARAMETER(tapi_h);
 	CHECK_INPUT_PARAMETER(state);
+	GET_SIM_STATUS(tapi_h, sim_card_state);
 
-	error_code = tel_get_property_int(tapi_h, TAPI_PROP_SIM_CALL_FORWARD_STATE, &tel_state);
-	if (error_code == TAPI_API_SUCCESS) {
-		*state = (bool)tel_state;
-		LOGI("Call forwarding indicator state: [%s]", *state ? "ON" : "OFF");
-		error_code = TELEPHONY_ERROR_NONE;
-	} else if (error_code == TAPI_API_ACCESS_DENIED) {
-		LOGE("PERMISSION_DENIED");
-		error_code = TELEPHONY_ERROR_PERMISSION_DENIED;
+	*state = 0;
+	if (sim_card_state != TAPI_SIM_STATUS_SIM_INIT_COMPLETED) {
+		error_code = TELEPHONY_ERROR_SIM_NOT_AVAILABLE;
 	} else {
-		LOGE("OPERATION_FAILED");
-		error_code = TELEPHONY_ERROR_OPERATION_FAILED;
+		int tel_state;
+		int ret = tel_get_property_int(tapi_h, TAPI_PROP_SIM_CALL_FORWARD_STATE, &tel_state);
+		if (ret == TAPI_API_SUCCESS) {
+			*state = (bool)tel_state;
+			LOGI("Call forwarding indicator state: [%s]", *state ? "ON" : "OFF");
+		} else if (ret == TAPI_API_ACCESS_DENIED) {
+			LOGE("PERMISSION_DENIED");
+			error_code = TELEPHONY_ERROR_PERMISSION_DENIED;
+		} else {
+			LOGE("OPERATION_FAILED");
+			error_code = TELEPHONY_ERROR_OPERATION_FAILED;
+		}
 	}
 
 	return error_code;
