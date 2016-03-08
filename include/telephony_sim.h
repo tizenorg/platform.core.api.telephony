@@ -40,7 +40,7 @@
 typedef enum {
 	TELEPHONY_SIM_STATE_UNAVAILABLE, /**< SIM is not available on this device */
 	TELEPHONY_SIM_STATE_LOCKED,      /**< SIM is locked */
-	TELEPHONY_SIM_STATE_AVAILABLE,   /**< SIM is available on this device */
+	TELEPHONY_SIM_STATE_AVAILABLE,   /**< SIM is available on this device (SIM is not locked) */
 	TELEPHONY_SIM_STATE_UNKNOWN,     /**< SIM is in transition between states */
 } telephony_sim_state_e;
 
