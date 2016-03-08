@@ -27,73 +27,12 @@
 #include "telephony_common.h"
 #include "telephony_private.h"
 
-static int __get_serving_network(TapiHandle *tapi_h, TelNetworkServing_t *data)
-{
-	int ret;
-	int act;
-
-	ret = tel_get_property_int(tapi_h, TAPI_PROP_NETWORK_ACT, &act);
-	if (ret == TAPI_API_SUCCESS) {
-		ret = TELEPHONY_ERROR_NONE;
-		data->info.cdma_info.system_id = -1;
-		data->info.cdma_info.network_id = -1;
-		data->info.cdma_info.base_station_id = -1;
-		data->info.cdma_info.base_station_latitude = 0x7FFFFFFF;
-		data->info.cdma_info.base_station_longitude = 0x7FFFFFFF;
-
-		if (act >= TAPI_NETWORK_SYSTEM_IS95A && act <= TAPI_NETWORK_SYSTEM_EHRPD) {
-			GError *error = NULL;
-			GVariant *dbus_result;
-
-			dbus_result = g_dbus_connection_call_sync(tapi_h->dbus_connection,
-				DBUS_TELEPHONY_SERVICE, tapi_h->path, DBUS_TELEPHONY_NETWORK_INTERFACE,
-				"GetServingNetwork", NULL, NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &error);
-
-			if (dbus_result) {
-				GVariantIter *iter;
-				int tapi_result;
-
-				g_variant_get(dbus_result, "(a{sv}i)", &iter, &tapi_result);
-				if (tapi_result == 0) {
-					const gchar *key = NULL;
-					GVariant *value = NULL;
-					while (g_variant_iter_loop(iter, "{sv}", &key, &value)) {
-						if (!g_strcmp0(key, "c_serving")) {
-							g_variant_get(value, "(iuuuiiuu)",
-								&data->info.cdma_info.carrier,
-								&data->info.cdma_info.system_id,
-								&data->info.cdma_info.network_id,
-								&data->info.cdma_info.base_station_id,
-								&data->info.cdma_info.base_station_latitude,
-								&data->info.cdma_info.base_station_longitude,
-								&data->info.cdma_info.registration_zone,
-								&data->info.cdma_info.pilot_offset);
-						}
-					}
-					ret = TELEPHONY_ERROR_NONE;
-				} else {
-					LOGE("OPERATION_FAILED");
-					ret = TELEPHONY_ERROR_OPERATION_FAILED;
-				}
-				g_variant_iter_free(iter);
-			}
-			g_variant_unref(dbus_result);
-		}
-	} else if (ret == TAPI_API_ACCESS_DENIED) {
-		LOGE("PERMISSION_DENIED");
-		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
-	} else {
-		LOGE("OPERATION_FAILED");
-		ret = TELEPHONY_ERROR_OPERATION_FAILED;
-	}
-
-	return ret;
-}
-
 int telephony_network_get_lac(telephony_h handle, int *lac)
 {
-	int ret;
+	int ret = TELEPHONY_ERROR_NONE;
 	TapiHandle *tapi_h;
+	GError *error = NULL;
+	GVariant *dbus_result;
 
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
 	CHECK_INPUT_PARAMETER(handle);
@@ -101,16 +40,23 @@ int telephony_network_get_lac(telephony_h handle, int *lac)
 	CHECK_INPUT_PARAMETER(tapi_h);
 	CHECK_INPUT_PARAMETER(lac);
 
-	ret = tel_get_property_int(tapi_h, TAPI_PROP_NETWORK_LAC, lac);
-	if (ret == TAPI_API_SUCCESS) {
-		LOGI("lac:[%d]", *lac);
-		ret = TELEPHONY_ERROR_NONE;
-	} else if (ret == TAPI_API_ACCESS_DENIED) {
-		LOGE("PERMISSION_DENIED");
-		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
+	dbus_result = g_dbus_connection_call_sync(tapi_h->dbus_connection,
+		DBUS_TELEPHONY_SERVICE, tapi_h->path, DBUS_TELEPHONY_NETWORK_INTERFACE,
+		"GetLac", NULL, NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &error);
+
+	if (dbus_result) {
+		g_variant_get(dbus_result, "(i)", lac);
+		g_variant_unref(dbus_result);
 	} else {
-		LOGE("OPERATION_FAILED");
-		ret = TELEPHONY_ERROR_OPERATION_FAILED;
+		LOGE("g_dbus_connection_call_sync() failed. (%s)", error->message);
+		if (strstr(error->message, "AccessDenied")) {
+			LOGE("PERMISSION_DENIED");
+			ret = TELEPHONY_ERROR_PERMISSION_DENIED;
+		} else {
+			LOGE("OPERATION_FAILED");
+			ret = TELEPHONY_ERROR_OPERATION_FAILED;
+		}
+		g_error_free(error);
 	}
 
 	return ret;
@@ -118,8 +64,10 @@ int telephony_network_get_lac(telephony_h handle, int *lac)
 
 int telephony_network_get_cell_id(telephony_h handle, int *cell_id)
 {
-	int ret;
+	int ret = TELEPHONY_ERROR_NONE;
 	TapiHandle *tapi_h;
+	GError *error = NULL;
+	GVariant *dbus_result;
 
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
 	CHECK_INPUT_PARAMETER(handle);
@@ -127,16 +75,23 @@ int telephony_network_get_cell_id(telephony_h handle, int *cell_id)
 	CHECK_INPUT_PARAMETER(tapi_h);
 	CHECK_INPUT_PARAMETER(cell_id);
 
-	ret = tel_get_property_int(tapi_h, TAPI_PROP_NETWORK_CELLID, cell_id);
-	if (ret == TAPI_API_SUCCESS) {
-		LOGI("cell_id:[%d]", *cell_id);
-		ret = TELEPHONY_ERROR_NONE;
-	} else if (ret == TAPI_API_ACCESS_DENIED) {
-		LOGE("PERMISSION_DENIED");
-		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
+	dbus_result = g_dbus_connection_call_sync(tapi_h->dbus_connection,
+		DBUS_TELEPHONY_SERVICE, tapi_h->path, DBUS_TELEPHONY_NETWORK_INTERFACE,
+		"GetCellId", NULL, NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &error);
+
+	if (dbus_result) {
+		g_variant_get(dbus_result, "(i)", cell_id);
+		g_variant_unref(dbus_result);
 	} else {
-		LOGE("OPERATION_FAILED");
-		ret = TELEPHONY_ERROR_OPERATION_FAILED;
+		LOGE("g_dbus_connection_call_sync() failed. (%s)", error->message);
+		if (strstr(error->message, "AccessDenied")) {
+			LOGE("PERMISSION_DENIED");
+			ret = TELEPHONY_ERROR_PERMISSION_DENIED;
+		} else {
+			LOGE("OPERATION_FAILED");
+			ret = TELEPHONY_ERROR_OPERATION_FAILED;
+		}
+		g_error_free(error);
 	}
 
 	return ret;
@@ -634,8 +589,10 @@ int telephony_network_get_selection_mode(telephony_h handle, telephony_network_s
 
 int telephony_network_get_tac(telephony_h handle, int *tac)
 {
-	int ret;
+	int ret = TELEPHONY_ERROR_NONE;
 	TapiHandle *tapi_h;
+	GError *error = NULL;
+	GVariant *dbus_result;
 
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
 	CHECK_INPUT_PARAMETER(handle);
@@ -643,16 +600,23 @@ int telephony_network_get_tac(telephony_h handle, int *tac)
 	CHECK_INPUT_PARAMETER(tapi_h);
 	CHECK_INPUT_PARAMETER(tac);
 
-	ret = tel_get_property_int(tapi_h, TAPI_PROP_NETWORK_TAC, tac);
-	if (ret == TAPI_API_SUCCESS) {
-		LOGI("tac:[%d]", *tac);
-		ret = TELEPHONY_ERROR_NONE;
-	} else if (ret == TAPI_API_ACCESS_DENIED) {
-		LOGE("PERMISSION_DENIED");
-		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
+	dbus_result = g_dbus_connection_call_sync(tapi_h->dbus_connection,
+		DBUS_TELEPHONY_SERVICE, tapi_h->path, DBUS_TELEPHONY_NETWORK_INTERFACE,
+		"GetTac", NULL, NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &error);
+
+	if (dbus_result) {
+		g_variant_get(dbus_result, "(i)", tac);
+		g_variant_unref(dbus_result);
 	} else {
-		LOGE("OPERATION_FAILED");
-		ret = TELEPHONY_ERROR_OPERATION_FAILED;
+		LOGE("g_dbus_connection_call_sync() failed. (%s)", error->message);
+		if (strstr(error->message, "AccessDenied")) {
+			LOGE("PERMISSION_DENIED");
+			ret = TELEPHONY_ERROR_PERMISSION_DENIED;
+		} else {
+			LOGE("OPERATION_FAILED");
+			ret = TELEPHONY_ERROR_OPERATION_FAILED;
+		}
+		g_error_free(error);
 	}
 
 	return ret;
@@ -660,9 +624,10 @@ int telephony_network_get_tac(telephony_h handle, int *tac)
 
 int telephony_network_get_system_id(telephony_h handle, int *sid)
 {
-	int ret;
+	int ret = TELEPHONY_ERROR_NONE;
 	TapiHandle *tapi_h;
-	TelNetworkServing_t data = {0,};
+	GError *error = NULL;
+	GVariant *dbus_result;
 
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
 	CHECK_INPUT_PARAMETER(handle);
@@ -670,10 +635,23 @@ int telephony_network_get_system_id(telephony_h handle, int *sid)
 	CHECK_INPUT_PARAMETER(tapi_h);
 	CHECK_INPUT_PARAMETER(sid);
 
-	ret = __get_serving_network(tapi_h, &data);
-	if (ret == TELEPHONY_ERROR_NONE) {
-		*sid = data.info.cdma_info.system_id;
-		LOGI("sid:[%d]", *sid);
+	dbus_result = g_dbus_connection_call_sync(tapi_h->dbus_connection,
+		DBUS_TELEPHONY_SERVICE, tapi_h->path, DBUS_TELEPHONY_NETWORK_INTERFACE,
+		"GetSystemId", NULL, NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &error);
+
+	if (dbus_result) {
+		g_variant_get(dbus_result, "(i)", sid);
+		g_variant_unref(dbus_result);
+	} else {
+		LOGE("g_dbus_connection_call_sync() failed. (%s)", error->message);
+		if (strstr(error->message, "AccessDenied")) {
+			LOGE("PERMISSION_DENIED");
+			ret = TELEPHONY_ERROR_PERMISSION_DENIED;
+		} else {
+			LOGE("OPERATION_FAILED");
+			ret = TELEPHONY_ERROR_OPERATION_FAILED;
+		}
+		g_error_free(error);
 	}
 
 	return ret;
@@ -681,9 +659,10 @@ int telephony_network_get_system_id(telephony_h handle, int *sid)
 
 int telephony_network_get_network_id(telephony_h handle, int *nid)
 {
-	int ret;
+	int ret = TELEPHONY_ERROR_NONE;
 	TapiHandle *tapi_h;
-	TelNetworkServing_t data = {0,};
+	GError *error = NULL;
+	GVariant *dbus_result;
 
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
 	CHECK_INPUT_PARAMETER(handle);
@@ -691,10 +670,23 @@ int telephony_network_get_network_id(telephony_h handle, int *nid)
 	CHECK_INPUT_PARAMETER(tapi_h);
 	CHECK_INPUT_PARAMETER(nid);
 
-	ret = __get_serving_network(tapi_h, &data);
-	if (ret == TELEPHONY_ERROR_NONE) {
-		*nid = data.info.cdma_info.network_id;
-		LOGI("nid:[%d]", *nid);
+	dbus_result = g_dbus_connection_call_sync(tapi_h->dbus_connection,
+		DBUS_TELEPHONY_SERVICE, tapi_h->path, DBUS_TELEPHONY_NETWORK_INTERFACE,
+		"GetNetworkId", NULL, NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &error);
+
+	if (dbus_result) {
+		g_variant_get(dbus_result, "(i)", nid);
+		g_variant_unref(dbus_result);
+	} else {
+		LOGE("g_dbus_connection_call_sync() failed. (%s)", error->message);
+		if (strstr(error->message, "AccessDenied")) {
+			LOGE("PERMISSION_DENIED");
+			ret = TELEPHONY_ERROR_PERMISSION_DENIED;
+		} else {
+			LOGE("OPERATION_FAILED");
+			ret = TELEPHONY_ERROR_OPERATION_FAILED;
+		}
+		g_error_free(error);
 	}
 
 	return ret;
@@ -702,9 +694,10 @@ int telephony_network_get_network_id(telephony_h handle, int *nid)
 
 int telephony_network_get_base_station_id(telephony_h handle, int *bs_id)
 {
-	int ret;
+	int ret = TELEPHONY_ERROR_NONE;
 	TapiHandle *tapi_h;
-	TelNetworkServing_t data = {0,};
+	GError *error = NULL;
+	GVariant *dbus_result;
 
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
 	CHECK_INPUT_PARAMETER(handle);
@@ -712,10 +705,23 @@ int telephony_network_get_base_station_id(telephony_h handle, int *bs_id)
 	CHECK_INPUT_PARAMETER(tapi_h);
 	CHECK_INPUT_PARAMETER(bs_id);
 
-	ret = __get_serving_network(tapi_h, &data);
-	if (ret == TELEPHONY_ERROR_NONE) {
-		*bs_id = data.info.cdma_info.base_station_id;
-		LOGI("bs_id:[%d]", *bs_id);
+	dbus_result = g_dbus_connection_call_sync(tapi_h->dbus_connection,
+		DBUS_TELEPHONY_SERVICE, tapi_h->path, DBUS_TELEPHONY_NETWORK_INTERFACE,
+		"GetBsId", NULL, NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &error);
+
+	if (dbus_result) {
+		g_variant_get(dbus_result, "(i)", bs_id);
+		g_variant_unref(dbus_result);
+	} else {
+		LOGE("g_dbus_connection_call_sync() failed. (%s)", error->message);
+		if (strstr(error->message, "AccessDenied")) {
+			LOGE("PERMISSION_DENIED");
+			ret = TELEPHONY_ERROR_PERMISSION_DENIED;
+		} else {
+			LOGE("OPERATION_FAILED");
+			ret = TELEPHONY_ERROR_OPERATION_FAILED;
+		}
+		g_error_free(error);
 	}
 
 	return ret;
@@ -723,9 +729,10 @@ int telephony_network_get_base_station_id(telephony_h handle, int *bs_id)
 
 int telephony_network_get_base_station_latitude(telephony_h handle, int *bs_latitude)
 {
-	int ret;
+	int ret = TELEPHONY_ERROR_NONE;
 	TapiHandle *tapi_h;
-	TelNetworkServing_t data = {0,};
+	GError *error = NULL;
+	GVariant *dbus_result;
 
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
 	CHECK_INPUT_PARAMETER(handle);
@@ -733,10 +740,23 @@ int telephony_network_get_base_station_latitude(telephony_h handle, int *bs_lati
 	CHECK_INPUT_PARAMETER(tapi_h);
 	CHECK_INPUT_PARAMETER(bs_latitude);
 
-	ret = __get_serving_network(tapi_h, &data);
-	if (ret == TELEPHONY_ERROR_NONE) {
-		*bs_latitude = data.info.cdma_info.base_station_latitude;
-		LOGI("bs_latitude:[%d]", *bs_latitude);
+	dbus_result = g_dbus_connection_call_sync(tapi_h->dbus_connection,
+		DBUS_TELEPHONY_SERVICE, tapi_h->path, DBUS_TELEPHONY_NETWORK_INTERFACE,
+		"GetBsLatitude", NULL, NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &error);
+
+	if (dbus_result) {
+		g_variant_get(dbus_result, "(i)", bs_latitude);
+		g_variant_unref(dbus_result);
+	} else {
+		LOGE("g_dbus_connection_call_sync() failed. (%s)", error->message);
+		if (strstr(error->message, "AccessDenied")) {
+			LOGE("PERMISSION_DENIED");
+			ret = TELEPHONY_ERROR_PERMISSION_DENIED;
+		} else {
+			LOGE("OPERATION_FAILED");
+			ret = TELEPHONY_ERROR_OPERATION_FAILED;
+		}
+		g_error_free(error);
 	}
 
 	return ret;
@@ -744,9 +764,10 @@ int telephony_network_get_base_station_latitude(telephony_h handle, int *bs_lati
 
 int telephony_network_get_base_station_longitude(telephony_h handle, int *bs_longitude)
 {
-	int ret;
+	int ret = TELEPHONY_ERROR_NONE;
 	TapiHandle *tapi_h;
-	TelNetworkServing_t data = {0,};
+	GError *error = NULL;
+	GVariant *dbus_result;
 
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
 	CHECK_INPUT_PARAMETER(handle);
@@ -754,10 +775,23 @@ int telephony_network_get_base_station_longitude(telephony_h handle, int *bs_lon
 	CHECK_INPUT_PARAMETER(tapi_h);
 	CHECK_INPUT_PARAMETER(bs_longitude);
 
-	ret = __get_serving_network(tapi_h, &data);
-	if (ret == TELEPHONY_ERROR_NONE) {
-		*bs_longitude = data.info.cdma_info.base_station_longitude;
-		LOGI("bs_longitude:[%d]", *bs_longitude);
+	dbus_result = g_dbus_connection_call_sync(tapi_h->dbus_connection,
+		DBUS_TELEPHONY_SERVICE, tapi_h->path, DBUS_TELEPHONY_NETWORK_INTERFACE,
+		"GetBsLongitude", NULL, NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &error);
+
+	if (dbus_result) {
+		g_variant_get(dbus_result, "(i)", bs_longitude);
+		g_variant_unref(dbus_result);
+	} else {
+		LOGE("g_dbus_connection_call_sync() failed. (%s)", error->message);
+		if (strstr(error->message, "AccessDenied")) {
+			LOGE("PERMISSION_DENIED");
+			ret = TELEPHONY_ERROR_PERMISSION_DENIED;
+		} else {
+			LOGE("OPERATION_FAILED");
+			ret = TELEPHONY_ERROR_OPERATION_FAILED;
+		}
+		g_error_free(error);
 	}
 
 	return ret;
