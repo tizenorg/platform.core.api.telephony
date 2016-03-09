@@ -86,7 +86,8 @@ typedef enum  {
 									Privilege : http://tizen.org/privilege/telephony */
 	TELEPHONY_NOTI_NETWORK_CELLID,				/**< Notification to be invoked when the cell ID changes. @n
 									'cell_id(int)' will be delivered in notification data @n
-									Privilege : http://tizen.org/privilege/location.coarse (@b Since: 3.0) */
+									Privilege : http://tizen.org/privilege/location.coarse (@b Since: 3.0) @n
+									http://tizen.org/privilege/telephony privilege is no longer required since 3.0. */
 	TELEPHONY_NOTI_NETWORK_ROAMING_STATUS,			/**< Notification to be invoked when the roaming status changes. @n
 									'roaming_status(bool)' will be delivered in notification data @n
 									Privilege : http://tizen.org/privilege/telephony */

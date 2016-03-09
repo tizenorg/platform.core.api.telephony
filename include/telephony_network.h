@@ -141,7 +141,8 @@ typedef enum {
  * @privilege %http://tizen.org/privilege/location.coarse
  *
  * @remarks This API can be used in GSM / WCDMA network. @n
- *	http://tizen.org/privilege/location.coarse privilege is required to use this API since 3.0.
+ *	http://tizen.org/privilege/location.coarse privilege is required to use this API since 3.0. @n
+ *	http://tizen.org/privilege/telephony privilege is no longer required since 3.0.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] lac The Location Area Code, -1 if unknown
@@ -168,7 +169,8 @@ int telephony_network_get_lac(telephony_h handle, int *lac);
  * @privilege %http://tizen.org/privilege/location.coarse
  *
  * @remarks This API can be used in GSM / WCDMA / LTE network. @n
- *	http://tizen.org/privilege/location.coarse privilege is required to use this API since 3.0.
+ *	http://tizen.org/privilege/location.coarse privilege is required to use this API since 3.0. @n
+ *	http://tizen.org/privilege/telephony privilege is no longer required since 3.0.
  *
  * @param[in] handle The handle from telephony_init()
  * @param[out] cell_id The cell identification number, -1 if unknown
