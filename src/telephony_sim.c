@@ -105,14 +105,15 @@ int telephony_sim_get_icc_id(telephony_h handle, char **icc_id)
 	} else {
 		GError *gerr = NULL;
 		GVariant *sync_gv = NULL;
-		gchar *iccid = NULL;
-		TelSimAccessResult_t result = TAPI_SIM_ACCESS_SUCCESS;
 
 		sync_gv = g_dbus_connection_call_sync(tapi_h->dbus_connection,
 			DBUS_TELEPHONY_SERVICE, tapi_h->path, DBUS_TELEPHONY_SIM_INTERFACE,
 			"GetICCID", NULL, NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &gerr);
 
 		if (sync_gv) {
+			TelSimAccessResult_t result = TAPI_SIM_ACCESS_SUCCESS;
+			gchar *iccid = NULL;
+
 			g_variant_get(sync_gv, "(is)", &result, &iccid);
 			if (result == TAPI_SIM_ACCESS_SUCCESS) {
 				if (iccid != NULL && strlen(iccid) != 0)
@@ -223,15 +224,16 @@ int telephony_sim_get_spn(telephony_h handle, char **spn)
 	} else {
 		GError *gerr = NULL;
 		GVariant *sync_gv = NULL;
-		TelSimAccessResult_t result = TAPI_SIM_ACCESS_SUCCESS;
-		gchar *spn_str = NULL;
-		guchar dc = 0;
 
 		sync_gv = g_dbus_connection_call_sync(tapi_h->dbus_connection,
 			DBUS_TELEPHONY_SERVICE, tapi_h->path, DBUS_TELEPHONY_SIM_INTERFACE,
 			"GetSpn", NULL, NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &gerr);
 
 		if (sync_gv) {
+			TelSimAccessResult_t result = TAPI_SIM_ACCESS_SUCCESS;
+			gchar *spn_str = NULL;
+			guchar dc = 0;
+
 			g_variant_get(sync_gv, "(iys)", &result, &dc, &spn_str);
 			if (result == TAPI_SIM_ACCESS_SUCCESS) {
 				if (spn_str != NULL && strlen(spn_str) != 0)
@@ -368,7 +370,6 @@ int telephony_sim_get_subscriber_number(telephony_h handle, char **subscriber_nu
 	int error_code = TELEPHONY_ERROR_NONE;
 	GError *gerr = NULL;
 	GVariant *sync_gv = NULL;
-	TelSimAccessResult_t result = TAPI_SIM_ACCESS_SUCCESS;
 	TapiHandle *tapi_h;
 
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
@@ -381,7 +382,9 @@ int telephony_sim_get_subscriber_number(telephony_h handle, char **subscriber_nu
 		DBUS_TELEPHONY_SERVICE, tapi_h->path, DBUS_TELEPHONY_SIM_INTERFACE,
 		"GetMSISDN", NULL, NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &gerr);
 	if (sync_gv) {
+		TelSimAccessResult_t result = TAPI_SIM_ACCESS_SUCCESS;
 		GVariantIter *iter = NULL;
+
 		g_variant_get(sync_gv, "(iaa{sv})", &result, &iter);
 		if (result == TAPI_SIM_ACCESS_SUCCESS) {
 			gchar *key = NULL;
@@ -403,10 +406,10 @@ int telephony_sim_get_subscriber_number(telephony_h handle, char **subscriber_nu
 			}
 			if (!*subscriber_number)
 				*subscriber_number = strdup("");
-			g_variant_iter_free(iter);
 		} else {
 			error_code = TELEPHONY_ERROR_OPERATION_FAILED;
 		}
+		g_variant_iter_free(iter);
 		g_variant_unref(sync_gv);
 	} else {
 		LOGE("g_dbus_conn failed. error (%s)", gerr->message);
@@ -516,42 +519,43 @@ int telephony_sim_get_group_id1(telephony_h handle, char **gid1)
 		error_code = TELEPHONY_ERROR_SIM_NOT_AVAILABLE;
 	} else {
 		GError *gerr = NULL;
-		TelSimAccessResult_t result = TAPI_SIM_ACCESS_SUCCESS;
 		GVariant *sync_gv = NULL;
-		GVariant *gid_gv = NULL;
-		GVariant *inner_gv = NULL;
-		GVariantIter *iter = NULL;
-		TelSimGid_t tel_gid;
-		int i = 0;
-		guchar value = 0;
 
 		sync_gv = g_dbus_connection_call_sync(tapi_h->dbus_connection,
 			DBUS_TELEPHONY_SERVICE, tapi_h->path, DBUS_TELEPHONY_SIM_INTERFACE,
 			"GetGID", NULL, NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &gerr);
 
 		if (sync_gv) {
+			TelSimAccessResult_t result = TAPI_SIM_ACCESS_SUCCESS;
+			GVariant *gid_gv = NULL;
+			TelSimGid_t tel_gid;
+
 			g_variant_get(sync_gv, "(ii@v)", &result, &tel_gid.GroupIdentifierLen, &gid_gv);
 			if (result == TAPI_SIM_ACCESS_SUCCESS) {
-				inner_gv = g_variant_get_variant(gid_gv);
-				g_variant_get(inner_gv, "ay", &iter);
-				while (g_variant_iter_loop(iter, "y", &value) && i < TAPI_SIM_GROUP_IDENTIFIER_LEN_MAX) {
-					tel_gid.szGroupIdentifier[i] = value;
-					i++;
-				}
-
 				if (tel_gid.GroupIdentifierLen == 0) {
 					*gid1 = strdup("");
 				} else {
+					GVariant *inner_gv = NULL;
+					GVariantIter *iter = NULL;
+					int i = 0;
+					guchar value = 0;
+
+					inner_gv = g_variant_get_variant(gid_gv);
+					g_variant_get(inner_gv, "ay", &iter);
+					while (g_variant_iter_loop(iter, "y", &value) && i < TAPI_SIM_GROUP_IDENTIFIER_LEN_MAX) {
+						tel_gid.szGroupIdentifier[i] = value;
+						i++;
+					}
 					*gid1 = malloc(tel_gid.GroupIdentifierLen * 2 + 1);
 					for (i = 0; i < tel_gid.GroupIdentifierLen; i++)
 						snprintf(*gid1 + (i * 2), 3, "%02x", tel_gid.szGroupIdentifier[i]);
+					g_variant_iter_free(iter);
+					g_variant_unref(inner_gv);
 				}
-				g_variant_iter_free(iter);
-				g_variant_unref(inner_gv);
-				g_variant_unref(gid_gv);
 			} else {
 				error_code = TELEPHONY_ERROR_OPERATION_FAILED;
 			}
+			g_variant_unref(gid_gv);
 			g_variant_unref(sync_gv);
 		} else {
 			LOGE("g_dbus_conn failed. error (%s)", gerr->message);
