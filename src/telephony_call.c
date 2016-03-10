@@ -300,7 +300,7 @@ int telephony_call_get_number(telephony_call_h call_handle, char **number)
 	CHECK_INPUT_PARAMETER(call_handle);
 	CHECK_INPUT_PARAMETER(number);
 
-	*number = g_strdup(((telephony_call_info_s *)call_handle)->number);
+	*number = strdup(((telephony_call_info_s *)call_handle)->number);
 	return TELEPHONY_ERROR_NONE;
 }
 

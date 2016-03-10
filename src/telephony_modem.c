@@ -31,9 +31,7 @@ int telephony_modem_get_imei(telephony_h handle, char **imei)
 {
 	GVariant *gv = NULL;
 	GError *gerr = NULL;
-	int tapi_result;
-	char *tapi_imei = NULL;
-	int error = TELEPHONY_ERROR_OPERATION_FAILED;
+	int error = TELEPHONY_ERROR_NONE;
 	TapiHandle *tapi_h;
 
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
@@ -47,13 +45,19 @@ int telephony_modem_get_imei(telephony_h handle, char **imei)
 		"GetIMEI", NULL, NULL, G_DBUS_CALL_FLAGS_NONE, -1, NULL, &gerr);
 
 	if (gv) {
+		int tapi_result;
+		char *tapi_imei = NULL;
+
 		g_variant_get(gv, "(is)", &tapi_result, &tapi_imei);
 		if (tapi_result == 0) {
-			if (tapi_imei != NULL && strlen(tapi_imei) != 0) {
-				*imei = g_strdup_printf("%s", tapi_imei);
-				error = TELEPHONY_ERROR_NONE;
-			}
+			if (tapi_imei != NULL && strlen(tapi_imei) != 0)
+				*imei = strdup(tapi_imei);
+			else
+				*imei = strdup("");
 			g_free(tapi_imei);
+		} else {
+			LOGE("OPERATION_FAILED");
+			error = TELEPHONY_ERROR_OPERATION_FAILED;
 		}
 		g_variant_unref(gv);
 	} else {
@@ -61,6 +65,9 @@ int telephony_modem_get_imei(telephony_h handle, char **imei)
 		if (strstr(gerr->message, "AccessDenied")) {
 			LOGE("PERMISSION_DENIED");
 			error = TELEPHONY_ERROR_PERMISSION_DENIED;
+		} else {
+			LOGE("OPERATION_FAILED");
+			error = TELEPHONY_ERROR_OPERATION_FAILED;
 		}
 		g_error_free(gerr);
 	}
@@ -118,7 +125,7 @@ int telephony_modem_get_power_status(telephony_h handle,
 
 int telephony_modem_get_meid(telephony_h handle, char **meid)
 {
-	int ret = TELEPHONY_ERROR_OPERATION_FAILED;
+	int ret = TELEPHONY_ERROR_NONE;
 	TapiHandle *tapi_h;
 	GVariant *gv = NULL;
 	GError *gerr = NULL;
@@ -136,12 +143,14 @@ int telephony_modem_get_meid(telephony_h handle, char **meid)
 	if (gv) {
 		int tapi_result;
 		char *tapi_esn = NULL, *tapi_meid = NULL, *tapi_imei = NULL, *tapi_imeisv = NULL;
+
 		g_variant_get(gv, "(issss)",
 			&tapi_result, &tapi_esn, &tapi_meid, &tapi_imei, &tapi_imeisv);
 		if (tapi_result == 0) {
-			ret = TELEPHONY_ERROR_NONE;
-			*meid = strdup(tapi_meid);
-
+			if (tapi_meid != NULL && strlen(tapi_meid) != 0)
+				*meid = strdup(tapi_meid);
+			else
+				*meid = strdup("");
 			g_free(tapi_esn);
 			g_free(tapi_meid);
 			g_free(tapi_imei);
