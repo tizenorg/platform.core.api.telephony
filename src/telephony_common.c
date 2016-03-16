@@ -137,7 +137,7 @@ static const char *_mapping_noti_id(telephony_noti_e noti_id)
 		return NULL;
 	}
 }
-
+/* LCOV_EXCL_START */
 static int _mapping_sim_status(TelSimCardStatus_t tapi_sim_status)
 {
 	int sim_status;
@@ -171,7 +171,7 @@ static int _mapping_sim_status(TelSimCardStatus_t tapi_sim_status)
 
 	return sim_status;
 }
-
+/* LCOV_EXCL_STOP */
 static int _mapping_service_state(int tapi_service_type)
 {
 	int service_state;
@@ -183,10 +183,10 @@ static int _mapping_service_state(int tapi_service_type)
 		service_state = TELEPHONY_NETWORK_SERVICE_STATE_OUT_OF_SERVICE;
 		break;
 	case TAPI_NETWORK_SERVICE_TYPE_EMERGENCY:
-		service_state = TELEPHONY_NETWORK_SERVICE_STATE_EMERGENCY_ONLY;
+		service_state = TELEPHONY_NETWORK_SERVICE_STATE_EMERGENCY_ONLY; /* LCOV_EXCL_LINE */
 		break;
 	default:
-		service_state = TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE;
+		service_state = TELEPHONY_NETWORK_SERVICE_STATE_IN_SERVICE; /* LCOV_EXCL_LINE */
 		break;
 	}
 
@@ -253,6 +253,7 @@ static void _deregister_noti(gpointer data)
 static void on_signal_callback(TapiHandle *tapi_h, const char *evt_id,
 	void *data, void *user_data)
 {
+	/* LCOV_EXCL_START */
 	telephony_evt_cb_data *evt_cb_data = user_data;
 
 	if (evt_cb_data == NULL) {
@@ -352,6 +353,7 @@ static void on_signal_callback(TapiHandle *tapi_h, const char *evt_id,
 	} else {
 		LOGE("Unhandled noti: [%s]", evt_id);
 	}
+	/* LCOV_EXCL_STOP */
 }
 
 int telephony_set_noti_cb(telephony_h handle,
@@ -485,6 +487,7 @@ int telephony_init(telephony_handle_list_s *list)
 		tmp->evt_list = NULL;
 		tmp->tapi_h = tel_init(cp_list[i]);
 		if (tmp->tapi_h == NULL) {
+			/* LCOV_EXCL_START */
 			int j = 0;
 			LOGE("handle is NULL");
 			for (; j < i; j++) {
@@ -500,6 +503,7 @@ int telephony_init(telephony_handle_list_s *list)
 			list->count = 0;
 			g_strfreev(cp_list);
 			return TELEPHONY_ERROR_OPERATION_FAILED;
+			/* LCOV_EXCL_STOP */
 		}
 		list->handle[i] = (telephony_h)tmp;
 	}

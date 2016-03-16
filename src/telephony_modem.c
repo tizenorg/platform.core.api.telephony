@@ -61,6 +61,7 @@ int telephony_modem_get_imei(telephony_h handle, char **imei)
 		}
 		g_variant_unref(gv);
 	} else {
+		/* LCOV_EXCL_START */
 		LOGE("g_dbus_conn failed. error (%s)", gerr->message);
 		if (strstr(gerr->message, "AccessDenied")) {
 			LOGE("PERMISSION_DENIED");
@@ -70,6 +71,7 @@ int telephony_modem_get_imei(telephony_h handle, char **imei)
 			error = TELEPHONY_ERROR_OPERATION_FAILED;
 		}
 		g_error_free(gerr);
+		/* LCOV_EXCL_STOP */
 	}
 
 	return error;
@@ -101,19 +103,19 @@ int telephony_modem_get_power_status(telephony_h handle,
 			*status = TELEPHONY_MODEM_POWER_STATUS_ON;
 			break;
 		case TAPI_PHONE_POWER_STATUS_OFF:
-			*status = TELEPHONY_MODEM_POWER_STATUS_OFF;
-			break;
+			*status = TELEPHONY_MODEM_POWER_STATUS_OFF; /* LCOV_EXCL_LINE */
+			break; /* LCOV_EXCL_LINE */
 		case TAPI_PHONE_POWER_STATUS_RESET:
-			*status = TELEPHONY_MODEM_POWER_STATUS_RESET;
-			break;
+			*status = TELEPHONY_MODEM_POWER_STATUS_RESET; /* LCOV_EXCL_LINE */
+			break; /* LCOV_EXCL_LINE */
 		case TAPI_PHONE_POWER_STATUS_LOW:
-			*status = TELEPHONY_MODEM_POWER_STATUS_LOW;
-			break;
+			*status = TELEPHONY_MODEM_POWER_STATUS_LOW; /* LCOV_EXCL_LINE */
+			break; /* LCOV_EXCL_LINE */
 		case TAPI_PHONE_POWER_STATUS_UNKNOWN:
 		case TAPI_PHONE_POWER_STATUS_ERROR:
 		default:
-			*status = TELEPHONY_MODEM_POWER_STATUS_UNKNOWN;
-			break;
+			*status = TELEPHONY_MODEM_POWER_STATUS_UNKNOWN; /* LCOV_EXCL_LINE */
+			break; /* LCOV_EXCL_LINE */
 		}
 	}
 
@@ -123,6 +125,7 @@ int telephony_modem_get_power_status(telephony_h handle,
 
 }
 
+/* LCOV_EXCL_START */
 int telephony_modem_get_meid(telephony_h handle, char **meid)
 {
 	int ret = TELEPHONY_ERROR_NONE;
@@ -174,3 +177,4 @@ int telephony_modem_get_meid(telephony_h handle, char **meid)
 
 	return ret;
 }
+/* LCOV_EXCL_STOP */
