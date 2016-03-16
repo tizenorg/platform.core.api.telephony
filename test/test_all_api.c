@@ -480,11 +480,10 @@ int main()
 	}
 
 	ret_value = telephony_sim_get_lock_state(handle_list.handle[0], &lock_state);
-	if (ret_value != TELEPHONY_ERROR_NONE) {
+	if (ret_value != TELEPHONY_ERROR_NONE)
 		LOGE("telephony_sim_get_lock_state() failed!!! [%d]", ret_value);
-	} else {
+	else
 		LOGI("Lock state is [%d]", lock_state);
-	}
 
 	ret_value = telephony_sim_get_group_id1(handle_list.handle[0], &gid1);
 	if (ret_value != TELEPHONY_ERROR_NONE) {
@@ -495,11 +494,10 @@ int main()
 	}
 
 	ret_value = telephony_sim_get_call_forwarding_indicator_state(handle_list.handle[0], &cf_state);
-	if (ret_value != TELEPHONY_ERROR_NONE) {
+	if (ret_value != TELEPHONY_ERROR_NONE)
 		LOGE("telephony_sim_get_call_forwarding_indicator_state() failed!!! [%d]", ret_value);
-	} else {
+	else
 		LOGI("Call forwarding indicator state is [%s]", cf_state ? "ON" : "OFF");
-	}
 
 	/* Network API */
 	ret_value = telephony_network_get_cell_id(handle_list.handle[0], &cell_id);
