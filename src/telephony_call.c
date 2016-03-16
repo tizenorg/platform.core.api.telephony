@@ -27,6 +27,7 @@
 #include "telephony_call.h"
 #include "telephony_private.h"
 
+/* LCOV_EXCL_START */
 static void _mapping_call_state(TelCallStates_t tapi_call_state, telephony_call_state_e *call_state)
 {
 	switch (tapi_call_state) {
@@ -127,6 +128,7 @@ static void _get_call_status_cb(TelCallStatus_t *status, void *user_data)
 		call_info->conference_status ? "TRUE" : "FALSE");
 	*list = g_slist_append(*list, call_info);
 }
+/* LCOV_EXCL_STOP */
 
 int telephony_call_get_voice_call_state(telephony_h handle, telephony_call_state_e *call_state)
 {
@@ -142,6 +144,7 @@ int telephony_call_get_voice_call_state(telephony_h handle, telephony_call_state
 	*call_state = TELEPHONY_CALL_STATE_IDLE;
 
 	ret = tel_get_call_status_all(tapi_h, _voice_call_get_state_cb, call_state);
+	/* LCOV_EXCL_START */
 	if (ret == TAPI_API_ACCESS_DENIED) {
 		LOGE("PERMISSION_DENIED");
 		return TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -149,6 +152,7 @@ int telephony_call_get_voice_call_state(telephony_h handle, telephony_call_state
 		LOGE("OPERATION_FAILED");
 		return TELEPHONY_ERROR_OPERATION_FAILED;
 	}
+	/* LCOV_EXCL_STOP */
 
 	LOGI("call_state: [%d]", *call_state);
 
@@ -169,6 +173,7 @@ int telephony_call_get_video_call_state(telephony_h handle, telephony_call_state
 	*call_state = TELEPHONY_CALL_STATE_IDLE;
 
 	ret = tel_get_call_status_all(tapi_h, _video_call_get_state_cb, call_state);
+	/* LCOV_EXCL_START */
 	if (ret == TAPI_API_ACCESS_DENIED) {
 		LOGE("PERMISSION_DENIED");
 		return TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -176,6 +181,7 @@ int telephony_call_get_video_call_state(telephony_h handle, telephony_call_state
 		LOGE("OPERATION_FAILED");
 		return TELEPHONY_ERROR_OPERATION_FAILED;
 	}
+	/* LCOV_EXCL_STOP */
 
 	LOGI("call_state: [%d]", *call_state);
 
@@ -195,12 +201,14 @@ int telephony_call_get_preferred_voice_subscription(telephony_h handle, telephon
 	CHECK_INPUT_PARAMETER(call_sub);
 
 	ret = tel_get_call_preferred_voice_subscription(tapi_h, &preferred_sub);
+	/* LCOV_EXCL_START */
 	if (ret == TAPI_API_ACCESS_DENIED) {
 		LOGE("PERMISSION_DENIED");
 		return TELEPHONY_ERROR_PERMISSION_DENIED;
 	} else if (ret != TAPI_API_SUCCESS) {
 		LOGE("OPERATION_FAILED");
 		return TELEPHONY_ERROR_OPERATION_FAILED;
+	/* LCOV_EXCL_STOP */
 	} else {
 		switch (preferred_sub) {
 		case TAPI_CALL_PREFERRED_VOICE_SUBS_CURRENT_NETWORK:
@@ -240,6 +248,7 @@ int telephony_call_get_call_list(telephony_h handle,
 	CHECK_INPUT_PARAMETER(count);
 
 	ret = tel_get_call_status_all(tapi_h, _get_call_status_cb, &list);
+	/* LCOV_EXCL_START */
 	if (ret == TAPI_API_ACCESS_DENIED) {
 		LOGE("PERMISSION_DENIED");
 		return TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -247,8 +256,10 @@ int telephony_call_get_call_list(telephony_h handle,
 		LOGE("OPERATION_FAILED");
 		return TELEPHONY_ERROR_OPERATION_FAILED;
 	}
+	/* LCOV_EXCL_STOP */
 
 	if (g_slist_length(list)) {
+		/* LCOV_EXCL_START */
 		*count = g_slist_length(list);
 		*call_list = g_malloc0(*count * sizeof(telephony_call_h));
 
@@ -261,6 +272,7 @@ int telephony_call_get_call_list(telephony_h handle,
 			call_index++;
 		}
 		g_slist_free(list);
+		/* LCOV_EXCL_STOP */
 	} else {
 		*count = 0;
 		*call_list = NULL;
@@ -271,6 +283,7 @@ int telephony_call_get_call_list(telephony_h handle,
 
 int telephony_call_release_call_list(unsigned int count, telephony_call_h **call_list)
 {
+	/* LCOV_EXCL_START */
 	int i;
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
 	CHECK_INPUT_PARAMETER(call_list);
@@ -282,67 +295,80 @@ int telephony_call_release_call_list(unsigned int count, telephony_call_h **call
 	}
 
 	return TELEPHONY_ERROR_NONE;
+	/* LCOV_EXCL_STOP */
 }
 
 int telephony_call_get_handle_id(telephony_call_h call_handle, unsigned int *handle_id)
 {
+	/* LCOV_EXCL_START */
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
 	CHECK_INPUT_PARAMETER(call_handle);
 	CHECK_INPUT_PARAMETER(handle_id);
 
 	*handle_id = ((telephony_call_info_s *)call_handle)->id;
 	return TELEPHONY_ERROR_NONE;
+	/* LCOV_EXCL_STOP */
 }
 
 int telephony_call_get_number(telephony_call_h call_handle, char **number)
 {
+	/* LCOV_EXCL_START */
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
 	CHECK_INPUT_PARAMETER(call_handle);
 	CHECK_INPUT_PARAMETER(number);
 
 	*number = strdup(((telephony_call_info_s *)call_handle)->number);
 	return TELEPHONY_ERROR_NONE;
+	/* LCOV_EXCL_STOP */
 }
 
 int telephony_call_get_type(telephony_call_h call_handle,
 	telephony_call_type_e *type)
 {
+	/* LCOV_EXCL_START */
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
 	CHECK_INPUT_PARAMETER(call_handle);
 	CHECK_INPUT_PARAMETER(type);
 
 	*type = ((telephony_call_info_s *)call_handle)->type;
 	return TELEPHONY_ERROR_NONE;
+	/* LCOV_EXCL_STOP */
 }
 
 int telephony_call_get_status(telephony_call_h call_handle,
 	telephony_call_status_e *status)
 {
+	/* LCOV_EXCL_START */
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
 	CHECK_INPUT_PARAMETER(call_handle);
 	CHECK_INPUT_PARAMETER(status);
 
 	*status = ((telephony_call_info_s *)call_handle)->status;
 	return TELEPHONY_ERROR_NONE;
+	/* LCOV_EXCL_STOP */
 }
 
 int telephony_call_get_direction(telephony_call_h call_handle,
 	telephony_call_direction_e *direction)
 {
+	/* LCOV_EXCL_START */
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
 	CHECK_INPUT_PARAMETER(call_handle);
 	CHECK_INPUT_PARAMETER(direction);
 
 	*direction = ((telephony_call_info_s *)call_handle)->direction;
 	return TELEPHONY_ERROR_NONE;
+	/* LCOV_EXCL_STOP */
 }
 
 int telephony_call_get_conference_status(telephony_call_h call_handle, bool *conference_status)
 {
+	/* LCOV_EXCL_START */
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
 	CHECK_INPUT_PARAMETER(call_handle);
 	CHECK_INPUT_PARAMETER(conference_status);
 
 	*conference_status = ((telephony_call_info_s *)call_handle)->conference_status;
 	return TELEPHONY_ERROR_NONE;
+	/* LCOV_EXCL_STOP */
 }

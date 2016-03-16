@@ -61,6 +61,7 @@ int telephony_modem_get_imei(telephony_h handle, char **imei)
 		}
 		g_variant_unref(gv);
 	} else {
+		/* LCOV_EXCL_START */
 		LOGE("g_dbus_conn failed. error (%s)", gerr->message);
 		if (strstr(gerr->message, "AccessDenied")) {
 			LOGE("PERMISSION_DENIED");
@@ -70,6 +71,7 @@ int telephony_modem_get_imei(telephony_h handle, char **imei)
 			error = TELEPHONY_ERROR_OPERATION_FAILED;
 		}
 		g_error_free(gerr);
+		/* LCOV_EXCL_STOP */
 	}
 
 	return error;
@@ -89,12 +91,14 @@ int telephony_modem_get_power_status(telephony_h handle,
 	CHECK_INPUT_PARAMETER(status);
 
 	ret = tel_check_modem_power_status(tapi_h, &modem_status);
+	/* LCOV_EXCL_START */
 	if (ret == TAPI_API_ACCESS_DENIED) {
 		LOGE("PERMISSION_DENIED");
 		return TELEPHONY_ERROR_PERMISSION_DENIED;
 	} else if (ret != TAPI_API_SUCCESS) {
 		LOGE("OPERATION_FAILED");
 		return TELEPHONY_ERROR_OPERATION_FAILED;
+	/* LCOV_EXCL_STOP */
 	} else {
 		switch (modem_status) {
 		case TAPI_PHONE_POWER_STATUS_ON:
@@ -123,6 +127,7 @@ int telephony_modem_get_power_status(telephony_h handle,
 
 }
 
+/* LCOV_EXCL_START */
 int telephony_modem_get_meid(telephony_h handle, char **meid)
 {
 	int ret = TELEPHONY_ERROR_NONE;
@@ -174,3 +179,4 @@ int telephony_modem_get_meid(telephony_h handle, char **meid)
 
 	return ret;
 }
+/* LCOV_EXCL_STOP */
