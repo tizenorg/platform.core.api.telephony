@@ -27,6 +27,8 @@
 #include "telephony_common.h"
 #include "telephony_private.h"
 
+#define TELEPHONY_NETWORK_MCC_LEN 3
+
 int telephony_network_get_lac(telephony_h handle, int *lac)
 {
 	int ret = TELEPHONY_ERROR_NONE;
@@ -156,9 +158,8 @@ int telephony_network_get_roaming_status(telephony_h handle, bool *status)
 
 int telephony_network_get_mcc(telephony_h handle, char **mcc)
 {
-	int ret;
+	int ret = TELEPHONY_ERROR_NONE;
 	char *plmn_str = NULL;
-	int mcc_length = 3;
 	TapiHandle *tapi_h;
 
 	CHECK_TELEPHONY_SUPPORTED(TELEPHONY_FEATURE);
@@ -169,18 +170,19 @@ int telephony_network_get_mcc(telephony_h handle, char **mcc)
 
 	ret = tel_get_property_string(tapi_h, TAPI_PROP_NETWORK_PLMN, &plmn_str);
 	if (ret == TAPI_API_SUCCESS) {
-		*mcc = malloc(sizeof(char) * (mcc_length + 1));
-		if (*mcc == NULL) {
-			LOGE("OUT_OF_MEMORY");
-			ret = TELEPHONY_ERROR_OUT_OF_MEMORY;
+		if (plmn_str != NULL && strlen(plmn_str) != 0) {
+			*mcc = malloc(sizeof(char) * (TELEPHONY_NETWORK_MCC_LEN + 1));
+			if (*mcc == NULL) {
+				LOGE("OUT_OF_MEMORY");
+				ret = TELEPHONY_ERROR_OUT_OF_MEMORY;
+			} else {
+				snprintf(*mcc, TELEPHONY_NETWORK_MCC_LEN + 1, "%s", plmn_str);
+			}
+			g_free(plmn_str);
 		} else {
-			memset(*mcc, 0x00, mcc_length + 1);
-			strncpy(*mcc, plmn_str, mcc_length);
-			free(plmn_str);
-
-			LOGI("mcc:[%s]", *mcc);
-			ret = TELEPHONY_ERROR_NONE;
+			*mcc = strdup("");
 		}
+		LOGI("MCC: [%s]", *mcc);
 	} else if (ret == TAPI_API_ACCESS_DENIED) {
 		LOGE("PERMISSION_DENIED");
 		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -194,7 +196,7 @@ int telephony_network_get_mcc(telephony_h handle, char **mcc)
 
 int telephony_network_get_mnc(telephony_h handle, char **mnc)
 {
-	int ret;
+	int ret = TELEPHONY_ERROR_NONE;
 	char *plmn_str = NULL;
 	int plmn_length;
 	TapiHandle *tapi_h;
@@ -207,21 +209,21 @@ int telephony_network_get_mnc(telephony_h handle, char **mnc)
 
 	ret = tel_get_property_string(tapi_h, TAPI_PROP_NETWORK_PLMN, &plmn_str);
 	if (ret == TAPI_API_SUCCESS) {
-		plmn_length = strlen(plmn_str);
-		LOGI("plmn:[%s], length:[%d]", plmn_str, plmn_length);
-
-		*mnc = malloc(sizeof(char) * (plmn_length -3 + 1));
-		if (*mnc == NULL) {
-			LOGE("OUT_OF_MEMORY");
-			ret = TELEPHONY_ERROR_OUT_OF_MEMORY;
+		if (plmn_str != NULL && strlen(plmn_str) != 0) {
+			plmn_length = strlen(plmn_str);
+			*mnc = malloc(sizeof(char) * (plmn_length - TELEPHONY_NETWORK_MCC_LEN + 1));
+			if (*mnc == NULL) {
+				LOGE("OUT_OF_MEMORY");
+				ret = TELEPHONY_ERROR_OUT_OF_MEMORY;
+			} else {
+				snprintf(*mnc, plmn_length - TELEPHONY_NETWORK_MCC_LEN + 1,
+					"%s", plmn_str + TELEPHONY_NETWORK_MCC_LEN);
+			}
+			g_free(plmn_str);
 		} else {
-			memset(*mnc, 0x00, (plmn_length -3 + 1));
-			strncpy(*mnc, plmn_str + 3, (plmn_length -3 + 1));
-			free(plmn_str);
-
-			LOGI("mnc:[%s]", *mnc);
-			ret = TELEPHONY_ERROR_NONE;
+			*mnc = strdup("");
 		}
+		LOGI("MNC: [%s]", *mnc);
 	} else if (ret == TAPI_API_ACCESS_DENIED) {
 		LOGE("PERMISSION_DENIED");
 		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
