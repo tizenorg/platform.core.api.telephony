@@ -51,6 +51,7 @@
 	} \
 }
 
+/* LCOV_EXCL_START */
 static telephony_error_e _convert_dbus_errmsg_to_sim_error(gchar *err_msg)
 {
 	telephony_error_e ret = TELEPHONY_ERROR_OPERATION_FAILED;
@@ -82,6 +83,7 @@ static telephony_error_e _convert_dbus_errmsg_to_sim_error(gchar *err_msg)
 
 	return ret;
 }
+/* LCOV_EXCL_STOP */
 
 int telephony_sim_get_icc_id(telephony_h handle, char **icc_id)
 {
@@ -126,9 +128,11 @@ int telephony_sim_get_icc_id(telephony_h handle, char **icc_id)
 			g_free(iccid);
 			g_variant_unref(sync_gv);
 		} else {
+			/* LCOV_EXCL_START */
 			LOGE("g_dbus_conn failed. error (%s)", gerr->message);
 			error_code = _convert_dbus_errmsg_to_sim_error(gerr->message);
 			g_error_free(gerr);
+			/* LCOV_EXCL_STOP */
 		}
 	}
 
@@ -158,6 +162,7 @@ int telephony_sim_get_operator(telephony_h handle, char **sim_operator)
 			*sim_operator = malloc(len + 1);
 			snprintf(*sim_operator, len + 1, "%s%s", sim_imsi_info.szMcc, sim_imsi_info.szMnc);
 			LOGI("SIM operator: [%s]", *sim_operator);
+		/* LCOV_EXCL_START */
 		} else if (ret == TAPI_API_ACCESS_DENIED) {
 			LOGE("PERMISSION_DENIED");
 			error_code = TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -165,6 +170,7 @@ int telephony_sim_get_operator(telephony_h handle, char **sim_operator)
 			LOGE("OPERATION_FAILED");
 			error_code = TELEPHONY_ERROR_OPERATION_FAILED;
 		}
+		/* LCOV_EXCL_STOP */
 	}
 
 	return error_code;
@@ -190,6 +196,7 @@ int telephony_sim_get_msin(telephony_h handle, char **msin)
 		int ret = tel_get_sim_imsi(tapi_h, &sim_imsi_info);
 		if (ret == TAPI_API_SUCCESS) {
 			*msin = strdup(sim_imsi_info.szMsin);
+		/* LCOV_EXCL_START */
 		} else if (ret == TAPI_API_ACCESS_DENIED) {
 			LOGE("PERMISSION_DENIED");
 			error_code = TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -197,6 +204,7 @@ int telephony_sim_get_msin(telephony_h handle, char **msin)
 			LOGE("OPERATION_FAILED");
 			error_code = TELEPHONY_ERROR_OPERATION_FAILED;
 		}
+		/* LCOV_EXCL_STOP */
 	}
 
 	return error_code;
@@ -247,9 +255,11 @@ int telephony_sim_get_spn(telephony_h handle, char **spn)
 			g_free(spn_str);
 			g_variant_unref(sync_gv);
 		} else {
+			/* LCOV_EXCL_START */
 			LOGE("g_dbus_conn failed. error (%s)", gerr->message);
 			error_code = _convert_dbus_errmsg_to_sim_error(gerr->message);
 			g_error_free(gerr);
+			/* LCOV_EXCL_STOP */
 		}
 	}
 
@@ -278,6 +288,7 @@ int telephony_sim_is_changed(telephony_h handle, bool *is_changed)
 			LOGE("NOT_AVAILABLE");
 			error_code = TELEPHONY_ERROR_SIM_NOT_AVAILABLE;
 		}
+	/* LCOV_EXCL_START */
 	} else if (ret == TAPI_API_ACCESS_DENIED) {
 		LOGE("PERMISSION_DENIED");
 		error_code = TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -285,6 +296,7 @@ int telephony_sim_is_changed(telephony_h handle, bool *is_changed)
 		LOGE("OPERATION_FAILED");
 		error_code = TELEPHONY_ERROR_OPERATION_FAILED;
 	}
+	/* LCOV_EXCL_STOP */
 
 	return error_code;
 }
@@ -353,6 +365,7 @@ int telephony_sim_get_application_list(telephony_h handle, unsigned int *app_lis
 		if (ret == TAPI_API_SUCCESS) {
 			*app_list = (unsigned int)tapi_app_list;
 			LOGI("SIM Application List: [0x%x]", *app_list);
+		/* LCOV_EXCL_START */
 		} else if (ret == TAPI_API_ACCESS_DENIED) {
 			LOGE("PERMISSION_DENIED");
 			error_code = TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -360,6 +373,7 @@ int telephony_sim_get_application_list(telephony_h handle, unsigned int *app_lis
 			LOGE("OPERATION_FAILED");
 			error_code = TELEPHONY_ERROR_OPERATION_FAILED;
 		}
+		/* LCOV_EXCL_STOP */
 	}
 
 	return error_code;
@@ -412,9 +426,11 @@ int telephony_sim_get_subscriber_number(telephony_h handle, char **subscriber_nu
 		g_variant_iter_free(iter);
 		g_variant_unref(sync_gv);
 	} else {
+		/* LCOV_EXCL_START */
 		LOGE("g_dbus_conn failed. error (%s)", gerr->message);
 		error_code = _convert_dbus_errmsg_to_sim_error(gerr->message);
 		g_error_free(gerr);
+		/* LCOV_EXCL_STOP */
 	}
 
 	return error_code;
@@ -456,6 +472,7 @@ int telephony_sim_get_subscriber_id(telephony_h handle, char **subscriber_id)
 				snprintf(*subscriber_id + (i * 2), 3,  "%02x", md[i]);
 			LOGI("Subscriber ID: [%s]", *subscriber_id);
 			g_free(imsi);
+		/* LCOV_EXCL_START */
 		} else if (error_code == TAPI_API_ACCESS_DENIED) {
 			LOGE("get_subscriber_id: PERMISSION_DENIED");
 			error_code = TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -463,11 +480,13 @@ int telephony_sim_get_subscriber_id(telephony_h handle, char **subscriber_id)
 			LOGE("get_subscriber_id: OPERATION_FAILED");
 			error_code = TELEPHONY_ERROR_OPERATION_FAILED;
 		}
+		/* LCOV_EXCL_STOP */
 	}
 
 	return error_code;
 }
 
+/* LCOV_EXCL_START */
 int telephony_sim_get_lock_state(telephony_h handle, telephony_sim_lock_state_e *lock_state)
 {
 	TelSimCardStatus_t sim_card_state;
@@ -599,3 +618,4 @@ int telephony_sim_get_call_forwarding_indicator_state(telephony_h handle, bool *
 
 	return error_code;
 }
+/* LCOV_EXCL_STOP */
