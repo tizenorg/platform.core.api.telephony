@@ -47,6 +47,7 @@ int telephony_network_get_lac(telephony_h handle, int *lac)
 	if (dbus_result) {
 		g_variant_get(dbus_result, "(i)", lac);
 		g_variant_unref(dbus_result);
+	/* LCOV_EXCL_START */
 	} else {
 		LOGE("g_dbus_connection_call_sync() failed. (%s)", error->message);
 		if (strstr(error->message, "AccessDenied")) {
@@ -58,6 +59,7 @@ int telephony_network_get_lac(telephony_h handle, int *lac)
 		}
 		g_error_free(error);
 	}
+	/* LCOV_EXCL_STOP */
 
 	return ret;
 }
@@ -83,6 +85,7 @@ int telephony_network_get_cell_id(telephony_h handle, int *cell_id)
 		g_variant_get(dbus_result, "(i)", cell_id);
 		g_variant_unref(dbus_result);
 	} else {
+		/* LCOV_EXCL_START */
 		LOGE("g_dbus_connection_call_sync() failed. (%s)", error->message);
 		if (strstr(error->message, "AccessDenied")) {
 			LOGE("PERMISSION_DENIED");
@@ -92,6 +95,7 @@ int telephony_network_get_cell_id(telephony_h handle, int *cell_id)
 			ret = TELEPHONY_ERROR_OPERATION_FAILED;
 		}
 		g_error_free(error);
+		/* LCOV_EXCL_STOP */
 	}
 
 	return ret;
@@ -112,6 +116,7 @@ int telephony_network_get_rssi(telephony_h handle, telephony_network_rssi_e *rss
 	if (ret == TAPI_API_SUCCESS) {
 		LOGI("rssi:[%d]", *rssi);
 		ret = TELEPHONY_ERROR_NONE;
+	/* LCOV_EXCL_START */
 	} else if (ret == TAPI_API_ACCESS_DENIED) {
 		LOGE("PERMISSION_DENIED");
 		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -119,6 +124,7 @@ int telephony_network_get_rssi(telephony_h handle, telephony_network_rssi_e *rss
 		LOGE("OPERATION_FAILED");
 		ret = TELEPHONY_ERROR_OPERATION_FAILED;
 	}
+	/* LCOV_EXCL_STOP */
 
 	return ret;
 }
@@ -143,6 +149,7 @@ int telephony_network_get_roaming_status(telephony_h handle, bool *status)
 			*status = false;
 		LOGI("status:[%d]", *status);
 		ret = TELEPHONY_ERROR_NONE;
+	/* LCOV_EXCL_START */
 	} else if (ret == TAPI_API_ACCESS_DENIED) {
 		LOGE("PERMISSION_DENIED");
 		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -150,6 +157,7 @@ int telephony_network_get_roaming_status(telephony_h handle, bool *status)
 		LOGE("OPERATION_FAILED");
 		ret = TELEPHONY_ERROR_OPERATION_FAILED;
 	}
+	/* LCOV_EXCL_STOP */
 
 	return ret;
 }
@@ -181,6 +189,7 @@ int telephony_network_get_mcc(telephony_h handle, char **mcc)
 			LOGI("mcc:[%s]", *mcc);
 			ret = TELEPHONY_ERROR_NONE;
 		}
+	/* LCOV_EXCL_START */
 	} else if (ret == TAPI_API_ACCESS_DENIED) {
 		LOGE("PERMISSION_DENIED");
 		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -188,6 +197,7 @@ int telephony_network_get_mcc(telephony_h handle, char **mcc)
 		LOGE("OPERATION_FAILED");
 		ret = TELEPHONY_ERROR_OPERATION_FAILED;
 	}
+	/* LCOV_EXCL_STOP */
 
 	return ret;
 }
@@ -222,6 +232,7 @@ int telephony_network_get_mnc(telephony_h handle, char **mnc)
 			LOGI("mnc:[%s]", *mnc);
 			ret = TELEPHONY_ERROR_NONE;
 		}
+	/* LCOV_EXCL_START */
 	} else if (ret == TAPI_API_ACCESS_DENIED) {
 		LOGE("PERMISSION_DENIED");
 		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -229,6 +240,7 @@ int telephony_network_get_mnc(telephony_h handle, char **mnc)
 		LOGE("OPERATION_FAILED");
 		ret = TELEPHONY_ERROR_OPERATION_FAILED;
 	}
+	/* LCOV_EXCL_STOP */
 
 	return ret;
 }
@@ -248,6 +260,7 @@ int telephony_network_get_network_name(telephony_h handle, char **network_name)
 	if (ret == TAPI_API_SUCCESS) {
 		LOGI("network_name:[%s]", *network_name);
 		ret = TELEPHONY_ERROR_NONE;
+	/* LCOV_EXCL_START */
 	} else if (ret == TAPI_API_ACCESS_DENIED) {
 		LOGE("PERMISSION_DENIED");
 		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -255,6 +268,7 @@ int telephony_network_get_network_name(telephony_h handle, char **network_name)
 		LOGE("OPERATION_FAILED");
 		ret = TELEPHONY_ERROR_OPERATION_FAILED;
 	}
+	/* LCOV_EXCL_STOP */
 
 	return ret;
 }
@@ -290,6 +304,7 @@ int telephony_network_get_network_name_option(telephony_h handle, telephony_netw
 
 		LOGI("network_name_option:[%d]", *network_name_option);
 		ret = TELEPHONY_ERROR_NONE;
+	/* LCOV_EXCL_START */
 	} else if (ret == TAPI_API_ACCESS_DENIED) {
 		LOGE("PERMISSION_DENIED");
 		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -297,6 +312,7 @@ int telephony_network_get_network_name_option(telephony_h handle, telephony_netw
 		LOGE("OPERATION_FAILED");
 		ret = TELEPHONY_ERROR_OPERATION_FAILED;
 	}
+	/* LCOV_EXCL_STOP */
 
 	return ret;
 }
@@ -370,6 +386,7 @@ int telephony_network_get_type(telephony_h handle, telephony_network_type_e *net
 
 		LOGI("network_type:[%d]", *network_type);
 		ret = TELEPHONY_ERROR_NONE;
+	/* LCOV_EXCL_START */
 	} else if (ret == TAPI_API_ACCESS_DENIED) {
 		LOGE("PERMISSION_DENIED");
 		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -377,6 +394,7 @@ int telephony_network_get_type(telephony_h handle, telephony_network_type_e *net
 		LOGE("OPERATION_FAILED");
 		ret = TELEPHONY_ERROR_OPERATION_FAILED;
 	}
+	/* LCOV_EXCL_STOP */
 
 	return ret;
 }
@@ -415,6 +433,7 @@ int telephony_network_get_ps_type(telephony_h handle, telephony_network_ps_type_
 
 		LOGI("ps_type:[%d]", *ps_type);
 		ret = TELEPHONY_ERROR_NONE;
+	/* LCOV_EXCL_START */
 	} else if (ret == TAPI_API_ACCESS_DENIED) {
 		LOGE("PERMISSION_DENIED");
 		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -422,6 +441,7 @@ int telephony_network_get_ps_type(telephony_h handle, telephony_network_ps_type_
 		LOGE("OPERATION_FAILED");
 		ret = TELEPHONY_ERROR_OPERATION_FAILED;
 	}
+	/* LCOV_EXCL_STOP */
 
 	return ret;
 }
@@ -455,6 +475,7 @@ int telephony_network_get_service_state(telephony_h handle, telephony_network_se
 		}
 		LOGI("network_service_state:[%d]", *network_service_state);
 		ret = TELEPHONY_ERROR_NONE;
+	/* LCOV_EXCL_START */
 	} else if (ret == TAPI_API_ACCESS_DENIED) {
 		LOGE("PERMISSION_DENIED");
 		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -462,6 +483,7 @@ int telephony_network_get_service_state(telephony_h handle, telephony_network_se
 		LOGE("OPERATION_FAILED");
 		ret = TELEPHONY_ERROR_OPERATION_FAILED;
 	}
+	/* LCOV_EXCL_STOP */
 
 	return ret;
 }
@@ -495,6 +517,7 @@ int telephony_network_get_default_data_subscription(telephony_h handle,
 		}
 		LOGI("default data subscription: [%d]", *default_data_sub);
 		ret = TELEPHONY_ERROR_NONE;
+	/* LCOV_EXCL_START */
 	} else if (ret == TAPI_API_ACCESS_DENIED) {
 		LOGE("PERMISSION_DENIED");
 		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -502,6 +525,7 @@ int telephony_network_get_default_data_subscription(telephony_h handle,
 		LOGE("OPERATION_FAILED");
 		ret = TELEPHONY_ERROR_OPERATION_FAILED;
 	}
+	/* LCOV_EXCL_STOP */
 
 	return ret;
 }
@@ -535,6 +559,7 @@ int telephony_network_get_default_subscription(telephony_h handle,
 		}
 		LOGI("default subscription: [%d]", *default_sub);
 		ret = TELEPHONY_ERROR_NONE;
+	/* LCOV_EXCL_START */
 	} else if (ret == TAPI_API_ACCESS_DENIED) {
 		LOGE("PERMISSION_DENIED");
 		ret = TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -542,10 +567,12 @@ int telephony_network_get_default_subscription(telephony_h handle,
 		LOGE("OPERATION_FAILED");
 		ret = TELEPHONY_ERROR_OPERATION_FAILED;
 	}
+	/* LCOV_EXCL_STOP */
 
 	return ret;
 }
 
+/* LCOV_EXCL_START */
 int telephony_network_get_selection_mode(telephony_h handle, telephony_network_selection_mode_e *mode)
 {
 	int ret = TELEPHONY_ERROR_OPERATION_FAILED;
@@ -796,3 +823,4 @@ int telephony_network_get_base_station_longitude(telephony_h handle, int *bs_lon
 
 	return ret;
 }
+/* LCOV_EXCL_STOP */
