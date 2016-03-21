@@ -85,10 +85,10 @@ typedef enum {
  *         otherwise a negative error value
  *
  * @retval #TELEPHONY_ERROR_NONE              Successful
- * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Out of memory
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
- * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Invalid parameter
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  * @retval #TELEPHONY_ERROR_SIM_NOT_AVAILABLE SIM is not available
  *
  * @pre The SIM state must be #TELEPHONY_SIM_STATE_AVAILABLE.
@@ -114,10 +114,10 @@ int telephony_sim_get_icc_id(telephony_h handle, char **icc_id);
  *         otherwise a negative error value
  *
  * @retval #TELEPHONY_ERROR_NONE              Successful
- * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Out of memory
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
- * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Invalid parameter
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  * @retval #TELEPHONY_ERROR_SIM_NOT_AVAILABLE SIM is not available
  *
  * @pre The SIM state must be #TELEPHONY_SIM_STATE_AVAILABLE.
@@ -143,10 +143,10 @@ int telephony_sim_get_operator(telephony_h handle, char **sim_operator);
  *         otherwise a negative error value
  *
  * @retval #TELEPHONY_ERROR_NONE              Successful
- * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Out of memory
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
- * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Invalid parameter
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  * @retval #TELEPHONY_ERROR_SIM_NOT_AVAILABLE SIM is not available
  *
  * @pre The SIM state must be #TELEPHONY_SIM_STATE_AVAILABLE.
@@ -173,10 +173,10 @@ int telephony_sim_get_msin(telephony_h handle, char **msin);
  *         otherwise a negative error value
  *
  * @retval #TELEPHONY_ERROR_NONE              Successful
- * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Out of memory
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
- * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Invalid parameter
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  * @retval #TELEPHONY_ERROR_SIM_NOT_AVAILABLE SIM is not available
  *
  * @pre The SIM state must be #TELEPHONY_SIM_STATE_AVAILABLE.
@@ -200,10 +200,10 @@ int telephony_sim_get_spn(telephony_h handle, char **spn);
  *         otherwise a negative error value
  *
  * @retval #TELEPHONY_ERROR_NONE              Successful
- * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Out of memory
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
- * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Invalid parameter
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  * @retval #TELEPHONY_ERROR_SIM_NOT_AVAILABLE SIM is not available
  *
  * @pre The SIM state must be #TELEPHONY_SIM_STATE_AVAILABLE.
@@ -226,10 +226,10 @@ int telephony_sim_is_changed(telephony_h handle, bool *is_changed);
  *         otherwise a negative error value
  *
  * @retval #TELEPHONY_ERROR_NONE              Successful
- * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Out of memory
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
- * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Invalid parameter
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  */
 int telephony_sim_get_state(telephony_h handle, telephony_sim_state_e *sim_state);
 
@@ -251,10 +251,10 @@ int telephony_sim_get_state(telephony_h handle, telephony_sim_state_e *sim_state
  *         otherwise a negative error value
  *
  * @retval #TELEPHONY_ERROR_NONE              Successful
- * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Out of memory
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
- * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Invalid parameter
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  * @retval #TELEPHONY_ERROR_SIM_NOT_AVAILABLE SIM is not available
  *
  * @pre The SIM state must be #TELEPHONY_SIM_STATE_AVAILABLE.
@@ -282,10 +282,10 @@ int telephony_sim_get_application_list(telephony_h handle, unsigned int *app_lis
  *         otherwise a negative error value
  *
  * @retval #TELEPHONY_ERROR_NONE              Successful
- * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Out of memory
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
- * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Invalid parameter
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  * @retval #TELEPHONY_ERROR_SIM_NOT_AVAILABLE SIM is not available
  *
  * @pre The SIM state must be #TELEPHONY_SIM_STATE_AVAILABLE.
@@ -308,10 +308,10 @@ int telephony_sim_get_subscriber_number(telephony_h handle, char **subscriber_nu
  * @param[out] subscriber_id The subscriber ID
  *
  * @retval #TELEPHONY_ERROR_NONE              Successful
- * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Out of memory
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
- * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Invalid parameter
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  * @retval #TELEPHONY_ERROR_SIM_NOT_AVAILABLE SIM is not available
  *
  * @pre The SIM state must be #TELEPHONY_SIM_STATE_AVAILABLE.
@@ -336,10 +336,10 @@ int telephony_sim_get_subscriber_id(telephony_h handle, char **subscriber_id);
  *         otherwise a negative error value
  *
  * @retval #TELEPHONY_ERROR_NONE              Successful
- * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Out of memory
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
- * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Invalid parameter
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  *
  * @pre The SIM state must be #TELEPHONY_SIM_STATE_LOCKED.
  *
@@ -362,10 +362,10 @@ int telephony_sim_get_lock_state(telephony_h handle, telephony_sim_lock_state_e 
  * @param[out] gid1 The GID1
  *
  * @retval #TELEPHONY_ERROR_NONE              Successful
- * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Out of memory
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
- * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Invalid parameter
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  * @retval #TELEPHONY_ERROR_SIM_NOT_AVAILABLE SIM is not available
  *
  * @pre The SIM state must be #TELEPHONY_SIM_STATE_AVAILABLE.
@@ -392,10 +392,10 @@ int telephony_sim_get_group_id1(telephony_h handle, char **gid1);
  *         otherwise a negative error value
  *
  * @retval #TELEPHONY_ERROR_NONE              Successful
- * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Out of memory
+ * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
  * @retval #TELEPHONY_ERROR_PERMISSION_DENIED Permission denied
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
- * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Invalid parameter
+ * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
  * @retval #TELEPHONY_ERROR_SIM_NOT_AVAILABLE SIM is not available
  *
  * @pre The SIM state must be #TELEPHONY_SIM_STATE_AVAILABLE.
