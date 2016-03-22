@@ -249,7 +249,7 @@ int telephony_sim_get_spn(telephony_h handle, char **spn)
 				else
 					*spn = strdup("");
 				LOGI("SPN: [%s]", *spn);
-			} else if (result == SIM_ACCESS_FILE_NOT_FOUND) {
+			} else if (result == TAPI_SIM_ACCESS_FILE_NOT_FOUND) {
 				*spn = strdup("");
 				LOGI("SPN: [%s]", *spn);
 			} else {
@@ -423,7 +423,7 @@ int telephony_sim_get_subscriber_number(telephony_h handle, char **subscriber_nu
 			}
 			if (!*subscriber_number)
 				*subscriber_number = strdup("");
-		} else if (result == SIM_ACCESS_FILE_NOT_FOUND) {
+		} else if (result == TAPI_SIM_ACCESS_FILE_NOT_FOUND) {
 			*subscriber_number = strdup("");
 		} else {
 			error_code = TELEPHONY_ERROR_OPERATION_FAILED;
@@ -576,7 +576,7 @@ int telephony_sim_get_group_id1(telephony_h handle, char **gid1)
 					g_variant_iter_free(iter);
 					g_variant_unref(inner_gv);
 				}
-			} else if (result == SIM_ACCESS_FILE_NOT_FOUND) {
+			} else if (result == TAPI_SIM_ACCESS_FILE_NOT_FOUND) {
 				*gid1 = strdup("");
 			} else {
 				error_code = TELEPHONY_ERROR_OPERATION_FAILED;
