@@ -491,9 +491,9 @@ int telephony_sim_get_subscriber_id(telephony_h handle, char **subscriber_id)
 	return error_code;
 }
 
-/* LCOV_EXCL_START */
 int telephony_sim_get_lock_state(telephony_h handle, telephony_sim_lock_state_e *lock_state)
 {
+	/* LCOV_EXCL_START */
 	TelSimCardStatus_t sim_card_state;
 	int error_code = TELEPHONY_ERROR_NONE;
 	TapiHandle *tapi_h;
@@ -524,6 +524,7 @@ int telephony_sim_get_lock_state(telephony_h handle, telephony_sim_lock_state_e 
 	}
 
 	return error_code;
+	/* LCOV_EXCL_STOP */
 }
 
 int telephony_sim_get_group_id1(telephony_h handle, char **gid1)
@@ -584,9 +585,11 @@ int telephony_sim_get_group_id1(telephony_h handle, char **gid1)
 			g_variant_unref(gid_gv);
 			g_variant_unref(sync_gv);
 		} else {
+			/* LCOV_EXCL_START */
 			LOGE("g_dbus_conn failed. error (%s)", gerr->message);
 			error_code = _convert_dbus_errmsg_to_sim_error(gerr->message);
 			g_error_free(gerr);
+			/* LCOV_EXCL_STOP */
 		}
 	}
 
@@ -614,6 +617,7 @@ int telephony_sim_get_call_forwarding_indicator_state(telephony_h handle, bool *
 		if (ret == TAPI_API_SUCCESS) {
 			*state = (bool)tel_state;
 			LOGI("Call forwarding indicator state: [%s]", *state ? "ON" : "OFF");
+		/* LCOV_EXCL_START */
 		} else if (ret == TAPI_API_ACCESS_DENIED) {
 			LOGE("PERMISSION_DENIED");
 			error_code = TELEPHONY_ERROR_PERMISSION_DENIED;
@@ -621,8 +625,8 @@ int telephony_sim_get_call_forwarding_indicator_state(telephony_h handle, bool *
 			LOGE("OPERATION_FAILED");
 			error_code = TELEPHONY_ERROR_OPERATION_FAILED;
 		}
+		/* LCOV_EXCL_STOP */
 	}
 
 	return error_code;
 }
-/* LCOV_EXCL_STOP */
