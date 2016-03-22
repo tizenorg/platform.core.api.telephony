@@ -574,7 +574,6 @@ int telephony_network_get_default_subscription(telephony_h handle,
 	return ret;
 }
 
-/* LCOV_EXCL_START */
 int telephony_network_get_selection_mode(telephony_h handle, telephony_network_selection_mode_e *mode)
 {
 	int ret = TELEPHONY_ERROR_OPERATION_FAILED;
@@ -605,12 +604,14 @@ int telephony_network_get_selection_mode(telephony_h handle, telephony_network_s
 		}
 		g_variant_unref(dbus_result);
 	} else {
+		/* LCOV_EXCL_START */
 		LOGE("g_dbus_connection_call_sync() failed. (%s)", error->message);
 		if (strstr(error->message, "AccessDenied")) {
 			LOGE("PERMISSION_DENIED");
 			ret = TELEPHONY_ERROR_PERMISSION_DENIED;
 		}
 		g_error_free(error);
+		/* LCOV_EXCL_STOP */
 	}
 
 	return ret;
@@ -637,6 +638,7 @@ int telephony_network_get_tac(telephony_h handle, int *tac)
 		g_variant_get(dbus_result, "(i)", tac);
 		g_variant_unref(dbus_result);
 	} else {
+		/* LCOV_EXCL_START */
 		LOGE("g_dbus_connection_call_sync() failed. (%s)", error->message);
 		if (strstr(error->message, "AccessDenied")) {
 			LOGE("PERMISSION_DENIED");
@@ -646,6 +648,7 @@ int telephony_network_get_tac(telephony_h handle, int *tac)
 			ret = TELEPHONY_ERROR_OPERATION_FAILED;
 		}
 		g_error_free(error);
+		/* LCOV_EXCL_STOP */
 	}
 
 	return ret;
@@ -672,6 +675,7 @@ int telephony_network_get_system_id(telephony_h handle, int *sid)
 		g_variant_get(dbus_result, "(i)", sid);
 		g_variant_unref(dbus_result);
 	} else {
+		/* LCOV_EXCL_START */
 		LOGE("g_dbus_connection_call_sync() failed. (%s)", error->message);
 		if (strstr(error->message, "AccessDenied")) {
 			LOGE("PERMISSION_DENIED");
@@ -681,6 +685,7 @@ int telephony_network_get_system_id(telephony_h handle, int *sid)
 			ret = TELEPHONY_ERROR_OPERATION_FAILED;
 		}
 		g_error_free(error);
+		/* LCOV_EXCL_STOP */
 	}
 
 	return ret;
@@ -707,6 +712,7 @@ int telephony_network_get_network_id(telephony_h handle, int *nid)
 		g_variant_get(dbus_result, "(i)", nid);
 		g_variant_unref(dbus_result);
 	} else {
+		/* LCOV_EXCL_START */
 		LOGE("g_dbus_connection_call_sync() failed. (%s)", error->message);
 		if (strstr(error->message, "AccessDenied")) {
 			LOGE("PERMISSION_DENIED");
@@ -716,6 +722,7 @@ int telephony_network_get_network_id(telephony_h handle, int *nid)
 			ret = TELEPHONY_ERROR_OPERATION_FAILED;
 		}
 		g_error_free(error);
+		/* LCOV_EXCL_STOP */
 	}
 
 	return ret;
@@ -742,6 +749,7 @@ int telephony_network_get_base_station_id(telephony_h handle, int *bs_id)
 		g_variant_get(dbus_result, "(i)", bs_id);
 		g_variant_unref(dbus_result);
 	} else {
+		/* LCOV_EXCL_START */
 		LOGE("g_dbus_connection_call_sync() failed. (%s)", error->message);
 		if (strstr(error->message, "AccessDenied")) {
 			LOGE("PERMISSION_DENIED");
@@ -751,6 +759,7 @@ int telephony_network_get_base_station_id(telephony_h handle, int *bs_id)
 			ret = TELEPHONY_ERROR_OPERATION_FAILED;
 		}
 		g_error_free(error);
+		/* LCOV_EXCL_STOP */
 	}
 
 	return ret;
@@ -777,6 +786,7 @@ int telephony_network_get_base_station_latitude(telephony_h handle, int *bs_lati
 		g_variant_get(dbus_result, "(i)", bs_latitude);
 		g_variant_unref(dbus_result);
 	} else {
+		/* LCOV_EXCL_START */
 		LOGE("g_dbus_connection_call_sync() failed. (%s)", error->message);
 		if (strstr(error->message, "AccessDenied")) {
 			LOGE("PERMISSION_DENIED");
@@ -786,6 +796,7 @@ int telephony_network_get_base_station_latitude(telephony_h handle, int *bs_lati
 			ret = TELEPHONY_ERROR_OPERATION_FAILED;
 		}
 		g_error_free(error);
+		/* LCOV_EXCL_STOP */
 	}
 
 	return ret;
@@ -812,6 +823,7 @@ int telephony_network_get_base_station_longitude(telephony_h handle, int *bs_lon
 		g_variant_get(dbus_result, "(i)", bs_longitude);
 		g_variant_unref(dbus_result);
 	} else {
+		/* LCOV_EXCL_START */
 		LOGE("g_dbus_connection_call_sync() failed. (%s)", error->message);
 		if (strstr(error->message, "AccessDenied")) {
 			LOGE("PERMISSION_DENIED");
@@ -821,8 +833,8 @@ int telephony_network_get_base_station_longitude(telephony_h handle, int *bs_lon
 			ret = TELEPHONY_ERROR_OPERATION_FAILED;
 		}
 		g_error_free(error);
+		/* LCOV_EXCL_STOP */
 	}
 
 	return ret;
 }
-/* LCOV_EXCL_STOP */

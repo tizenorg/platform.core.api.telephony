@@ -127,7 +127,6 @@ int telephony_modem_get_power_status(telephony_h handle,
 
 }
 
-/* LCOV_EXCL_START */
 int telephony_modem_get_meid(telephony_h handle, char **meid)
 {
 	int ret = TELEPHONY_ERROR_NONE;
@@ -166,6 +165,7 @@ int telephony_modem_get_meid(telephony_h handle, char **meid)
 		}
 		g_variant_unref(gv);
 	} else {
+		/* LCOV_EXCL_START */
 		LOGE("g_dbus_conn failed. error (%s)", gerr->message);
 		if (strstr(gerr->message, "AccessDenied")) {
 			LOGE("PERMISSION_DENIED");
@@ -175,8 +175,8 @@ int telephony_modem_get_meid(telephony_h handle, char **meid)
 			ret = TELEPHONY_ERROR_OPERATION_FAILED;
 		}
 		g_error_free(gerr);
+		/* LCOV_EXCL_STOP */
 	}
 
 	return ret;
 }
-/* LCOV_EXCL_STOP */
