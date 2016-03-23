@@ -35,7 +35,7 @@ extern "C" {
 
 /**
  * @brief Enumeration for Modem Power Status.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  */
 typedef enum {
 	TELEPHONY_MODEM_POWER_STATUS_UNKNOWN = -1,	/**< Unknown */
@@ -73,7 +73,7 @@ int telephony_modem_get_imei(telephony_h handle, char **imei);
 /**
  * @brief Gets the power status of the modem
  *
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *

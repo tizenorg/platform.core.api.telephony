@@ -73,7 +73,7 @@ typedef enum {
 
 /**
  * @brief Enumeration for PS Type.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  */
 typedef enum {
 	TELEPHONY_NETWORK_PS_TYPE_UNKNOWN,	/**< Unknown */
@@ -95,7 +95,7 @@ typedef enum {
 
 /**
  * @brief Enumeration for Network Name Priority.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  */
 typedef enum {
 	TELEPHONY_NETWORK_NAME_OPTION_UNKNOWN,	/**< Unknown */
@@ -106,7 +106,7 @@ typedef enum {
 
 /**
  * @brief Enumeration for the possible 'default' Data Subscriptions for Packet Switched(PS).
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  */
 typedef enum {
 	TELEPHONY_NETWORK_DEFAULT_DATA_SUBS_UNKNOWN = -1,	/**< Unknown status */
@@ -116,7 +116,7 @@ typedef enum {
 
 /**
  * @brief Enumeration defines possible 'default' Subscriptions for Circuit Switched(CS).
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  */
 typedef enum {
 	TELEPHONY_NETWORK_DEFAULT_SUBS_UNKNOWN = -1,	/**< Unknown status */
@@ -336,7 +336,7 @@ int telephony_network_get_type(telephony_h handle,
 /**
  * @brief Gets the packet service type of the current registered network.
  *
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -362,7 +362,7 @@ int telephony_network_get_ps_type(telephony_h handle, telephony_network_ps_type_
 /**
  * @brief Gets the network name option of the current registered network.
  *
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -408,7 +408,7 @@ int telephony_network_get_service_state(telephony_h handle,
 /**
  * @brief Gets the current default subscription for data service (Packet Switched).
  *
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -431,7 +431,7 @@ int telephony_network_get_default_data_subscription(telephony_h handle,
 /**
  * @brief Gets the current default subscription for voice service (Circuit Switched).
  *
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *

@@ -35,12 +35,12 @@ extern "C" {
 
 /**
  * @brief The call handle.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  */
 typedef struct telephony_call_info_s *telephony_call_h;
 
 /**
- * @deprecated Deprecated Since 2.4. Use #telephony_call_status_e instead.
+ * @deprecated Deprecated Since @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif. Use #telephony_call_status_e instead.
  *
  * @brief Enumeration for the call state.
  * @since_tizen @if MOBILE 2.3 @elseif WEARABLE 2.3.1 @endif
@@ -53,7 +53,7 @@ typedef enum {
 
 /**
  * @brief Enumeration for the call status.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  */
 typedef enum {
 	TELEPHONY_CALL_STATUS_IDLE, /**< Idle status */
@@ -66,7 +66,7 @@ typedef enum {
 
 /**
  * @brief Enumeration for the preferred voice call subscription.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  */
 typedef enum {
 	TELEPHONY_CALL_PREFERRED_VOICE_SUBS_UNKNOWN = -1, /**< Unknown status */
@@ -78,7 +78,7 @@ typedef enum {
 
 /**
  * @brief Enumeration for the call type.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  */
 typedef enum {
 	TELEPHONY_CALL_TYPE_VOICE, /**< Voice call */
@@ -88,7 +88,7 @@ typedef enum {
 
 /**
  * @brief Enumeration for the call direction.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  */
 typedef enum {
 	TELEPHONY_CALL_DIRECTION_MO, /**< MO(Mobile Originated) call */
@@ -96,7 +96,7 @@ typedef enum {
 } telephony_call_direction_e;
 
 /**
- * @deprecated Deprecated Since 2.4. Use #telephony_call_get_status instead.
+ * @deprecated Deprecated Since @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif. Use #telephony_call_get_status instead.
  *
  * @brief Gets the voice call state of the telephony service.
  * @details Determines if the voice call is connecting, connected, or idle.
@@ -125,7 +125,7 @@ typedef enum {
 int telephony_call_get_voice_call_state(telephony_h handle, telephony_call_state_e *call_state);
 
 /**
- * @deprecated Deprecated Since 2.4. Use #telephony_call_get_status instead.
+ * @deprecated Deprecated Since @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif. Use #telephony_call_get_status instead.
  *
  * @brief Gets the video call state of the telephony service.
  * @details Determines if the video call is connecting, connected, or idle.
@@ -156,7 +156,7 @@ int telephony_call_get_video_call_state(telephony_h handle, telephony_call_state
 /**
  * @brief Gets the current value for the preferred voice call subscription.
  *
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -178,7 +178,7 @@ int telephony_call_get_preferred_voice_subscription(telephony_h handle, telephon
 /**
  * @brief Gets the list of the current call.
  *
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -203,7 +203,7 @@ int telephony_call_get_call_list(telephony_h handle,
 /**
  * @brief Releases the list allocated from #telephony_call_get_call_list()
  *
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  *
  * @param[in] count The count of the calls from #telephony_call_get_call_list()
  * @param[in] call_list The handle from #telephony_call_get_call_list()
@@ -222,7 +222,7 @@ int telephony_call_release_call_list(unsigned int count, telephony_call_h **call
 /**
  * @brief Gets the call handle ID.
  *
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  *
  * @param[in] call_handle The handle from #telephony_call_get_call_list()
  * @param[out] handle_id The id of the call handle
@@ -242,7 +242,7 @@ int telephony_call_get_handle_id(telephony_call_h call_handle, unsigned int *han
 /**
  * @brief Gets the call number.
  *
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  *
  * @remarks You must release @c number using free() on success case.
  *
@@ -264,7 +264,7 @@ int telephony_call_get_number(telephony_call_h call_handle, char **number);
 /**
  * @brief Gets the call type.
  *
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  *
  * @param[in] call_handle The handle from #telephony_call_get_call_list()
  * @param[out] type The type of the call (#telephony_call_type_e)
@@ -284,7 +284,7 @@ int telephony_call_get_type(telephony_call_h call_handle, telephony_call_type_e 
 /**
  * @brief Gets the call status.
  *
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  *
  * @param[in] call_handle The handle from #telephony_call_get_call_list()
  * @param[out] status The status of the call (#telephony_call_status_e)
@@ -303,7 +303,7 @@ int telephony_call_get_status(telephony_call_h call_handle, telephony_call_statu
 
 /**
  * @brief Gets whether the call is MO(Mobile Originated) call or MT(Mobile Terminated).
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  *
  * @param[in] call_handle The handle from #telephony_call_get_call_list()
  * @param[out] direction The direction of the call (#telephony_call_direction_e)
@@ -322,7 +322,7 @@ int telephony_call_get_direction(telephony_call_h call_handle, telephony_call_di
 
 /**
  * @brief Gets whether the call is conference call or not.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  *
  * @param[in] call_handle The handle from #telephony_call_get_call_list()
  * @param[out] conference_status The value whether the call is conference call or not.

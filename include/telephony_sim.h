@@ -58,7 +58,7 @@ typedef enum {
 
 /**
  * @brief Enumeration for the type of SIM card .
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  */
 typedef enum {
 	TELEPHONY_SIM_APP_TYPE_SIM = 0x01, /**< SIM(GSM) Application */
@@ -236,7 +236,7 @@ int telephony_sim_get_state(telephony_h handle, telephony_sim_state_e *sim_state
 /**
  * @brief Gets the list of application on UICC.
  *
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -298,7 +298,7 @@ int telephony_sim_get_subscriber_number(telephony_h handle, char **subscriber_nu
  * @brief Gets the Subscriber ID.
  * @details This function gets subscriber ID encoded.
  *
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  * @privlevel public
  * @privilege %http://tizen.org/privilege/telephony
  *
@@ -375,7 +375,7 @@ int telephony_sim_get_lock_state(telephony_h handle, telephony_sim_lock_state_e 
 int telephony_sim_get_group_id1(telephony_h handle, char **gid1);
 
 /**
- * @brief Gets the call fowarding indicator state of the SIM.
+ * @brief Gets the call forwarding indicator state of the SIM.
  * @details If the state is true, incoming call will be forwarded to selected number.
  *          @c state indicates the CFU (Call Forwarding Unconditional) indicator status - Voice.
  *          (3GPP TS 31.102 4.2.64 EF CFIS)

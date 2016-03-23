@@ -51,7 +51,7 @@
 
 /**
  * @brief Definition for the max length of call number
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  */
 #define TELEPHONY_CALL_NUMBER_LEN_MAX 82
 
@@ -78,7 +78,7 @@ struct tapi_handle {
 
 /**
  * @brief The structure type for the call information.
- * @since_tizen 2.4
+ * @since_tizen @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif
  */
 typedef struct {
 	unsigned int id; /**< The handle of the call */
