@@ -376,7 +376,7 @@ int telephony_sim_get_group_id1(telephony_h handle, char **gid1);
 
 /**
  * @brief Gets the call forwarding indicator state of the SIM.
- * @details If the state is true, incoming call will be forwarded to selected number.
+ * @details If the state is true, incoming call will be forwarded to the selected number.
  *          @c state indicates the CFU (Call Forwarding Unconditional) indicator status - Voice.
  *          (3GPP TS 31.102 4.2.64 EF CFIS)
  *
