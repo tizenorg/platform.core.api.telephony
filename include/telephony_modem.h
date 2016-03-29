@@ -42,7 +42,7 @@ typedef enum {
 	TELEPHONY_MODEM_POWER_STATUS_ON,		/**< Modem power ON */
 	TELEPHONY_MODEM_POWER_STATUS_OFF,		/**< Modem power OFF */
 	TELEPHONY_MODEM_POWER_STATUS_RESET,		/**< Modem power RESET */
-	TELEPHONY_MODEM_POWER_STATUS_LOW,    		/**< Modem power LOW */
+	TELEPHONY_MODEM_POWER_STATUS_LOW,		/**< Modem power LOW */
 } telephony_modem_power_status_e;
 
 /**

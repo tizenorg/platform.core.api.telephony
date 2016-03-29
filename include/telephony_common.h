@@ -106,7 +106,7 @@ typedef enum  {
 	TELEPHONY_NOTI_NETWORK_DEFAULT_SUBSCRIPTION,		/**< Notification to be invoked when the default subscription changes. @n
 									'#telephony_network_default_subs_e' will be delivered in notification data (@b Since: @if MOBILE 2.4 @elseif WEARABLE 3.0 @endif) @n
 									Privilege : http://tizen.org/privilege/telephony */
-	TELEPHONY_NOTI_NETWORK_LAC, 				/**< Notification to be invoked when the LAC (Location Area Code) changes. @n
+	TELEPHONY_NOTI_NETWORK_LAC,					/**< Notification to be invoked when the LAC (Location Area Code) changes. @n
 									'lac(int)' will be delivered in notification data (@b Since: 3.0) @n
 									Privilege : http://tizen.org/privilege/location.coarse */
 	TELEPHONY_NOTI_NETWORK_TAC,					/**< Notification to be invoked when the TAC (Tracking Area Code) changes. @n
@@ -205,7 +205,7 @@ typedef void (*telephony_noti_cb)(telephony_h handle, telephony_noti_e noti_id, 
  * @see telephony_unset_noti_cb()
  */
 int telephony_set_noti_cb(telephony_h handle,
-    telephony_noti_e noti_id, telephony_noti_cb cb, void *user_data);
+	telephony_noti_e noti_id, telephony_noti_cb cb, void *user_data);
 
 /**
  * @brief Unsets a callback function.

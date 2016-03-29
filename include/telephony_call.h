@@ -348,4 +348,4 @@ int telephony_call_get_conference_status(telephony_call_h call_handle, bool *con
 }
 #endif
 
-#endif // __CAPI_TELEPHONY_CALL_H__
+#endif /* __CAPI_TELEPHONY_CALL_H__ */
