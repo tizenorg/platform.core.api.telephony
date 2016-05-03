@@ -21,6 +21,7 @@
 #include "telephony_private.h"
 #include <gio/gio.h>
 #include <dlog.h>
+#include <stdlib.h>
 
 #include <tapi_common.h>
 #include <TelCall.h>
@@ -482,26 +483,47 @@ int telephony_init(telephony_handle_list_s *list)
 		cp_count++;
 
 	list->count = cp_count;
-	list->handle = g_malloc(cp_count * sizeof(telephony_h));
+	list->handle = malloc(cp_count * sizeof(telephony_h));
+	if (list->handle == NULL) {
+		LOGE("Out of memory");
+		g_strfreev(cp_list);
+		return TELEPHONY_ERROR_OUT_OF_MEMORY;
+	}
+
 	for (i = 0; i < cp_count; i++) {
-		telephony_data *tmp = g_malloc(sizeof(telephony_data));
+		telephony_data *tmp = malloc(sizeof(telephony_data));
+		if (tmp == NULL) {
+			/* LCOV_EXCL_START */
+			int j = 0;
+			LOGE("Out of memory");
+			/* Need to free already allocated data */
+			for (; j < i; j++) {
+				if (list->handle[j]) {
+					tel_deinit(((telephony_data *)list->handle[j])->tapi_h);
+					free(list->handle[j]);
+				}
+			}
+			free(list->handle);
+			g_strfreev(cp_list);
+			return TELEPHONY_ERROR_OUT_OF_MEMORY;
+			/* LCOV_EXCL_STOP */
+		}
+
 		tmp->evt_list = NULL;
 		tmp->tapi_h = tel_init(cp_list[i]);
 		if (tmp->tapi_h == NULL) {
 			/* LCOV_EXCL_START */
-			int j = 0;
-			LOGE("handle is NULL");
+			int j = 0;;
+			LOGE("tel_init() is failed");
+			/* Need to free already allocated data */
 			for (; j < i; j++) {
-				/* Need to free already allocated data */
 				if (list->handle[j]) {
 					tel_deinit(((telephony_data *)list->handle[j])->tapi_h);
-					g_free(list->handle[j]);
+					free(list->handle[j]);
 				}
 			}
-			g_free(tmp);
-			g_free(list->handle);
-			list->handle = NULL;
-			list->count = 0;
+			free(tmp);
+			free(list->handle);
 			g_strfreev(cp_list);
 			return TELEPHONY_ERROR_OPERATION_FAILED;
 			/* LCOV_EXCL_STOP */
@@ -532,9 +554,9 @@ int telephony_deinit(telephony_handle_list_s *list)
 		tmp->evt_list = NULL;
 
 		/* Free handle[i] */
-		g_free(list->handle[i]);
+		free(list->handle[i]);
 	}
-	g_free(list->handle);
+	free(list->handle);
 	list->handle = NULL;
 	list->count = 0;
 

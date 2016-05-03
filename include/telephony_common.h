@@ -242,6 +242,7 @@ int telephony_unset_noti_cb(telephony_h handle, telephony_noti_e noti_id);
  *         otherwise a negative error value
  *
  * @retval #TELEPHONY_ERROR_NONE              Successful
+ * @retval #TELEPHONY_ERROR_OUT_OF_MEMORY     Out of memory
  * @retval #TELEPHONY_ERROR_INVALID_PARAMETER Invalid parameter
  * @retval #TELEPHONY_ERROR_NOT_SUPPORTED     Not supported
  * @retval #TELEPHONY_ERROR_OPERATION_FAILED  Operation failed
