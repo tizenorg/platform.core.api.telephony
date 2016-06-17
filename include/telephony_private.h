@@ -69,7 +69,6 @@ struct tapi_handle {
 	char *path;
 	char *cp_name;
 	GHashTable *evt_list;
-	char cookie[20];
 	GCancellable *ca;
 
 	GHashTable *cache_property;
